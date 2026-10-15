@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sky Serpents Supremo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  <style>
+    html, body { margin: 0; height: 100%; background: black; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <!--
+    A ORDEM dos scripts importa: cada arquivo só pode usar classes que foram
+    carregadas antes dele (principalmente a classe "pai" de uma herança).
+
+    Estrutura de src/:
+      config/      configurações (personagens, bichos, chefões, fases...)
+      core/        utilitários, classe base GameEntity, combate
+      ui/          interface (HUD, menu, telas)
+      world/       cenário (mapa, fundo, efeitos, música)
+      projectiles/ base dos projéteis + bolas de fogo dos chefões
+      player/      base do jogador
+        knight/    tudo do GUERREIRO (espada)
+        archer/    tudo da ARQUEIRA (arco, flechas)
+      enemies/     bichos pequenos
+      bosses/      base dos chefões
+        dragon/    tudo dos DRAGÕES (vermelho e rosa)
+        serpent/   tudo da SERPENTE GLACIAL
+      items/       poções
+      scenes/      carregamento, menu e fase
+      main.js      inicia o Phaser
+  -->
+
+  <!-- Configuração -->
+  <script src="src/config/game_settings.js"></script>
+  <script src="src/config/characters.js"></script>
+  <script src="src/config/enemy_types.js"></script>
+  <script src="src/config/boss_types.js"></script>
+  <script src="src/config/terrain_themes.js"></script>
+  <script src="src/config/levels.js"></script>
+  <script src="src/config/difficulties.js"></script>
+  <script src="src/config/asset_manifest.js"></script>
+
+  <!-- Núcleo -->
+  <script src="src/core/game_events.js"></script>
+  <script src="src/core/frame_timers.js"></script>
+  <script src="src/core/input_controller.js"></script>
+  <script src="src/core/game_entity.js"></script>
+  <script src="src/core/combat_registry.js"></script>
+  <script src="src/core/match_config.js"></script>
+
+  <!-- Interface -->
+  <script src="src/ui/ui_style.js"></script>
+  <script src="src/ui/hearts_hud.js"></script>
+  <script src="src/ui/special_hud.js"></script>
+  <script src="src/ui/level_intro.js"></script>
+  <script src="src/ui/boss_hp_bar.js"></script>
+  <script src="src/ui/level_banner.js"></script>
+  <script src="src/ui/end_screen.js"></script>
+  <script src="src/ui/menu_rows.js"></script>
+  <script src="src/ui/level_slot.js"></script>
+  <script src="src/core/game_flow.js"></script>
+
+  <!-- Mundo -->
+  <script src="src/world/music_player.js"></script>
+  <script src="src/world/seamless_texture.js"></script>
+  <script src="src/world/fx_textures.js"></script>
+  <script src="src/world/parallax_background.js"></script>
+  <script src="src/world/level_map.js"></script>
+  <script src="src/world/weather_effect.js"></script>
+  <script src="src/world/checkpoint_tracker.js"></script>
+  <script src="src/world/breakable_tree.js"></script>
+  <script src="src/world/tree_manager.js"></script>
+  <script src="src/world/goal_flag.js"></script>
+
+  <!-- Projéteis (base → bolas de fogo) -->
+  <script src="src/projectiles/projectile_pool.js"></script>
+  <script src="src/projectiles/fireball_pool.js"></script>
+
+  <!-- Jogador: base -->
+  <script src="src/player/player_pose.js"></script>
+  <script src="src/player/player_movement.js"></script>
+  <script src="src/player/player_status.js"></script>
+  <script src="src/player/player_health.js"></script>
+  <script src="src/player/player_attack.js"></script>
+  <script src="src/player/player_special.js"></script>
+  <script src="src/player/player.js"></script>
+  <!-- Guerreiro -->
+  <script src="src/player/knight/sword_attack.js"></script>
+  <script src="src/player/knight/dash_special.js"></script>
+  <script src="src/player/knight/knight_player.js"></script>
+  <!-- Arqueira -->
+  <script src="src/player/archer/arrow_pool.js"></script>
+  <script src="src/player/archer/bow_attack.js"></script>
+  <script src="src/player/archer/arrow_storm_special.js"></script>
+  <script src="src/player/archer/archer_player.js"></script>
+  <!-- Escolha do personagem -->
+  <script src="src/player/player_factory.js"></script>
+
+  <!-- Bichos pequenos -->
+  <script src="src/enemies/enemy.js"></script>
+  <script src="src/enemies/walker_enemy.js"></script>
+  <script src="src/enemies/flyer_enemy.js"></script>
+  <script src="src/enemies/ghost_enemy.js"></script>
+  <script src="src/enemies/spiky_enemy.js"></script>
+  <script src="src/enemies/snake_enemy.js"></script>
+  <script src="src/enemies/hopper_enemy.js"></script>
+  <script src="src/enemies/seed_pool.js"></script>
+  <script src="src/enemies/shooter_enemy.js"></script>
+  <script src="src/enemies/diver_enemy.js"></script>
+  <script src="src/enemies/egg_pool.js"></script>
+  <script src="src/enemies/eagle_enemy.js"></script>
+  <script src="src/enemies/enemy_manager.js"></script>
+
+  <!-- Chefões: base -->
+  <script src="src/bosses/boss_health.js"></script>
+  <script src="src/bosses/boss.js"></script>
+  <script src="src/bosses/boss_arena.js"></script>
+  <script src="src/bosses/boss_attack.js"></script>
+  <!-- Dragões (vermelho e rosa) -->
+  <script src="src/bosses/dragon/radial_burst_attack.js"></script>
+  <script src="src/bosses/dragon/spiral_attack.js"></script>
+  <script src="src/bosses/dragon/dragon_movement.js"></script>
+  <script src="src/bosses/dragon/dragon_sprite_sheets.js"></script>
+  <script src="src/bosses/dragon/dragon_animation.js"></script>
+  <script src="src/bosses/dragon/dragon_boss.js"></script>
+  <!-- Serpente Glacial -->
+  <script src="src/bosses/serpent/double_ring_attack.js"></script>
+  <script src="src/bosses/serpent/serpent_body.js"></script>
+  <script src="src/bosses/serpent/serpent_movement.js"></script>
+  <script src="src/bosses/serpent/serpent_boss.js"></script>
+  <!-- Escolha do chefão -->
+  <script src="src/bosses/bear/bear_sprite_sheet.js"></script>
+  <script src="src/bosses/bear/ice_ball_attack.js"></script>
+  <script src="src/bosses/bear/ice_waves.js"></script>
+  <script src="src/bosses/bear/icicles.js"></script>
+  <script src="src/bosses/bear/bear_brain.js"></script>
+  <script src="src/bosses/bear/polar_bear_boss.js"></script>
+
+  <script src="src/bosses/boss_factory.js"></script>
+
+  <!-- Itens -->
+  <script src="src/items/potion_manager.js"></script>
+
+  <!-- Cenas -->
+  <script src="src/scenes/boot_scene.js"></script>
+  <script src="src/scenes/menu_scene.js"></script>
+  <script src="src/scenes/level_select_scene.js"></script>
+  <script src="src/scenes/game_scene.js"></script>
+
+  <!-- Início -->
+  <script src="src/main.js"></script>
+</body>
+</html>
