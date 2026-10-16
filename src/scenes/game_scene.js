@@ -26,6 +26,7 @@ class GameScene extends Phaser.Scene {
   #fireballs;
   #enemies;
   #potions;
+  #coins;
   #checkpoints;
   #arena = null;   // arena do chefão (fases com chefão)
   #goal = null;    // bandeira de chegada (fases sem chefão)
@@ -69,6 +70,7 @@ class GameScene extends Phaser.Scene {
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
     this.#potions = new PotionManager(this, level.POTIONS, this.#player.health);
+    this.#coins = new CoinManager(this, this.#levelMap, this.#eventBus);
     this.#checkpoints = new CheckpointTracker(level.CHECKPOINTS);
     this.#trees = new TreeManager(this, level.TREES || [], this.#levelMap, this.#combat);
 
@@ -82,6 +84,7 @@ class GameScene extends Phaser.Scene {
 
     // Interface
     new HeartsHUD(this, this.#player.health.maxHearts, this.#eventBus);
+    new CoinHUD(this, this.#eventBus);
     this.#specialHud = new SpecialHUD(this, this.#player);
     // Chefão chamando bichos (ex.: morceguinhos do urso)
     this.#eventBus.on(GameEvents.BOSS_SUMMON, (spawn, onSpawned) => onSpawned(this.#enemies.spawnEnemy(spawn)));
@@ -107,6 +110,7 @@ class GameScene extends Phaser.Scene {
     this.#player.handleAttack(this.#combat);
     this.#specialHud.update();
     this.#enemies.update(time, this.#player);
+    this.#coins.update();
     this.#checkpoints.update(this.#player.x);
 
     if (this.#arena && this.#arena.shouldStart(this.#player)) this.#startBossFight();
@@ -248,8 +252,9 @@ class GameScene extends Phaser.Scene {
       if (owner) owner.onPlayerContact(this.#player);
     });
 
-    // Coletar poção
+    // Coletar poção e moeda
     physics.overlap(playerSprite, this.#potions.group, (_player, potion) => this.#potions.collect(potion));
+    physics.overlap(playerSprite, this.#coins.group, (_player, coin) => this.#coins.collect(coin));
 
     // Colisões próprias do ataque (ex.: flechas x inimigos e x terreno)
     this.#player.bindAttackCollisions(this.#combat, this.#levelMap);

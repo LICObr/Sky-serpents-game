@@ -370,6 +370,21 @@ const GameSettings = deepFreeze({
     FLOAT_DURATION_MS: 900
   },
 
+  // Moedas: cada bicho derrotado tem chance de deixar uma. O total fica
+  // guardado no navegador (para comprar coisas no futuro).
+  COIN: {
+    TEXTURE: 'moeda',
+    DROP_CHANCE_PERCENT: 30,
+    SCALE: 0.36,                // imagem de 64px → ~23px na tela
+    POP_VELOCITY: { X: 60, Y: -260 }, // pulinho ao sair do bicho
+    BOUNCE: 0.35,
+    DRAG_X: 260,                // para de deslizar no chão
+    SPIN_MS: 700,               // "gira" achatando e voltando
+    LIFETIME_MS: 15000,         // some sozinha depois de um tempo...
+    BLINK_BEFORE_MS: 3000,      // ...piscando antes
+    STORAGE_KEY: 'skySerpents.coins'
+  },
+
   // Especial (tecla G): um por personagem, recarga de 25s (menos 2s por bicho)
   SPECIAL: {
     COOLDOWN_MS: 25000,
@@ -427,6 +442,8 @@ const GameSettings = deepFreeze({
       COLOR: 0xff0000, BACK_COLOR: 0x000000, BACK_ALPHA: 0.35,
       LABEL_Y: 50
     },
+    // Moedas no canto superior direito (no jogo e no menu)
+    COINS: { RIGHT_X: 780, Y: 30, ICON_SCALE: 0.42, GAP: 8, TEXT_SIZE: 14 },
     BANNER_DURATION_MS: 2200,
     DEPTH: 10
   },

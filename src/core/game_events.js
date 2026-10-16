@@ -15,5 +15,6 @@ const GameEvents = Object.freeze({
   BOSS_FIGHT_STARTED:    'boss:fight-started',    // (boss)
   BOSS_HP_CHANGED:       'boss:hp-changed',       // (currentHp, maxHp)
   BOSS_DEFEATED:         'boss:defeated',
-  BOSS_SUMMON:           'boss:summon'           // (spawn, onSpawned) chefão chama bichos
+  BOSS_SUMMON:           'boss:summon',          // (spawn, onSpawned) chefão chama bichos
+  COINS_CHANGED:         'coins:changed'         // (total) pegou uma moeda
 });

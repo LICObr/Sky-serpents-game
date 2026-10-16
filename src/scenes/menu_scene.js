@@ -30,6 +30,7 @@ class MenuScene extends Phaser.Scene {
     this.add.rectangle(0, 0, WIDTH, HEIGHT, 0x0a0618, 0.35).setOrigin(0);
     this.#addDecorations();
 
+    new CoinHUD(this); // moedas guardadas, no canto superior direito
     this.add.text(WIDTH / 2, 56, 'SKY SERPENTS', UiStyle.text(34, '#ffe066')).setOrigin(0.5);
     this.add.text(WIDTH / 2, 94, 'SUPREMO', UiStyle.text(16, '#ff9a6a')).setOrigin(0.5);
 

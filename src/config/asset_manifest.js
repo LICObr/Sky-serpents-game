@@ -110,7 +110,7 @@ const ASSET_MANIFEST = Object.freeze([
   }),
 
   // Itens e HUD
-  ...imagesIn('itens', { pocao: 'pocao.png' }),
+  ...imagesIn('itens', { pocao: 'pocao.png', moeda: 'moeda.png' }),
   ...imagesIn('hud', { heart: 'heart.png' }),
 
   // Áudio

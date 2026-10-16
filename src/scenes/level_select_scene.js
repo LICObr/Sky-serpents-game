@@ -37,6 +37,7 @@ class LevelSelectScene extends Phaser.Scene {
     this.#background = this.add.tileSprite(0, 0, WIDTH, HEIGHT, GameSettings.BACKGROUND.DEFAULT_TEXTURE).setOrigin(0);
     this.add.rectangle(0, 0, WIDTH, HEIGHT, 0x0a0618, 0.45).setOrigin(0);
 
+    new CoinHUD(this); // moedas guardadas, no canto superior direito
     this.add.text(WIDTH / 2, 50, 'ESCOLHA A FASE', UiStyle.text(24, '#ffe066')).setOrigin(0.5);
     const difficulty = DIFFICULTIES[this.#choice.difficultyId];
     const character = CHARACTERS[this.#choice.characterId];
