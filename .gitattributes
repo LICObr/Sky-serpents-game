@@ -1,0 +1,9 @@
+# fim de linha padronizado (LF) no repositório; cada sistema converte ao baixar
+* text=auto
+
+# arquivos binários (nunca mexer no conteúdo)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.mp3 binary
