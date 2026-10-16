@@ -505,5 +505,21 @@ const GameSettings = deepFreeze({
     TITLE_SIZE: 18,
     OPTION_SIZE: 14,
     OPTION_GAP: 40
+  },
+
+  // Controles de toque (celular): analógico onde o dedo encostar + botões
+  TOUCH: {
+    JOYSTICK_AREA_RATIO: 0.55,  // o analógico aparece na parte esquerda da tela
+    JOYSTICK_RADIUS: 60,
+    THUMB_RADIUS: 26,
+    DEAD_ZONE: 0.3,             // empurrão mínimo para andar
+    JUMP_ZONE: 0.55,            // para cima além disso = pular
+    DUCK_ZONE: 0.65,            // para baixo além disso = agachar
+    ALPHA: 0.45,
+    BUTTONS: {
+      ATTACK:  { X: 715, Y: 500, RADIUS: 46, LABEL: 'ESPAÇO', SIZE: 9 },
+      SPECIAL: { X: 610, Y: 540, RADIUS: 32, LABEL: 'G', SIZE: 14 },
+      PAUSE:   { X: 772, Y: 72, RADIUS: 18, LABEL: 'II', SIZE: 10 }
+    }
   }
 });

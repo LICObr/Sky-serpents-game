@@ -24,6 +24,8 @@ const gameConfig = {
       debug: GameSettings.PHYSICS.DEBUG
     }
   },
+  // até 3 dedos ao mesmo tempo no celular (analógico + botões)
+  input: { activePointers: 3 },
   scene: [BootScene, MenuScene, LevelSelectScene, GameScene, PauseScene]
 };
 

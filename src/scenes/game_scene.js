@@ -12,7 +12,7 @@
  *      Luta em etapas: se o chefão tem NEXT_BOSS, o próximo aparece depois dele
  *   3. chefão derrotado / bandeira → próxima fase | sem corações → game over
  *
- * Pausa: P e a janela perder o foco abrem a
+ * Pausa: P (ou o botão II no celular) e a janela perder o foco abrem a
  * PauseScene; ESC e R pedem confirmação antes de sair ou reiniciar.
  * -----------------------------------------------------------------------------
  */
@@ -35,6 +35,7 @@ class GameScene extends Phaser.Scene {
   #trees;
   #specialHud;
   #banner;
+  #touch;
 
   constructor() {
     super({ key: SceneKeys.GAME });
@@ -69,7 +70,11 @@ class GameScene extends Phaser.Scene {
 
     // Personagens, inimigos e itens
     this.#combat = new CombatRegistry(this);
-    this.#player = PlayerFactory.create(this, new InputController(this), this.#eventBus, this.#match);
+    this.#touch = new TouchControls(this, {
+      onPause: () => this.#openPause(PauseMode.PAUSE),
+      canUse: () => !this.#flow.hasEnded
+    });
+    this.#player = PlayerFactory.create(this, new InputController(this, this.#touch), this.#eventBus, this.#match);
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
     this.#potions = new PotionManager(this, level.POTIONS, this.#player.health);
@@ -189,8 +194,11 @@ class GameScene extends Phaser.Scene {
       this.game.events.off(Phaser.Core.Events.HIDDEN, autoPause);
     });
 
-    // Ao voltar da pausa, solta teclas que ficaram "presas" enquanto ela estava aberta
-    this.events.on(Phaser.Scenes.Events.RESUME, () => this.input.keyboard.resetKeys());
+    // Ao voltar da pausa, solta teclas/dedo que ficaram "presos" enquanto ela estava aberta
+    this.events.on(Phaser.Scenes.Events.RESUME, () => {
+      this.input.keyboard.resetKeys();
+      this.#touch.reset();
+    });
   }
 
   /** Pausa a fase e abre a caixinha (se a fase ainda estiver rolando). */
