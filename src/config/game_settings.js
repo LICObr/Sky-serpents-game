@@ -237,11 +237,12 @@ const GameSettings = deepFreeze({
     DEATH_FADE_MS: 900          // depois da animação de morte, some aos poucos
   },
 
-  // Abertura de fase (imagem + título no centro, some em fade)
+  // Abertura de fase (imagem do chefão + título no centro, some em fade)
   LEVEL_INTRO: {
-    IMAGE_SCALE: 2.2,
+    IMAGE_BOX: { WIDTH: 340, HEIGHT: 270 }, // a imagem é ampliada/reduzida até caber aqui
     IMAGE_OFFSET_Y: 30,
     TITLE_SIZE: 28,
+    TITLE_MAX_WIDTH: 760,       // título comprido diminui para caber na tela
     TITLE_GAP: 18,
     SHADE_ALPHA: 0.45,
     FADE_IN_MS: 400,

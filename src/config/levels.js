@@ -44,6 +44,7 @@ const LEVELS = deepFreeze([
   {
     NUMBER: 1,
     NAME: 'Campos de Fogo',
+    INTRO: { TEXTURE: 'dragon_red_intro', TITLE: 'THE RED DRAGON ATTACKS...' }, // abertura da fase
     BACKGROUND_TINT: 0xffffff,  // cenário original
     CHALLENGE: {
       ENEMY_SPEED: 0.9,
@@ -98,6 +99,7 @@ const LEVELS = deepFreeze([
   {
     NUMBER: 2,
     NAME: 'Pico Congelado',
+    INTRO: { TEXTURE: 'serpent_intro', TITLE: 'THE ICE SERPENT ATTACKS...' }, // abertura da fase
     BACKGROUND_TINT: 0xc8dcff,  // tom gelado
     CHALLENGE: {
       ENEMY_SPEED: 1,
@@ -153,6 +155,7 @@ const LEVELS = deepFreeze([
   {
     NUMBER: 3,
     NAME: 'Santuário Místico',
+    INTRO: { TEXTURE: 'dragon_pink_intro', TITLE: 'THE MYSTIC DRAGON ATTACKS...' }, // abertura da fase
     BACKGROUND_TINT: 0xffc8ec,  // tom mágico
     CHALLENGE: {
       ENEMY_SPEED: 1.1,

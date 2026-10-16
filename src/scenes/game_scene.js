@@ -87,7 +87,7 @@ class GameScene extends Phaser.Scene {
       () => this.#player.special.reduceCooldown(GameSettings.SPECIAL.KILL_REDUCTION_MS));
     new BossHPBar(this, this.#eventBus);
     this.#banner = new LevelBanner(this);
-    // Abertura especial (ex.: fase 4) antes do título da fase
+    // Abertura com a imagem do chefão antes do título da fase
     if (level.INTRO) LevelIntro.play(this, level.INTRO, () => this.#banner.show(`FASE ${level.NUMBER}`, level.NAME));
     else this.#banner.show(`FASE ${level.NUMBER}`, level.NAME);
 

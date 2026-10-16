@@ -88,19 +88,23 @@ const ASSET_MANIFEST = Object.freeze([
 
   // Chefões (cada um com o seu projétil)
   // (as animações dos dragões são carregadas por DragonSpriteSheets)
+  // (*_intro = imagem da abertura da fase; geradas por tools/boss_intros.py)
   ...imagesIn('chefoes/dragao_vermelho', {
     bola_fogo: 'bola_fogo.png',
-    bola_fogo_azul: 'bola_fogo_azul.png'
+    bola_fogo_azul: 'bola_fogo_azul.png',
+    dragon_red_intro: 'dragao_intro.png'
   }),
   ...imagesIn('chefoes/dragao_rosa', {
-    bola_rosa: 'bola_rosa.png'
+    bola_rosa: 'bola_rosa.png',
+    dragon_pink_intro: 'dragao_intro.png'
   }),
   ...imagesIn('chefoes/urso_polar', { bear_intro: 'urso_intro.png' }),
   ...imagesIn('chefoes/serpente_glacial', {
     serpent_head: 'serpente_cabeca.png',
     serpent_body: 'serpente_corpo.png',
     serpent_tail: 'serpente_cauda.png',
-    bola_gelo: 'bola_gelo.png'
+    bola_gelo: 'bola_gelo.png',
+    serpent_intro: 'serpente_intro.png'
   }),
 
   // Itens e HUD
