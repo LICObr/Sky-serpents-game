@@ -275,12 +275,12 @@ const GameSettings = deepFreeze({
       SECOND_WAVE_MS: 480,      // bravo: segunda leva de ondas
       SHAKE_MS: 380,
       SHAKE_INTENSITY: 0.014,
-      ICICLES: 4                // bravo: a pisada também derruba pinos de gelo
+      ICICLES: 2                // bravo: a pisada também derruba pinos de gelo (era 4)
     },
     // Pinos de gelo caindo do céu — SÓ quando bravo (abaixo de 50% da vida)
     ICICLES: {
       INTERVAL_MS: { MIN: 3000, MAX: 6000 },  // chuvas de pinos de tempos em tempos
-      PER_RAIN: { MIN: 2, MAX: 4 },
+      PER_RAIN: { MIN: 1, MAX: 2 },           // metade do que era (2 a 4)
       STAGGER_MS: 220,          // tempo entre um pino e outro da mesma chuva
       WARNING_MS: 650,          // tremendo lá em cima antes de cair
       FALL_SPEED: 120,          // velocidade inicial (a gravidade acelera)
