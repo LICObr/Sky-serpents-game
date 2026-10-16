@@ -10,6 +10,9 @@
  *   2. ao entrar na arena, ela fecha e o CHEFÃO aparece
  *      (fases ainda sem chefão terminam numa BANDEIRA de chegada)
  *   3. chefão derrotado / bandeira → próxima fase | sem corações → game over
+ *
+ * Pausa: P e a janela perder o foco abrem a
+ * PauseScene; ESC e R pedem confirmação antes de sair ou reiniciar.
  * -----------------------------------------------------------------------------
  */
 class GameScene extends Phaser.Scene {
@@ -93,7 +96,7 @@ class GameScene extends Phaser.Scene {
 
     this.#setupCamera();
     this.#setupCollisions();
-    this.input.keyboard.once('keydown-ESC', () => this.scene.start(SceneKeys.MENU));
+    this.#setupPause();
   }
 
   update(time) {
@@ -148,6 +151,39 @@ class GameScene extends Phaser.Scene {
     if (this.#player.health.isDead) return;
     const x = this.#checkpoints.respawnX;
     this.#player.respawnAt(x, this.#levelMap.surfaceYAt(x) ?? GameSettings.LEVEL.GROUND_TOP);
+  }
+
+  /**
+   * Teclas de pausa e pausa automática:
+   *   P → pausa | ESC → voltar ao menu? | R → reiniciar a fase?
+   *   janela perdeu o foco / minimizou / trocou de aba → pausa
+   */
+  #setupPause() {
+    const onKey = (key, action) => this.input.keyboard.on(`keydown-${key}`, event => {
+      if (!event.repeat) action();
+    });
+    onKey('P', () => this.#openPause(PauseMode.PAUSE));
+    onKey('R', () => this.#openPause(PauseMode.RESTART));
+    // Depois do fim da fase o ESC volta direto para o menu (não há o que perder)
+    onKey('ESC', () => (this.#flow.hasEnded ? this.scene.start(SceneKeys.MENU) : this.#openPause(PauseMode.MENU)));
+
+    const autoPause = () => this.#openPause(PauseMode.PAUSE);
+    this.game.events.on(Phaser.Core.Events.BLUR, autoPause);
+    this.game.events.on(Phaser.Core.Events.HIDDEN, autoPause);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.game.events.off(Phaser.Core.Events.BLUR, autoPause);
+      this.game.events.off(Phaser.Core.Events.HIDDEN, autoPause);
+    });
+
+    // Ao voltar da pausa, solta teclas que ficaram "presas" enquanto ela estava aberta
+    this.events.on(Phaser.Scenes.Events.RESUME, () => this.input.keyboard.resetKeys());
+  }
+
+  /** Pausa a fase e abre a caixinha (se a fase ainda estiver rolando). */
+  #openPause(mode) {
+    if (this.#flow.hasEnded || !this.scene.isActive()) return;
+    this.scene.launch(SceneKeys.PAUSE, { mode, matchData: this.#match.toSceneData() });
+    this.scene.pause();
   }
 
   /** Limites do mundo: laterais fechadas, embaixo aberto (buracos). */

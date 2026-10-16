@@ -429,5 +429,14 @@ const GameSettings = deepFreeze({
     },
     BANNER_DURATION_MS: 2200,
     DEPTH: 10
+  },
+
+  // Tela de pausa / confirmação (ESC, R, P ou janela sem foco)
+  PAUSE: {
+    SHADE_ALPHA: 0.55,
+    PANEL: { WIDTH: 540, HEIGHT: 280 },
+    TITLE_SIZE: 18,
+    OPTION_SIZE: 14,
+    OPTION_GAP: 40
   }
 });

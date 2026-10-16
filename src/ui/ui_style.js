@@ -9,7 +9,8 @@ const SceneKeys = Object.freeze({
   BOOT: 'BootScene',
   MENU: 'MenuScene',
   LEVEL_SELECT: 'LevelSelectScene',
-  GAME: 'GameScene'
+  GAME: 'GameScene',
+  PAUSE: 'PauseScene'
 });
 
 class UiStyle {

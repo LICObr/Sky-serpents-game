@@ -24,7 +24,7 @@ const gameConfig = {
       debug: GameSettings.PHYSICS.DEBUG
     }
   },
-  scene: [BootScene, MenuScene, LevelSelectScene, GameScene]
+  scene: [BootScene, MenuScene, LevelSelectScene, GameScene, PauseScene]
 };
 
 /** Espera a fonte (no máximo 1,5 s — sem internet usa a fonte padrão). */
