@@ -1,21 +1,31 @@
-MIT License
+Copyright (c) 2026 Danilo Mori Schuler. Todos os direitos reservados.
 
-Copyright (c) 2026 Danilo Mori Schuler
+Este jogo (código, imagens, sons e demais arquivos deste repositório) é
+propriedade de Danilo Mori Schuler.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Nenhuma permissão é concedida para usar, copiar, modificar, publicar,
+distribuir, sublicenciar ou vender qualquer parte deste repositório sem
+autorização prévia e por escrito do autor.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+O código está visível publicamente apenas para consulta. Ver o código não dá
+nenhum direito de uso.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Componentes de terceiros mantêm as suas próprias licenças (por exemplo, o
+Phaser, carregado de um CDN, é distribuído sob a licença MIT).
+
+-------------------------------------------------------------------------------
+
+Copyright (c) 2026 Danilo Mori Schuler. All rights reserved.
+
+This game (code, images, sounds and all other files in this repository) is
+the property of Danilo Mori Schuler.
+
+No permission is granted to use, copy, modify, publish, distribute,
+sublicense or sell any part of this repository without prior written
+permission from the author.
+
+The source code is publicly visible for reference only. Viewing the code does
+not grant any right to use it.
+
+Third-party components keep their own licenses (for example, Phaser, loaded
+from a CDN, is distributed under the MIT license).
