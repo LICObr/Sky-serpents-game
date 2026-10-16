@@ -12,7 +12,8 @@ const TerrainThemeId = Object.freeze({
   MEADOW: 'MEADOW',
   ICE: 'ICE',
   MYSTIC: 'MYSTIC',
-  JUNGLE_ICE: 'JUNGLE_ICE'
+  JUNGLE_ICE: 'JUNGLE_ICE',
+  HONEY: 'HONEY'
 });
 
 /** Tipos de clima. */
@@ -21,7 +22,8 @@ const WeatherType = Object.freeze({
   SNOW: 'SNOW',         // flocos de neve caindo
   SPARKLES: 'SPARKLES', // brilhos mágicos piscando
   LIGHT_SNOW: 'LIGHT_SNOW', // poucos flocos de neve
-  FOG: 'FOG'            // bancos de neblina passando devagar
+  FOG: 'FOG',           // bancos de neblina passando devagar
+  POLLEN: 'POLLEN'      // pólen dourado flutuando
 });
 
 const TERRAIN_THEMES = deepFreeze({
@@ -41,5 +43,10 @@ const TERRAIN_THEMES = deepFreeze({
   [TerrainThemeId.JUNGLE_ICE]: {
     TOP_TEXTURE: 'chao_selva', FILL_TEXTURE: 'terra_selva', PLATFORM_TEXTURE: 'platform_selva',
     WEATHER: [WeatherType.LIGHT_SNOW, WeatherType.FOG]
+  },
+  // Floresta do mel: grama verde-amarelada com mel no lugar da neve
+  [TerrainThemeId.HONEY]: {
+    TOP_TEXTURE: 'chao_mel', FILL_TEXTURE: 'terra_mel', PLATFORM_TEXTURE: 'platform_mel',
+    WEATHER: [WeatherType.POLLEN]
   }
 });

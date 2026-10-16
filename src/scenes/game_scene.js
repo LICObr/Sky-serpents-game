@@ -61,7 +61,7 @@ class GameScene extends Phaser.Scene {
     // Mundo (a ordem de criação define o que fica desenhado por cima)
     this.#background = new ParallaxBackground(this, level.BACKGROUND_TINT, level.BACKGROUND_TEXTURE);
     this.#levelMap = new LevelMap(this, level);
-    new WeatherEffect(this, TERRAIN_THEMES[level.TERRAIN].WEATHER); // neve, brasas, brilhos, neblina
+    new WeatherEffect(this, TERRAIN_THEMES[level.TERRAIN].WEATHER); // neve, brasas, brilhos, neblina, pólen
     this.#setupWorldBounds();
 
     // Personagens, inimigos e itens

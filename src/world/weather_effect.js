@@ -7,6 +7,7 @@
  *   SPARKLES → brilhos mágicos rosa/lilás que surgem e piscam no ar
  *   LIGHT_SNOW → poucos flocos de neve
  *   FOG      → grandes bancos de neblina atravessando a tela devagar
+ *   POLLEN   → pólen dourado subindo devagar, piscando de leve
  * Uma fase pode combinar vários (ex.: neve fraca + neblina).
  *
  * Feito com partículas (textura fx_spark, colorida com "tint").
@@ -85,6 +86,19 @@ class WeatherEffect {
         alpha: { start: 0.18, end: 0.08 },
         tint: [0xe6f2ee, 0xd6e8e2],
         frequency: 1400,
+        quantity: 1
+      },
+      [WeatherType.POLLEN]: {
+        x: { min: 0, max: WIDTH },
+        y: { min: 60, max: HEIGHT - 40 },
+        lifespan: { min: 3000, max: 6000 },
+        speedY: { min: -14, max: -4 },
+        speedX: { min: -10, max: 14 },
+        scale: { start: 0.35, end: 0.1 },
+        alpha: { start: 0.9, end: 0 },
+        tint: [0xfff2a0, 0xffd84a, 0xffffff],
+        blendMode: 'ADD',
+        frequency: 180,
         quantity: 1
       },
       [WeatherType.SPARKLES]: {

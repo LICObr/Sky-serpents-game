@@ -12,7 +12,7 @@
  *
  * Para adicionar um novo asset basta incluir uma linha na pasta certa.
  * Imagens geradas por código: veja tools/ (creature_sprites.py,
- * dragon_variants.py, archer_from_image.py).
+ * dragon_variants.py, archer_from_image.py, honey_background.py...).
  * As artes ORIGINAIS que as ferramentas usam ficam em source_art/ (o jogo não
  * carrega nada de lá).
  * -----------------------------------------------------------------------------
@@ -42,7 +42,9 @@ const ASSET_MANIFEST = Object.freeze([
     arvore_0: 'arvore_0.png', arvore_1: 'arvore_1.png',
     bandeira: 'bandeira.png',
     chao: 'chao.png', chao_gelo: 'chao_gelo.png', chao_rosa: 'chao_rosa.png',
-    terra: 'terra.png', terra_gelo: 'terra_gelo.png', terra_rosa: 'terra_rosa.png'
+    terra: 'terra.png', terra_gelo: 'terra_gelo.png', terra_rosa: 'terra_rosa.png',
+    // Floresta do mel (tools/honey_background.py e tools/honey_terrain.py)
+    bg_mel: 'fundo_mel.png', chao_mel: 'chao_mel.png', terra_mel: 'terra_mel.png', platform_mel: 'plataforma_mel.png'
   }),
 
   // Guerreiro
