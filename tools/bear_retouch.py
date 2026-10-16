@@ -23,7 +23,7 @@ from PIL import Image, ImageFilter
 
 FOLDER = Path(__file__).resolve().parent.parent / "assets" / "chefoes" / "urso_polar"
 SHEET = FOLDER / "urso_animacoes.png"
-ORIGINAL = FOLDER / "urso_animacoes_sem_retoque.png"
+ORIGINAL = Path(__file__).resolve().parent.parent / "source_art" / "chefoes" / "urso_polar" / "urso_animacoes_sem_retoque.png"
 META = FOLDER / "urso_animacoes.json"
 INTRO = FOLDER / "urso_intro.png"
 
@@ -118,7 +118,7 @@ def main():
             prev.paste(a, (j * fw, 0), a)
             prev.paste(b, (j * fw, fh), b)
         prev = prev.resize((prev.width * 2, prev.height * 2), Image.NEAREST)
-        prev.save(sys.argv[sys.argv.index("--preview") + 1] if len(sys.argv) > sys.argv.index("--preview") + 1 else FOLDER / "_preview_retoque.png")
+        prev.save(sys.argv[sys.argv.index("--preview") + 1] if len(sys.argv) > sys.argv.index("--preview") + 1 else ORIGINAL.parent / "_preview_retoque.png")
         return
     out.save(SHEET)
     print("folha retocada:", SHEET.name, "(original em", ORIGINAL.name + ")")

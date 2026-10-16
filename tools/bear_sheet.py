@@ -1,7 +1,7 @@
 """
 bear_sheet.py
 -----------------------------------------------------------------------------
-Separa a SPRITE SHEET do Urso Polar (assets/chefoes/urso_polar/urso_sheet.png,
+Separa a SPRITE SHEET do Urso Polar (source_art/chefoes/urso_polar/urso_sheet.png,
 fundo azul-escuro, 12 seções com título e números) em quadros e monta uma
 folha uniforme que o Phaser entende (mesmo formato dos dragões):
 
@@ -28,7 +28,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 
 FOLDER = Path(__file__).resolve().parent.parent / "assets" / "chefoes" / "urso_polar"
-SOURCE = FOLDER / "urso_sheet.png"
+SOURCE_FOLDER = Path(__file__).resolve().parent.parent / "source_art" / "chefoes" / "urso_polar"
+SOURCE = SOURCE_FOLDER / "urso_sheet.png"
 
 BACKGROUND = (8, 15, 20)  # azul quase preto do fundo
 BG_DISTANCE = 34          # diferença mínima da cor do fundo para ser "desenho"
@@ -59,13 +60,13 @@ SECTIONS = [
 
 # Quadros extras da 2ª imagem (fundo azul-claro com degradê): recortados um a
 # um e o fundo é removido por "balde de tinta" a partir das bordas.
-EXTRA_SOURCE = FOLDER / "urso_sheet_extra.png"
+EXTRA_SOURCE = SOURCE_FOLDER / "urso_sheet_extra.png"
 EXTRA_SECTIONS = [
     ("rugindo", [(178, 800, 340, 895), (378, 800, 535, 895), (565, 800, 722, 895), (760, 800, 910, 895)]),
     ("enrolado", [(178, 922, 302, 1006), (330, 922, 458, 1006), (500, 922, 628, 1006), (660, 922, 770, 1006)]),
 ]
 FILL_STEP = 16
-INTRO_SOURCE = FOLDER / "urso_intro_original.png"   # imagem da abertura da fase 4            # diferença máxima entre vizinhos do fundo (degradê suave)
+INTRO_SOURCE = SOURCE_FOLDER / "urso_intro_original.png"   # imagem da abertura da fase 4            # diferença máxima entre vizinhos do fundo (degradê suave)
 
 
 def cut_by_flood_fill(image, box):
@@ -223,7 +224,7 @@ def main():
     print(f"abertura: {cut.size}")
 
     if debug:
-        preview.save(FOLDER / "_preview_recortes.png")
+        preview.save(SOURCE_FOLDER / "_preview_recortes.png")
 
 
 if __name__ == "__main__":

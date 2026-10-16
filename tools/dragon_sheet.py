@@ -1,7 +1,7 @@
 """
 dragon_sheet.py
 -----------------------------------------------------------------------------
-Separa a SPRITE SHEET do dragão (assets/chefoes/dragao_vermelho/dragao_sheet.png)
+Separa a SPRITE SHEET do dragão (source_art/chefoes/dragao_vermelho/dragao_sheet.png)
 em quadros e monta uma folha uniforme que o Phaser entende:
 
   1. cada uma das 12 seções da sheet (voando p/ cima, ataque, morrendo...)
@@ -27,7 +27,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent / "assets" / "chefoes"
-SOURCE = ROOT / "dragao_vermelho" / "dragao_sheet.png"
+SOURCE_FOLDER = Path(__file__).resolve().parent.parent / "source_art" / "chefoes" / "dragao_vermelho"
+SOURCE = SOURCE_FOLDER / "dragao_sheet.png"
 OUTPUTS = {
     # pasta: rotação de matiz (0 = cores originais)
     "dragao_vermelho": 0,
@@ -198,7 +199,7 @@ def main():
     total = sum(len(v) for v in meta["animations"].values())
     print(f"{total} quadros, célula {meta['frameWidth']}x{meta['frameHeight']}px")
     if "--debug" in sys.argv:
-        save_debug(Image.open(SOURCE).convert("RGBA"), animations, ROOT / "dragao_vermelho" / "dragao_sheet_debug.png")
+        save_debug(Image.open(SOURCE).convert("RGBA"), animations, SOURCE_FOLDER / "dragao_sheet_debug.png")
 
 
 if __name__ == "__main__":

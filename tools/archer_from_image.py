@@ -1,7 +1,7 @@
 """
 archer_from_image.py
 -----------------------------------------------------------------------------
-Usa uma IMAGEM PRONTA da arqueira (assets/personagens/arqueira/arqueira_original.png
+Usa uma IMAGEM PRONTA da arqueira (source_art/personagens/arqueira/arqueira_original.png
 — ou .jpg/.webp) como sprite do jogo, sem redesenhar nada:
 
   1. remove o fundo cinza-escuro (inclusive vãos fechados, como dentro do
@@ -24,6 +24,7 @@ from pathlib import Path
 from PIL import Image
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets" / "personagens" / "arqueira"
+SOURCE = Path(__file__).resolve().parent.parent / "source_art" / "personagens" / "arqueira"
 SOURCE_NAMES = ["arqueira_original.png", "arqueira_original.jpg", "arqueira_original.jpeg", "arqueira_original.webp"]
 
 CANVAS = 500
@@ -51,10 +52,10 @@ STRING_WIDTH = 9
 
 def find_source():
     for name in SOURCE_NAMES:
-        path = ASSETS / name
+        path = SOURCE / name
         if path.exists():
             return path
-    sys.exit(f"Salve a imagem em {ASSETS / SOURCE_NAMES[0]} e rode de novo.")
+    sys.exit(f"Salve a imagem em {SOURCE / SOURCE_NAMES[0]} e rode de novo.")
 
 
 def is_background(pixel):
@@ -295,7 +296,7 @@ def main():
         image.save(ASSETS / f"{name}_direita.png")
         image.transpose(Image.FLIP_LEFT_RIGHT).save(ASSETS / f"{name}_esquerda.png")
     if "--debug" in sys.argv:
-        stand.save(ASSETS / "arqueira_debug.png")
+        stand.save(SOURCE / "arqueira_debug.png")
     print(f"Arqueira gerada a partir de {source.name} (olhos pintados: {eyes}).")
 
 

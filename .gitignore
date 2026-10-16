@@ -1,0 +1,19 @@
+# sistema
+.DS_Store
+Thumbs.db
+
+# editores e ferramentas locais
+.idea/
+.vscode/
+.claude/
+
+# python (ferramentas em tools/)
+__pycache__/
+*.pyc
+
+# prévias de depuração geradas pelas ferramentas (--debug / --preview)
+*_debug.png
+_preview_*.png
+
+# dependências (se um dia usar npm)
+node_modules/

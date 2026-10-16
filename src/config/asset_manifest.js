@@ -13,6 +13,8 @@
  * Para adicionar um novo asset basta incluir uma linha na pasta certa.
  * Imagens geradas por código: veja tools/ (creature_sprites.py,
  * dragon_variants.py, archer_from_image.py).
+ * As artes ORIGINAIS que as ferramentas usam ficam em source_art/ (o jogo não
+ * carrega nada de lá).
  * -----------------------------------------------------------------------------
  */
 

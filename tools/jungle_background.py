@@ -9,7 +9,7 @@ claras e apagadas ao longe (NEBLINA), com faixas de névoa e cipós.
 As árvores "dão a volta" nas bordas, então a imagem já emenda sozinha
 (fundo INFINITO) — por isso a fase marca BACKGROUND_SEAMLESS em levels.js.
 
-(Alternativa guardada: assets/cenario/fundo_selva_original.webp)
+(Alternativa guardada: source_art/cenario/fundo_selva_original.webp)
 
     py tools/jungle_background.py
 -----------------------------------------------------------------------------
