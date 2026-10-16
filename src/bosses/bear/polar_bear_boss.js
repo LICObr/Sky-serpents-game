@@ -6,7 +6,7 @@
  *   - BearBrain     → máquina de estados (o que fazer e qual animação mostrar)
  *   - IceBallAttack → bolas de gelo que CONGELAM (não tiram coração)
  *   - IceWaves      → ondas de gelo do terremoto (pule por cima!)
- *   - Icicles       → pinos de gelo caindo do céu (só abaixo de 50% da vida)
+ *   - CeilingDrops  → pinos de gelo caindo do céu (só abaixo de 50% da vida)
  *   - ajudantes     → depois de perder 20% da vida, chama morceguinhos e slimes de gelo
  *
  * Esta classe sabe EXECUTAR cada movimento (andar, investir, pular, pisar no
@@ -77,7 +77,8 @@ class PolarBearBoss extends Boss {
 
     this.#attack = new AttackClass(this, projectiles);
     this.#waves = new IceWaves(scene, arena, target, (x, y, n) => this.snowPuff(x, y, n));
-    this.#icicles = new Icicles(scene, arena, target, (x, y, n) => this.snowPuff(x, y, n));
+    this.#icicles = new CeilingDrops(scene, arena, target, (x, y, n) => this.snowPuff(x, y, n),
+      { texture: FxTextureKeys.ICICLE, cfg: GameSettings.POLAR_BEAR.ICICLES });
     this.#brain = new BearBrain(this);
   }
 
