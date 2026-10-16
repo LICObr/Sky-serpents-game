@@ -168,6 +168,7 @@ const GameSettings = deepFreeze({
 
   BOSS: {
     DEPTH: 1,
+    NEXT_BOSS_DELAY_MS: 900,    // luta em etapas: tempo até o próximo chefão aparecer
     // Ao apanhar o chefão fica meio transparente por um tempinho. É só visual:
     // NÃO dá imunidade (antes dava, e as flechas do especial contavam como uma só)
     HIT_BLINK_FRAMES: 30,
@@ -326,6 +327,50 @@ const GameSettings = deepFreeze({
     }
   },
 
+  // Colmeia (fase 5, 1ª etapa): parada em cima do desenho do cenário — veja hive_boss.js
+  // (a posição na arena vem de assets/chefoes/colmeia/colmeia.json)
+  HIVE: {
+    HITBOX: { LEFT: 0.12, RIGHT: 0.88, TOP: 0.1, BOTTOM: 0.92 }, // parte que apanha (proporção da imagem)
+    MELEE_REACH: 70,            // alcance da espada até a BORDA da colmeia
+    FIRST_WAVE_MS: 1500,        // a primeira leva de vespas sai logo depois que a luta começa
+    BEE_STAGGER_MS: 250,        // tempo entre uma vespa e outra da mesma leva
+    HIT_FLASH_MS: 70,
+    HIT_SHAKE: { DURATION_MS: 100, INTENSITY: 0.004 },
+    DEFEAT_MS: 1200,            // treme e escurece antes da rainha sair
+    DEFEAT_TINT: 0x4a4a4a
+  },
+
+  // Gotas de mel caindo do teto na fase 5 (colmeia e rainha), como o gelo do urso
+  HONEY_DROPS: {
+    FIRST_MS: 2500,
+    INTERVAL_MS: { MIN: 3000, MAX: 6000 },
+    PER_RAIN: { MIN: 1, MAX: 2 },
+    STAGGER_MS: 220,
+    WARNING_MS: 650,            // tremendo lá em cima antes de cair
+    FALL_SPEED: 120,
+    START_Y: 0,
+    SCALE: 1.3
+  },
+
+  // Abelha Rainha (fase 5, 2ª etapa): voa como o dragão — veja queen_bee_boss.js
+  QUEEN_BEE: {
+    START_X: 416,               // sai pela boca da colmeia
+    START_Y: 306,
+    DISPLAY_HEIGHT: 150,        // altura na tela
+    BODY_RATIO: { WIDTH: 0.6, HEIGHT: 0.55 }, // hitbox em relação ao quadro
+    MELEE_REACH: 120,
+    MOUTH: { X: 0.18, Y: 0.55 },// cabeça no quadro (proporção), olhando para a ESQUERDA
+    ATTACK_POSE_MS: 260,
+    HIT_FLASH_MS: 80,
+    HIT_SHAKE: { DURATION_MS: 120, INTENSITY: 0.005 },
+    DEATH_MS: 1200,
+    // Clipes da folha (tools/bee_boss_sprites.py)
+    CLIPS: {
+      voando:   { FPS: 16, REPEAT: -1 },
+      atacando: { FPS: 1,  REPEAT: 0 }
+    }
+  },
+
   SERPENT: {
     START_X: 650,               // relativo ao início da arena
     START_Y: 200,
@@ -352,7 +397,12 @@ const GameSettings = deepFreeze({
       bola_fogo:      { GLOW: 0xff7a1a, SPARKS: [0xfff1a8, 0xffb347, 0xff6a00, 0xd93a00] },
       bola_fogo_azul: { GLOW: 0x3aa0ff, SPARKS: [0xe6f6ff, 0x8fd0ff, 0x3a8cff, 0x1f4fd9] },
       bola_gelo:      { GLOW: 0x7fe3ff, SPARKS: [0xffffff, 0xc8f4ff, 0x7fdcff, 0x4fb6e6] },
-      bola_rosa:      { GLOW: 0xff4fc3, SPARKS: [0xffe0f5, 0xff9ad9, 0xff4fc3, 0xb02a8c] }
+      bola_rosa:      { GLOW: 0xff4fc3, SPARKS: [0xffe0f5, 0xff9ad9, 0xff4fc3, 0xb02a8c] },
+      espirro_mel:    { GLOW: null, SPARKS: [0xffd84a, 0xf2a40c, 0xd98a00] } // mel não brilha
+    },
+    // Projéteis com arte diferente da bola de fogo (o resto usa os valores acima)
+    ART: {
+      espirro_mel: { SCALE: 0.45, CORE_ORIGIN: { X: 0.74, Y: 0.5 }, ART_DIRECTION_RAD: 0, BODY_SIZE: 30 }
     },
     // A arte da bola de fogo tem o núcleo embaixo à esquerda e o rastro
     // subindo para a direita. O sprite gira em torno do núcleo para que o

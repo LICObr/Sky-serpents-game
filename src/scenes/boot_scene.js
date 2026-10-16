@@ -21,7 +21,11 @@ class BootScene extends Phaser.Scene {
     const bar = this.add.rectangle(x, y, 0, 16, 0xffe066).setOrigin(0, 0.5);
 
     this.load.on('progress', progress => { bar.width = barWidth * progress; });
-    AssetLoader.load(this, [...DragonSpriteSheets.manifestEntries(), ...BearSpriteSheet.manifestEntries()]);
+    AssetLoader.load(this, [
+      ...DragonSpriteSheets.manifestEntries(),
+      ...BearSpriteSheet.manifestEntries(),
+      ...QueenBeeSpriteSheet.manifestEntries()
+    ]);
   }
 
   create() {
@@ -30,8 +34,10 @@ class BootScene extends Phaser.Scene {
 
     // Folhas de animação dos dragões (voar, atacar, morrer...)
     DragonSpriteSheets.registerAll(this);
-    // ...e do Urso Polar (andar, pular, pisar no chão, morrer...)
+    // ...do Urso Polar (andar, pular, pisar no chão, morrer...)
     BearSpriteSheet.registerAll(this);
+    // ...e da Abelha Rainha (voando, atacando)
+    QueenBeeSpriteSheet.registerAll(this);
 
     // Fundos que rolam: gera versões sem corte na emenda (loop infinito)
     const { DEFAULT_TEXTURE, PHASES, SEAMLESS_BLEND } = GameSettings.BACKGROUND;

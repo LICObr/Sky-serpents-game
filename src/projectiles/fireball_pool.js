@@ -13,7 +13,8 @@
  *   - brilho (aura) pulsante atrás da bola, com mistura aditiva
  *   - chama tremulando: tamanho e ângulo variam um pouco o tempo todo
  *   - rastro de faíscas (partículas) que se apagam ao ficar para trás
- * Cada tipo de projétil tem suas cores (GameSettings.FIREBALL.COLORS).
+ * Cada tipo de projétil tem suas cores (GameSettings.FIREBALL.COLORS) e, se a
+ * arte for diferente da bola de fogo, sua escala/núcleo/direção (FIREBALL.ART).
  * -----------------------------------------------------------------------------
  */
 class FireballPool extends ProjectilePool {
@@ -29,23 +30,26 @@ class FireballPool extends ProjectilePool {
   configure(fireball, angleRad) {
     const cfg = GameSettings.FIREBALL;
     const frame = fireball.frame;
-    const colors = cfg.COLORS[fireball.texture.key] || cfg.COLORS.bola_fogo;
+    const key = fireball.texture.key;
+    const colors = cfg.COLORS[key] || cfg.COLORS.bola_fogo;
+    const art = { ...cfg, ...cfg.ART[key] };
 
-    fireball.setScale(cfg.SCALE);
-    fireball.setOrigin(cfg.CORE_ORIGIN.X, cfg.CORE_ORIGIN.Y);
+    fireball.setScale(art.SCALE);
+    fireball.setOrigin(art.CORE_ORIGIN.X, art.CORE_ORIGIN.Y);
     fireball.setDepth(GameSettings.BOSS.DEPTH + 0.4);
 
-    const baseRotation = angleRad - cfg.ART_DIRECTION_RAD;
+    const baseRotation = angleRad - art.ART_DIRECTION_RAD;
     fireball.setRotation(baseRotation);
     fireball.setData('baseRotation', baseRotation);
+    fireball.setData('baseScale', art.SCALE);
     fireball.setData('seed', Math.random() * 1000);
     fireball.setData('sparkColors', colors.SPARKS);
 
     // Hitbox quadrada centrada no núcleo (coordenadas da imagem original)
-    const coreX = frame.realWidth * cfg.CORE_ORIGIN.X;
-    const coreY = frame.realHeight * cfg.CORE_ORIGIN.Y;
-    fireball.body.setSize(cfg.BODY_SIZE, cfg.BODY_SIZE, false);
-    fireball.body.setOffset(coreX - cfg.BODY_SIZE / 2, coreY - cfg.BODY_SIZE / 2);
+    const coreX = frame.realWidth * art.CORE_ORIGIN.X;
+    const coreY = frame.realHeight * art.CORE_ORIGIN.Y;
+    fireball.body.setSize(art.BODY_SIZE, art.BODY_SIZE, false);
+    fireball.body.setOffset(coreX - art.BODY_SIZE / 2, coreY - art.BODY_SIZE / 2);
 
     this.#attachGlow(fireball, colors.GLOW);
     this.#attachTrail(fireball);
@@ -57,11 +61,12 @@ class FireballPool extends ProjectilePool {
     const seed = fireball.getData('seed');
 
     const flicker = Math.sin(time * 0.031 + seed) * 0.6 + (Math.random() - 0.5) * 0.8;
-    fireball.setScale(cfg.SCALE * (1 + flicker * cfg.FLICKER_SCALE));
+    fireball.setScale(fireball.getData('baseScale') * (1 + flicker * cfg.FLICKER_SCALE));
     fireball.setRotation(fireball.getData('baseRotation') +
       Phaser.Math.DegToRad(Math.sin(time * 0.02 + seed) * cfg.FLICKER_ANGLE_DEG));
 
     const glow = fireball.getData('glow');
+    if (!glow || !glow.visible) return; // projétil sem brilho (ex.: espirro de mel)
     glow.setPosition(fireball.x, fireball.y);
     glow.setScale(cfg.GLOW_SCALE * (1 + Math.sin(time * 0.025 + seed) * 0.18));
   }
@@ -77,9 +82,13 @@ class FireballPool extends ProjectilePool {
     }
   }
 
-  /** Aura brilhante atrás da bola (reaproveitada junto com a bola). */
+  /** Aura brilhante atrás da bola (reaproveitada junto com a bola). Sem cor = sem brilho. */
   #attachGlow(fireball, color) {
     let glow = fireball.getData('glow');
+    if (color === null) {
+      if (glow) glow.setVisible(false);
+      return;
+    }
     if (!glow) {
       glow = this.scene.add.image(fireball.x, fireball.y, FxTextureKeys.GLOW)
         .setBlendMode(Phaser.BlendModes.ADD)

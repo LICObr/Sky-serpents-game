@@ -8,6 +8,7 @@
  *   personagens/guerreiro | personagens/arqueira
  *   inimigos/slime | inimigos/morcego | inimigos/fantasma
  *   chefoes/dragao_vermelho | chefoes/dragao_rosa | chefoes/serpente_glacial | chefoes/urso_polar
+ *   chefoes/colmeia | chefoes/abelha_rainha
  *   cenario | itens | hud | audio
  *
  * Para adicionar um novo asset basta incluir uma linha na pasta certa.
@@ -110,6 +111,10 @@ const ASSET_MANIFEST = Object.freeze([
     bola_gelo: 'bola_gelo.png',
     serpent_intro: 'serpente_intro.png'
   }),
+  // Fase 5 (tools/bee_boss_sprites.py; a folha da rainha é carregada por QueenBeeSpriteSheet)
+  ...imagesIn('chefoes/colmeia', { hive: 'colmeia.png', hive_scene: 'colmeia_cenario.png' }),
+  { type: 'json', key: 'hive_layout', path: 'assets/chefoes/colmeia/colmeia.json' },
+  ...imagesIn('chefoes/abelha_rainha', { gota_mel: 'gota_mel.png', espirro_mel: 'espirro_mel.png' }),
 
   // Itens e HUD
   ...imagesIn('itens', { pocao: 'pocao.png', moeda: 'moeda.png' }),

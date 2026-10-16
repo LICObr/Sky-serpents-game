@@ -2,8 +2,10 @@
  * boss_types.js
  * -----------------------------------------------------------------------------
  * Chefões do final de cada fase. KIND define a classe do chefão
- * (DragonBoss, SerpentBoss ou PolarBearBoss) e ATTACK_STYLE o seu PODER ESPECIAL
- * (subclasse de BossAttack — veja boss_factory.js).
+ * (DragonBoss, SerpentBoss, PolarBearBoss, HiveBoss ou QueenBeeBoss) e
+ * ATTACK_STYLE o seu PODER ESPECIAL (subclasse de BossAttack — veja
+ * boss_factory.js). NEXT_BOSS faz uma luta em etapas: quando este chefão
+ * é derrotado, o próximo aparece (ex.: colmeia → abelha rainha).
  *
  * MAX_HP é a vida REAL do chefão (não é multiplicada por nada).
  * Referência: cada golpe de espada tira 15 e cada flecha tira 12.
@@ -13,14 +15,18 @@
 const BossKind = Object.freeze({
   DRAGON: 'DRAGON',
   SERPENT: 'SERPENT',
-  BEAR: 'BEAR'
+  BEAR: 'BEAR',
+  HIVE: 'HIVE',
+  BEE: 'BEE'
 });
 
 const BossTypeId = Object.freeze({
   FIRE_DRAGON: 'FIRE_DRAGON',
   ICE_SERPENT: 'ICE_SERPENT',
   MYSTIC_DRAGON: 'MYSTIC_DRAGON',
-  POLAR_BEAR: 'POLAR_BEAR'
+  POLAR_BEAR: 'POLAR_BEAR',
+  HIVE: 'HIVE',
+  QUEEN_BEE: 'QUEEN_BEE'
 });
 
 /** Efeitos que um projétil/contato pode causar no jogador além do dano. */
@@ -159,6 +165,57 @@ const BOSS_TYPES = deepFreeze({
       SPEED: 270,
       TEXTURE: 'bola_gelo',
       EFFECT: ProjectileEffect.FREEZE
+    }
+  },
+
+  // Colmeia (fase 5): chefão PARADO em cima do desenho do cenário. Perde vida
+  // apanhando e solta as VESPAS do jogo para se defender. Quando a vida acaba,
+  // sai a Abelha Rainha.
+  [BossTypeId.HIVE]: {
+    ID: BossTypeId.HIVE,
+    KIND: BossKind.HIVE,
+    NAME: 'Colmeia',
+    POWER: 'Vespas de defesa',
+    TEXTURE: 'hive',
+    LAYOUT: 'hive_layout',      // onde ela fica na arena (colmeia.json)
+    MAX_HP: 250,                // ~17 golpes de espada ou ~21 flechas
+    SPEED: 0,
+    NEXT_BOSS: BossTypeId.QUEEN_BEE,
+    SWARM: {
+      BEE_TYPE: 'WASP',         // as vespas que já existem no jogo
+      TOTAL: 50,                // vespas guardadas na colmeia
+      INTERVAL_MS: { MIN: 3000, MAX: 8000 },  // tempo sorteado entre uma leva e outra
+      PER_WAVE: { MIN: 2, MAX: 4 },
+      MAX_ALIVE: 8              // no máximo 8 voando ao mesmo tempo
+    }
+  },
+
+  // Abelha Rainha: sai da colmeia. Voa como o dragão e cospe mel, que gruda
+  // (tira coração e deixa o jogador lento).
+  [BossTypeId.QUEEN_BEE]: {
+    ID: BossTypeId.QUEEN_BEE,
+    KIND: BossKind.BEE,
+    NAME: 'Abelha Rainha',
+    POWER: 'Espirros de mel',
+    ATTACK_STYLE: 'RADIAL_BURST',
+    MAX_HP: 200,                // ~14 golpes de espada ou ~17 flechas
+    SPEED: 190,
+    SHOT: {
+      CHANCE_PERCENT: 2,
+      SPEED: 240,
+      TEXTURE: 'espirro_mel',
+      AIMED: true,
+      AIM_SPREAD_DEG: 20,
+      EFFECT: ProjectileEffect.SLOW
+    },
+    SPECIAL: {
+      HP_RATIO_THRESHOLD: 0.8,
+      CHANCE_PERCENT: 30,
+      INTERVAL_MS: 5000,
+      PROJECTILES: 10,
+      SPEED: 190,
+      TEXTURE: 'espirro_mel',
+      EFFECT: ProjectileEffect.SLOW
     }
   }
 });

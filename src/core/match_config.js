@@ -37,7 +37,7 @@ class MatchConfig {
   get level()            { return LEVELS[this.#levelIndex]; }
   get levelIndex()       { return this.#levelIndex; }
   get difficulty()       { return DIFFICULTIES[this.#difficultyId]; }
-  get boss()             { return this.#boss; }
+  get boss()             { return this.#boss; } // o (primeiro) chefão da arena
   get hasBoss()          { return this.#boss !== null; }
   get playerHearts()     { return this.difficulty.PLAYER_HEARTS; }
   get potionDelayMs()    { return this.difficulty.POTION_DELAY_MS; }
@@ -52,6 +52,11 @@ class MatchConfig {
   /** Vida de um bicho: sempre a mesma em qualquer fase (só muda de bicho para bicho). */
   enemyHp(baseHp) {
     return baseHp;
+  }
+
+  /** Estatísticas de QUALQUER chefão ajustadas à fase (ex.: o próximo de uma luta em etapas). */
+  bossStats(typeId) {
+    return MatchConfig.#scaleBoss(BOSS_TYPES[typeId], this.challenge);
   }
 
   /** Velocidade de um inimigo comum ajustada à dificuldade da fase. */
@@ -75,19 +80,22 @@ class MatchConfig {
 
   /** Aplica os multiplicadores da dificuldade DA FASE sobre o chefão base (a vida não muda). */
   static #scaleBoss(base, challenge) {
-    return deepFreeze({
-      ...base,
-      SPEED: base.SPEED * challenge.BOSS_SPEED,
-      SHOT: {
+    const stats = { ...base, SPEED: base.SPEED * challenge.BOSS_SPEED };
+    // (a colmeia não atira: não tem SHOT nem SPECIAL)
+    if (base.SHOT) {
+      stats.SHOT = {
         ...base.SHOT,
         CHANCE_PERCENT: base.SHOT.CHANCE_PERCENT * challenge.SHOT_CHANCE,
         SPEED: base.SHOT.SPEED * challenge.PROJECTILE_SPEED
-      },
-      SPECIAL: {
+      };
+    }
+    if (base.SPECIAL) {
+      stats.SPECIAL = {
         ...base.SPECIAL,
         SPEED: base.SPECIAL.SPEED * challenge.PROJECTILE_SPEED,
         INTERVAL_MS: base.SPECIAL.INTERVAL_MS * challenge.SPECIAL_INTERVAL
-      }
-    });
+      };
+    }
+    return deepFreeze(stats);
   }
 }

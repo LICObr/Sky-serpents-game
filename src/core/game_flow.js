@@ -22,7 +22,10 @@ class GameFlow {
     this.#scene = scene;
     this.#match = match;
     eventBus.on(GameEvents.PLAYER_DIED, () => this.gameOver());
-    eventBus.on(GameEvents.BOSS_DEFEATED, () => this.victory(`${this.#match.boss.NAME} foi derrotado`));
+    // Luta em etapas (NEXT_BOSS): a vitória só vem no último chefão
+    eventBus.on(GameEvents.BOSS_DEFEATED, boss => {
+      if (!boss.stats.NEXT_BOSS) this.victory(`Chefão derrotado: ${boss.name}`);
+    });
   }
 
   /** true depois que a partida terminou. */

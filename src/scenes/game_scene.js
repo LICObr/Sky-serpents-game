@@ -9,6 +9,7 @@
  *   1. percurso com rolagem lateral (buracos, bichos, poções, checkpoints)
  *   2. ao entrar na arena, ela fecha e o CHEFÃO aparece
  *      (fases ainda sem chefão terminam numa BANDEIRA de chegada)
+ *      Luta em etapas: se o chefão tem NEXT_BOSS, o próximo aparece depois dele
  *   3. chefão derrotado / bandeira → próxima fase | sem corações → game over
  *
  * Pausa: P e a janela perder o foco abrem a
@@ -60,6 +61,8 @@ class GameScene extends Phaser.Scene {
 
     // Mundo (a ordem de criação define o que fica desenhado por cima)
     this.#background = new ParallaxBackground(this, level.BACKGROUND_TINT, level.BACKGROUND_TEXTURE);
+    // Cenário próprio da arena (ex.: a imagem inteira da colmeia na fase 5)
+    if (level.ARENA && level.ARENA.BACKDROP) this.add.image(level.ARENA_START_X, 0, level.ARENA.BACKDROP).setOrigin(0, 0);
     this.#levelMap = new LevelMap(this, level);
     new WeatherEffect(this, TERRAIN_THEMES[level.TERRAIN].WEATHER); // neve, brasas, brilhos, neblina, pólen
     this.#setupWorldBounds();
@@ -86,8 +89,13 @@ class GameScene extends Phaser.Scene {
     new HeartsHUD(this, this.#player.health.maxHearts, this.#eventBus);
     new CoinHUD(this, this.#eventBus);
     this.#specialHud = new SpecialHUD(this, this.#player);
-    // Chefão chamando bichos (ex.: morceguinhos do urso)
+    // Chefão chamando bichos (ex.: morceguinhos do urso, vespas da colmeia)
     this.#eventBus.on(GameEvents.BOSS_SUMMON, (spawn, onSpawned) => onSpawned(this.#enemies.spawnEnemy(spawn)));
+    // Luta em etapas: derrotou um chefão que tem "próximo" → ele aparece
+    this.#eventBus.on(GameEvents.BOSS_DEFEATED, boss => {
+      if (!boss.stats.NEXT_BOSS) return;
+      this.time.delayedCall(GameSettings.BOSS.NEXT_BOSS_DELAY_MS, () => this.#spawnBoss(this.#match.bossStats(boss.stats.NEXT_BOSS)));
+    });
     // Cada bicho derrotado adianta a recarga do especial
     this.#eventBus.on(GameEvents.ENEMY_DEFEATED,
       () => this.#player.special.reduceCooldown(GameSettings.SPECIAL.KILL_REDUCTION_MS));
@@ -127,19 +135,21 @@ class GameScene extends Phaser.Scene {
     this.#fireballs.update(time);
   }
 
-  /** Fecha a arena e chama o chefão. */
+  /** Fecha a arena e chama o (primeiro) chefão. */
   #startBossFight() {
     this.#arena.lock();
     this.#enemies.stopWaves(); // na arena é só o chefão
     this.#checkpoints.set(this.#arena.respawnX);
-
-    this.#boss = BossFactory.create(
-      this, this.#match.boss, this.#arena, this.#player, this.#eventBus, this.#fireballs);
-    this.#combat.register(this.#boss, this.#boss.hurtsOnContact);
     this.#potions.startArenaSpawning(this.#levelMap.arenaPlatforms, this.#match.potionDelayMs);
+    this.#spawnBoss(this.#match.boss);
+  }
 
+  /** Cria um chefão, coloca no combate e mostra o nome dele. */
+  #spawnBoss(stats) {
+    this.#boss = BossFactory.create(this, stats, this.#arena, this.#player, this.#eventBus, this.#fireballs);
+    this.#combat.register(this.#boss, this.#boss.hurtsOnContact);
     this.#eventBus.emit(GameEvents.BOSS_FIGHT_STARTED, this.#boss);
-    this.#banner.show('CHEFAO!', `${this.#boss.name} — ${this.#match.boss.POWER}`);
+    this.#banner.show('CHEFAO!', `${this.#boss.name} — ${stats.POWER}`);
   }
 
   /** Chegou na bandeira: fase concluída. */

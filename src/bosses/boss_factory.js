@@ -2,15 +2,18 @@
  * boss_factory.js
  * -----------------------------------------------------------------------------
  * Cria o chefão certo (padrão "Factory"): escolhe a CLASSE pelo tipo
- * (dragão, serpente ou urso) e o PODER ESPECIAL pelo estilo de ataque.
- * Para um chefão novo: crie a subclasse e registre aqui.
+ * (dragão, serpente, urso, colmeia ou abelha) e o PODER ESPECIAL pelo estilo
+ * de ataque (a colmeia não tem). Para um chefão novo: crie a subclasse e
+ * registre aqui.
  * -----------------------------------------------------------------------------
  */
 class BossFactory {
   static #bossClasses = Object.freeze({
     [BossKind.DRAGON]: DragonBoss,
     [BossKind.SERPENT]: SerpentBoss,
-    [BossKind.BEAR]: PolarBearBoss
+    [BossKind.BEAR]: PolarBearBoss,
+    [BossKind.HIVE]: HiveBoss,
+    [BossKind.BEE]: QueenBeeBoss
   });
 
   static #attackClasses = Object.freeze({
@@ -35,9 +38,9 @@ class BossFactory {
    */
   static create(scene, stats, arena, target, eventBus, projectiles) {
     const BossClass = BossFactory.#bossClasses[stats.KIND];
-    const AttackClass = BossFactory.#attackClasses[stats.ATTACK_STYLE];
+    const AttackClass = stats.ATTACK_STYLE ? BossFactory.#attackClasses[stats.ATTACK_STYLE] : null;
     if (!BossClass) throw new RangeError(`Tipo de chefão desconhecido: ${stats.KIND}`);
-    if (!AttackClass) throw new RangeError(`Estilo de ataque desconhecido: ${stats.ATTACK_STYLE}`);
+    if (stats.ATTACK_STYLE && !AttackClass) throw new RangeError(`Estilo de ataque desconhecido: ${stats.ATTACK_STYLE}`);
 
     return new BossClass(scene, stats, arena, target, eventBus, projectiles, AttackClass);
   }

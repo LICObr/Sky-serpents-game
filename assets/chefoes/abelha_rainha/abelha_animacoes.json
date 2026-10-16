@@ -1,0 +1,16 @@
+{
+  "frameWidth": 398,
+  "frameHeight": 320,
+  "facesRight": false,
+  "animations": {
+    "voando": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "atacando": [
+      4
+    ]
+  }
+}
