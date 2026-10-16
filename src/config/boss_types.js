@@ -5,8 +5,9 @@
  * (DragonBoss, SerpentBoss ou PolarBearBoss) e ATTACK_STYLE o seu PODER ESPECIAL
  * (subclasse de BossAttack — veja boss_factory.js).
  *
- * Valores aqui são os da dificuldade NORMAL; difficulties.js aplica os
- * multiplicadores através do MatchConfig.
+ * MAX_HP é a vida REAL do chefão (não é multiplicada por nada).
+ * Referência: cada golpe de espada tira 15 e cada flecha tira 12.
+ * Velocidade e tiros ainda sobem um pouco de fase em fase (CHALLENGE em levels.js).
  * -----------------------------------------------------------------------------
  */
 const BossKind = Object.freeze({
@@ -38,7 +39,7 @@ const BOSS_TYPES = deepFreeze({
     POWER: 'Chuva de fogo',
     ATTACK_STYLE: 'RADIAL_BURST',
     SPRITE_SHEET: 'dragon_red',      // folha de animação (dragon_sprite_sheets.js)
-    MAX_HP: 625,       // x0.8 na fase 1 = 500 de vida
+    MAX_HP: 250,              // ~17 golpes de espada ou ~21 flechas
     SPEED: 200,
     SHOT: {
       CHANCE_PERCENT: 3,        // chance por frame
@@ -66,7 +67,7 @@ const BOSS_TYPES = deepFreeze({
     NAME: 'Serpente Glacial',
     POWER: 'Gelo e investida',
     ATTACK_STYLE: 'DOUBLE_RING',
-    MAX_HP: 1000,
+    MAX_HP: 250,              // igual ao Dragão Vermelho
     SPEED: 170,
     SCALE: 0.17,
     SEGMENTS: 14,
@@ -106,7 +107,7 @@ const BOSS_TYPES = deepFreeze({
     POWER: 'Espiral mágica',
     ATTACK_STYLE: 'SPIRAL',
     SPRITE_SHEET: 'dragon_pink',
-    MAX_HP: 1200,
+    MAX_HP: 200,              // o mais curto: ~14 golpes de espada ou ~17 flechas
     SPEED: 230,
     SHOT: {
       CHANCE_PERCENT: 3,
@@ -137,7 +138,7 @@ const BOSS_TYPES = deepFreeze({
     NAME: 'Urso Polar',
     POWER: 'Gelo e terremoto',
     ATTACK_STYLE: 'ICE_BALLS',
-    MAX_HP: 550,
+    MAX_HP: 250,              // igual ao Dragão Vermelho
     SPEED: 110,
     SCALE: 1.45,
     CONTACT_DAMAGE: true,

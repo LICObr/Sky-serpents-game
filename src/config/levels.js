@@ -19,10 +19,10 @@
  *   - CHECKPOINTS: pontos de renascimento (x)
  *   - ARENA:       tela final com o CHEFÃO (plataformas em coordenadas
  *                  relativas ao início da arena)
- *   - CHALLENGE:   progressão da fase (multiplicadores sobre os valores base
- *                  do CHEFÃO e da velocidade dos bichos), subindo aos poucos
- *                  de uma fase para a outra. A VIDA dos bichos NÃO muda entre
- *                  fases: cada tipo de bicho tem sempre a mesma vida.
+ *   - CHALLENGE:   progressão da fase (multiplicadores sobre a velocidade e os
+ *                  tiros do CHEFÃO e a velocidade dos bichos), subindo aos poucos
+ *                  de uma fase para a outra. A VIDA não muda: a dos bichos fica
+ *                  em enemy_types.js e a dos chefões em boss_types.js.
  *
  * Medidas úteis para criar fases (com a física atual):
  *   - o pulo alcança ~100px de altura e ~85px de distância
@@ -47,7 +47,7 @@ const LEVELS = deepFreeze([
     BACKGROUND_TINT: 0xffffff,  // cenário original
     CHALLENGE: {
       ENEMY_SPEED: 0.9,
-      BOSS_HP: 0.8, BOSS_SPEED: 0.9,
+      BOSS_SPEED: 0.9,
       SHOT_CHANCE: 0.75, PROJECTILE_SPEED: 0.9, SPECIAL_INTERVAL: 1.25
     },
     TERRAIN: TerrainThemeId.MEADOW,
@@ -101,7 +101,7 @@ const LEVELS = deepFreeze([
     BACKGROUND_TINT: 0xc8dcff,  // tom gelado
     CHALLENGE: {
       ENEMY_SPEED: 1,
-      BOSS_HP: 1, BOSS_SPEED: 1,
+      BOSS_SPEED: 1,
       SHOT_CHANCE: 1, PROJECTILE_SPEED: 1, SPECIAL_INTERVAL: 1
     },
     TERRAIN: TerrainThemeId.ICE,
@@ -156,7 +156,7 @@ const LEVELS = deepFreeze([
     BACKGROUND_TINT: 0xffc8ec,  // tom mágico
     CHALLENGE: {
       ENEMY_SPEED: 1.1,
-      BOSS_HP: 1.1, BOSS_SPEED: 1.1,
+      BOSS_SPEED: 1.1,
       SHOT_CHANCE: 1.15, PROJECTILE_SPEED: 1.1, SPECIAL_INTERVAL: 0.85
     },
     TERRAIN: TerrainThemeId.MYSTIC,
@@ -214,7 +214,7 @@ const LEVELS = deepFreeze([
     TERRAIN: TerrainThemeId.JUNGLE_ICE,
     CHALLENGE: {
       ENEMY_SPEED: 1.1,
-      BOSS_HP: 1.15, BOSS_SPEED: 1.1,
+      BOSS_SPEED: 1.1,
       SHOT_CHANCE: 1.15, PROJECTILE_SPEED: 1.1, SPECIAL_INTERVAL: 0.85
     },
     ARENA_START_X: 4000,

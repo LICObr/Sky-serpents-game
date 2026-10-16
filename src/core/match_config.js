@@ -4,7 +4,8 @@
  * Configuração de UMA partida: junta personagem + fase + dificuldade e
  * entrega os valores finais já calculados:
  *   - dificuldade do MENU  → vidas e frequência de poções
- *   - progressão da FASE   → força do chefão e velocidade dos bichos
+ *   - progressão da FASE   → velocidade/tiros do chefão e velocidade dos bichos
+ *     (a VIDA do chefão é a de boss_types.js, sem multiplicador)
  *
  * As classes do jogo recebem um MatchConfig e não precisam saber como os
  * multiplicadores funcionam.
@@ -72,11 +73,10 @@ class MatchConfig {
     return new MatchConfig({ ...this.toSceneData(), levelIndex: this.#levelIndex + 1 });
   }
 
-  /** Aplica os multiplicadores da dificuldade DA FASE sobre o chefão base. */
+  /** Aplica os multiplicadores da dificuldade DA FASE sobre o chefão base (a vida não muda). */
   static #scaleBoss(base, challenge) {
     return deepFreeze({
       ...base,
-      MAX_HP: Math.round(base.MAX_HP * challenge.BOSS_HP),
       SPEED: base.SPEED * challenge.BOSS_SPEED,
       SHOT: {
         ...base.SHOT,
