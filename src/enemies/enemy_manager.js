@@ -2,7 +2,7 @@
  * enemy_manager.js
  * -----------------------------------------------------------------------------
  * Cuida de todos os bichos de uma fase:
- *   - cria os bichos fixos da fase (ENEMIES em levels.js);
+ *   - cria os bichos fixos da fase (ENEMIES no arquivo da fase);
  *   - SORTEIA bichos extras em lugares aleatórios a cada partida
  *     (RANDOM_ENEMIES: quem anda só nasce em chão firme, quem voa no céu);
  *   - solta ONDAS: de tempos em tempos surge um bicho à frente do jogador,

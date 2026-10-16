@@ -7,7 +7,7 @@
  *
  * MAX_HP é a vida REAL do chefão (não é multiplicada por nada).
  * Referência: cada golpe de espada tira 15 e cada flecha tira 12.
- * Velocidade e tiros ainda sobem um pouco de fase em fase (CHALLENGE em levels.js).
+ * Velocidade e tiros ainda sobem um pouco de fase em fase (CHALLENGE no arquivo da fase).
  * -----------------------------------------------------------------------------
  */
 const BossKind = Object.freeze({

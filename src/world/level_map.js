@@ -1,7 +1,7 @@
 /**
  * level_map.js
  * -----------------------------------------------------------------------------
- * Monta o TERRENO de uma fase a partir dos dados de levels.js:
+ * Monta o TERRENO de uma fase a partir dos dados da fase (src/levels/):
  *   - trechos de chão em alturas diferentes (morros/paredões)
  *   - RAMPAS (subidas e descidas) entre alturas
  *   - buracos (espaços sem chão)

@@ -18,7 +18,8 @@
     carregadas antes dele (principalmente a classe "pai" de uma herança).
 
     Estrutura de src/:
-      config/      configurações (personagens, bichos, chefões, fases...)
+      config/      configurações (personagens, bichos, chefões, terrenos...)
+      levels/      as FASES (uma por arquivo) e a lista da campanha
       core/        utilitários, classe base GameEntity, combate
       ui/          interface (HUD, menu, telas)
       world/       cenário (mapa, fundo, efeitos, música)
@@ -30,6 +31,7 @@
       bosses/      base dos chefões
         dragon/    tudo dos DRAGÕES (vermelho e rosa)
         serpent/   tudo da SERPENTE GLACIAL
+        bear/      tudo do URSO POLAR
       items/       poções
       scenes/      carregamento, menu e fase
       main.js      inicia o Phaser
@@ -41,9 +43,16 @@
   <script src="src/config/enemy_types.js"></script>
   <script src="src/config/boss_types.js"></script>
   <script src="src/config/terrain_themes.js"></script>
-  <script src="src/config/levels.js"></script>
   <script src="src/config/difficulties.js"></script>
   <script src="src/config/asset_manifest.js"></script>
+
+  <!-- Fases (uma por arquivo; levels.js monta a lista da campanha) -->
+  <script src="src/levels/level_helpers.js"></script>
+  <script src="src/levels/level_01.js"></script>
+  <script src="src/levels/level_02.js"></script>
+  <script src="src/levels/level_03.js"></script>
+  <script src="src/levels/level_04.js"></script>
+  <script src="src/levels/levels.js"></script>
 
   <!-- Núcleo -->
   <script src="src/core/game_events.js"></script>
@@ -133,14 +142,14 @@
   <script src="src/bosses/serpent/serpent_body.js"></script>
   <script src="src/bosses/serpent/serpent_movement.js"></script>
   <script src="src/bosses/serpent/serpent_boss.js"></script>
-  <!-- Escolha do chefão -->
+  <!-- Urso Polar -->
   <script src="src/bosses/bear/bear_sprite_sheet.js"></script>
   <script src="src/bosses/bear/ice_ball_attack.js"></script>
   <script src="src/bosses/bear/ice_waves.js"></script>
   <script src="src/bosses/bear/icicles.js"></script>
   <script src="src/bosses/bear/bear_brain.js"></script>
   <script src="src/bosses/bear/polar_bear_boss.js"></script>
-
+  <!-- Escolha do chefão -->
   <script src="src/bosses/boss_factory.js"></script>
 
   <!-- Itens -->

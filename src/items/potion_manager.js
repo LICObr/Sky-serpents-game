@@ -2,7 +2,7 @@
  * potion_manager.js
  * -----------------------------------------------------------------------------
  * Poções de vida:
- *   - no percurso: ficam em lugares fixos definidos em levels.js;
+ *   - no percurso: ficam em lugares fixos definidos no arquivo da fase;
  *   - na arena do chefão: surgem sobre uma plataforma depois de um tempo
  *     sorteado (raras), se a anterior já tiver sido pega.
  * Ao coletar, o jogador recupera um coração.

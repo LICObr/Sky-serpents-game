@@ -8,7 +8,7 @@
  * (DEFAULT_DIFFICULTY = 5 corações). As outras ficam prontas para o futuro.
  *
  * A força dos bichos e dos chefões NÃO depende daqui: cada fase tem a sua
- * própria dificuldade (CHALLENGE em levels.js). Assim a fase 1 é sempre a
+ * própria dificuldade (CHALLENGE no arquivo da fase). Assim a fase 1 é sempre a
  * mais fácil e a 3 a mais difícil, seja qual for a quantidade de vidas.
  * -----------------------------------------------------------------------------
  */

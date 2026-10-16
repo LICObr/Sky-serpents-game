@@ -1,7 +1,7 @@
 /**
  * tree_manager.js
  * -----------------------------------------------------------------------------
- * Cria as árvores quebráveis de uma fase (TREES em levels.js), coloca-as no
+ * Cria as árvores quebráveis de uma fase (TREES no arquivo da fase), coloca-as no
  * combate (para espada e flechas acertarem) e guarda um grupo para as
  * colisões (jogador e bichos esbarram nelas). Também é dono do efeito de
  * lascas de madeira.

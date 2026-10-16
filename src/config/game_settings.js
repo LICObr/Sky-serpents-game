@@ -6,8 +6,8 @@
  * Configurações específicas ficam em arquivos próprios:
  *   characters.js   → personagens jogáveis
  *   enemy_types.js  → bichos pequenos (slime, morcego, fantasma...)
- *   boss_types.js   → chefões (dragões, serpente)
- *   levels.js       → fases (chão, buracos, plataformas, inimigos, arena)
+ *   boss_types.js   → chefões (dragões, serpente, urso)
+ *   src/levels/     → fases, uma por arquivo (chão, buracos, inimigos, arena)
  *   difficulties.js → multiplicadores de dificuldade
  *
  * O objeto é congelado profundamente (deepFreeze) para impedir que alguma
