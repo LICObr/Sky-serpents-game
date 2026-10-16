@@ -110,8 +110,8 @@ class DragonBoss extends Boss {
     this.#animation.setFacing(this.target.x > this.x);
   }
 
-  /** Volta a ficar opaco quando o cooldown de golpe termina. */
+  /** Volta a ficar opaco quando termina o piscar de golpe. */
   #restoreAlphaAfterHit() {
-    if (this.sprite.alpha < 1 && this.isHitCooldownReady) this.sprite.setAlpha(1);
+    if (this.sprite.alpha < 1 && !this.isHitBlinking) this.sprite.setAlpha(1);
   }
 }

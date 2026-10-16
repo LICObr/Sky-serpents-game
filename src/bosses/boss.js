@@ -4,11 +4,13 @@
  * Classe base ABSTRATA dos chefões (padrão "Template Method").
  *
  * A base resolve o que é igual para qualquer chefão:
- *   - vida (BossHealth) e intervalo mínimo entre golpes recebidos
+ *   - vida (BossHealth) e o piscar ao apanhar (só visual)
  *   - fluxo de "levar golpe" → reação → dano → morrer
  *   - aviso de derrota (BOSS_DEFEATED)
  *
- * As subclasses (DragonBoss, SerpentBoss) implementam:
+ * Cada golpe conta: várias flechas chegando juntas somam o dano de cada uma.
+ *
+ * As subclasses (DragonBoss, SerpentBoss, PolarBearBoss) implementam:
  *   - behave()       → movimento e ataques do frame
  *   - onHit(source)  → reação visual ao apanhar
  *   - destroyParts() → remover os sprites ao morrer
@@ -21,7 +23,7 @@ class Boss extends GameEntity {
   #target;
   #eventBus;
   #health;
-  #hitCooldown = new FrameCooldown();
+  #hitBlink = new FrameCooldown(); // tempo piscando depois de apanhar (não bloqueia dano)
   #defeated = false;
 
   /**
@@ -55,9 +57,9 @@ class Boss extends GameEntity {
     return Boolean(this.#stats.CONTACT_DAMAGE);
   }
 
-  /** O intervalo entre golpes recebidos já terminou? */
-  get isHitCooldownReady() {
-    return this.#hitCooldown.isReady;
+  /** Ainda está piscando por ter apanhado? (só visual) */
+  get isHitBlinking() {
+    return !this.#hitBlink.isReady;
   }
 
   /** De onde saem os projéteis. Subclasses podem sobrescrever. */
@@ -115,11 +117,11 @@ class Boss extends GameEntity {
 
   /** @override */
   takeHit(source, damage) {
-    if (!this.canBeHit || !this.#hitCooldown.isReady) return;
+    if (!this.canBeHit) return;
 
     this.onHit(source);
     this.#health.damage(damage);
-    this.#hitCooldown.start(GameSettings.BOSS.HIT_COOLDOWN_FRAMES);
+    this.#hitBlink.start(GameSettings.BOSS.HIT_BLINK_FRAMES);
 
     if (this.#health.isDead) this.#defeat();
   }
@@ -131,7 +133,7 @@ class Boss extends GameEntity {
 
   /** Avança os cooldowns (chamar uma vez por frame). */
   tickCooldowns() {
-    this.#hitCooldown.tick();
+    this.#hitBlink.tick();
   }
 
   #defeat() {

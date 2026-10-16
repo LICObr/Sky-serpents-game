@@ -168,7 +168,9 @@ const GameSettings = deepFreeze({
 
   BOSS: {
     DEPTH: 1,
-    HIT_COOLDOWN_FRAMES: 30,
+    // Ao apanhar o chefão fica meio transparente por um tempinho. É só visual:
+    // NÃO dá imunidade (antes dava, e as flechas do especial contavam como uma só)
+    HIT_BLINK_FRAMES: 30,
     HIT_ALPHA: 0.5
   },
 
