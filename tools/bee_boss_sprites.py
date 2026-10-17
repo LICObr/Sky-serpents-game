@@ -5,12 +5,14 @@ Gera as imagens dos chefões da fase 5 a partir das artes originais
 (source_art/chefoes/...):
 
   COLMEIA (1º chefão) — colmeia_original.png é a cena inteira:
-    chefoes/colmeia/colmeia_cenario.png → a cena no tamanho da arena (800x600),
-                                          fundo da luta final
+    chefoes/colmeia/colmeia_cenario_vazio.png → a cena no tamanho da arena (800x600)
+                                          SEM a colmeia: o buraco dela é preenchido
+                                          espelhando a paisagem dos dois lados
     chefoes/colmeia/colmeia.png         → só a colmeia, recortada da cena por um
                                           contorno + remoção do fundo azulado
+                                          (é o chefão, desenhado por cima da cena)
     chefoes/colmeia/colmeia.json        → onde a colmeia fica na arena (para o
-                                          chefão ficar exatamente em cima do desenho)
+                                          chefão ficar exatamente no lugar dela)
 
   ABELHA RAINHA (2º chefão)
     abelha_original.png → chefoes/abelha_rainha/abelha_animacoes.png/.json
@@ -40,7 +42,11 @@ HIVE_OUTLINE = [
 ]
 HIVE_MOUTH = (860, 480)       # boca da colmeia na imagem original (de onde saem as abelhas)
 ARENA_SIZE = (800, 600)       # a cena preenche a arena inteira (cortando as laterais)
-EDGE_FADE = 48                # borda esquerda some aos poucos (emenda com a floresta)
+# Buraco para apagar a colmeia da cena: o contorno com folga (para levar junto
+# os fios de musgo e pingos de mel pendurados em volta)
+HOLE_MARGIN = 18              # px da arena
+SEAM_BAND = 0.2               # largura da emenda pontilhada (fração do buraco)
+BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]]  # pontilhado da emenda
 
 
 def is_background(r, g, b):
@@ -69,14 +75,63 @@ def to_arena(image):
     return resized.crop((left, 0, left + width, height)), scale, left
 
 
+def hole_mask(original):
+    """Onde está a colmeia na cena da arena (contorno com folga)."""
+    polygon = Image.new("L", original.size, 0)
+    ImageDraw.Draw(polygon).polygon(HIVE_OUTLINE, fill=255)
+    arena, _, _ = to_arena(polygon.convert("RGBA"))
+    inside = arena.getchannel("R").point(lambda a: 255 if a > 20 else 0)
+    return inside.filter(ImageFilter.MaxFilter(HOLE_MARGIN * 2 + 1))
+
+
+def seam_at(y):
+    """Onde fica a emenda (fração do buraco). No alto, na copa da árvore, fica no
+    meio; mais embaixo vai para perto da borda esquerda, para quase tudo vir do
+    lado direito (montanhas e lago) e não copiar a cachoeira da esquerda."""
+    t = min(max((y - 240) / 80, 0), 1)
+    return 0.5 - 0.3 * t * t * (3 - 2 * t)
+
+
+def fill_hole(scene, hole):
+    """Apaga a colmeia: cada linha do buraco espelha a paisagem da esquerda e da
+    direita, com uma emenda pontilhada (como em pixel art) entre as duas."""
+    out = scene.copy()
+    px, src, mask = out.load(), scene.load(), hole.load()
+    width, height = scene.size
+
+    def reflect(x):  # espelha também na borda da imagem
+        x = -x if x < 0 else x
+        x = 2 * (width - 1) - x if x > width - 1 else x
+        return min(max(x, 0), width - 1)
+
+    for y in range(height):
+        seam = seam_at(y)
+        x = 0
+        while x < width:
+            if not mask[x, y]:
+                x += 1
+                continue
+            x0 = x
+            while x < width and mask[x, y]:
+                x += 1
+            x1 = x - 1
+            for xx in range(x0, x1 + 1):
+                t = (xx - x0 + 0.5) / (x1 - x0 + 1)
+                from_left = src[reflect(x0 - 1 - (xx - x0)), y]
+                from_right = src[reflect(x1 + 1 + (x1 - xx)), y]
+                k = min(max((t - (seam - SEAM_BAND / 2)) / SEAM_BAND, 0), 1)
+                px[xx, y] = from_right if k * 16 > BAYER[y % 4][xx % 4] + 0.5 else from_left
+    return out
+
+
 def hive():
-    """Devolve (cena da arena, colmeia recortada, posição da colmeia e da boca)."""
+    """Devolve (cena da arena sem a colmeia, colmeia recortada, posição da colmeia e da boca)."""
     original = Image.open(SOURCE / "colmeia" / "colmeia_original.png").convert("RGBA")
-    mask = hive_mask(original)
     scene, scale, left = to_arena(original)
     # 256 cores deixam o arquivo leve; a colmeia sai desta mesma cena (pixels idênticos)
-    scene = scene.convert("RGB").quantize(colors=256, method=Image.Quantize.FASTOCTREE).convert("RGBA")
-    arena_mask, _, _ = to_arena(mask.convert("RGBA"))
+    palette = scene.convert("RGB").quantize(colors=256, method=Image.Quantize.FASTOCTREE)
+    scene = palette.convert("RGBA")
+    arena_mask, _, _ = to_arena(hive_mask(original).convert("RGBA"))
 
     cut = scene.copy()
     cut.putalpha(arena_mask.getchannel("R").point(lambda a: 255 if a > 127 else 0))
@@ -86,11 +141,20 @@ def hive():
         "mouth": [round(HIVE_MOUTH[0] * scale - left), round(HIVE_MOUTH[1] * scale)],
     }
 
-    fade = scene.getchannel("A").load()
-    for x in range(EDGE_FADE):
-        for y in range(scene.height):
-            fade[x, y] = round(255 * x / EDGE_FADE)
-    return scene, cut.crop(box), layout
+    empty = fill_hole(scene.convert("RGB"), hole_mask(original))
+    return to_palette(empty, palette), cut.crop(box), layout
+
+
+def to_palette(image, palette):
+    """Grava com as mesmas 256 cores da cena, sem trocar nenhuma (o buraco só
+    copia pixels que já existem na cena)."""
+    colors = palette.getpalette()[:768]
+    index = {tuple(colors[i:i + 3]): i // 3 for i in range(0, len(colors), 3)}
+    out = Image.new("P", image.size)
+    out.putpalette(colors)
+    pixels = image.load()
+    out.putdata([index[pixels[x, y]] for y in range(image.height) for x in range(image.width)])
+    return out
 
 
 # ---------------------------------------------------------------- abelha
@@ -191,9 +255,9 @@ def honey_squirt():
 
 
 if __name__ == "__main__":
-    scene, hive_cut, layout = hive()
+    empty_scene, hive_cut, layout = hive()
     outputs = {
-        ASSETS / "colmeia" / "colmeia_cenario.png": scene,
+        ASSETS / "colmeia" / "colmeia_cenario_vazio.png": empty_scene,
         ASSETS / "colmeia" / "colmeia.png": hive_cut,
         ASSETS / "abelha_rainha" / "gota_mel.png": honey_drop(),
         ASSETS / "abelha_rainha" / "espirro_mel.png": honey_squirt(),

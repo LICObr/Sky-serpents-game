@@ -55,7 +55,7 @@ const LEVEL_05 = {
   CHECKPOINTS: [100, 1450, 2400, 3450],
   ARENA: {
     BOSS: BossTypeId.HIVE,
-    BACKDROP: 'hive_scene',   // a imagem inteira da colmeia é o fundo da luta
+    BACKDROP: 'hive_scene',   // a clareira da colmeia (sem ela): aparece aos poucos no fim do percurso
     // Ilhas dos lados (a colmeia fica no meio, do teto quase até o chão)
     PLATFORMS: [
       [100, 470], [170, 385], [100, 300], [170, 215],

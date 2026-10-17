@@ -80,7 +80,8 @@ const GameSettings = deepFreeze({
     PIT_Y: 680,                 // abaixo disso o jogador caiu no buraco
     RESPAWN_HEIGHT: 60,         // renasce um pouco acima do chão do checkpoint
     ARENA_WIDTH: 800,           // a arena do chefão ocupa uma tela inteira
-    ARENA_TRIGGER_OFFSET: 140   // quanto entrar na arena para a luta começar
+    ARENA_TRIGGER_OFFSET: 140,  // quanto entrar na arena para a luta começar
+    ARENA_BACKDROP_FADE_PX: 800 // cenário próprio da arena: começa a aparecer a esta distância
   },
 
   PLATFORMS: {

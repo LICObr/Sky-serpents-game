@@ -118,7 +118,7 @@ const ASSET_MANIFEST = Object.freeze([
     serpent_intro: 'serpente_intro.png'
   }),
   // Fase 5 (tools/bee_boss_sprites.py; a folha da rainha é carregada por QueenBeeSpriteSheet)
-  ...imagesIn('chefoes/colmeia', { hive: 'colmeia.png', hive_scene: 'colmeia_cenario.png' }),
+  ...imagesIn('chefoes/colmeia', { hive: 'colmeia.png', hive_scene: 'colmeia_cenario_vazio.png' }),
   { type: 'json', key: 'hive_layout', path: 'assets/chefoes/colmeia/colmeia.json' },
   ...imagesIn('chefoes/abelha_rainha', { gota_mel: 'gota_mel.png', espirro_mel: 'espirro_mel.png' }),
 

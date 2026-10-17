@@ -36,7 +36,7 @@ class GameScene extends Phaser.Scene {
   #specialHud;
   #banner;
   #touch;
-  #arenaBackdrop = null; // cenário próprio da arena (aparece só na luta)
+  #arenaBackdrop = null; // cenário próprio da arena (aparece no fim do percurso)
 
   constructor() {
     super({ key: SceneKeys.GAME });
@@ -63,10 +63,10 @@ class GameScene extends Phaser.Scene {
 
     // Mundo (a ordem de criação define o que fica desenhado por cima)
     this.#background = new ParallaxBackground(this, level.BACKGROUND_TINT, level.BACKGROUND_TEXTURE);
-    // Cenário próprio da arena (ex.: a imagem inteira da colmeia na fase 5):
-    // fica escondido no percurso e aparece com fade quando a luta começa
+    // Cenário próprio da arena (ex.: a clareira da colmeia na fase 5): preso à
+    // tela, vai cobrindo o fundo aos poucos no fim do percurso
     this.#arenaBackdrop = level.ARENA && level.ARENA.BACKDROP
-      ? this.add.image(level.ARENA_START_X, 0, level.ARENA.BACKDROP).setOrigin(0, 0).setAlpha(0)
+      ? this.add.image(0, 0, level.ARENA.BACKDROP).setOrigin(0, 0).setScrollFactor(0).setAlpha(0)
       : null;
     this.#levelMap = new LevelMap(this, level);
     new WeatherEffect(this, TERRAIN_THEMES[level.TERRAIN].WEATHER); // neve, brasas, brilhos, neblina, pólen
@@ -130,6 +130,7 @@ class GameScene extends Phaser.Scene {
     this.#coins.update();
     this.#checkpoints.update(this.#player.x);
 
+    if (this.#arenaBackdrop && !this.#arena.isStarted) this.#fadeInArenaBackdrop();
     if (this.#arena && this.#arena.shouldStart(this.#player)) this.#startBossFight();
     if (this.#goal) this.#goal.update(this.#player);
     if (this.#boss) {
@@ -162,6 +163,17 @@ class GameScene extends Phaser.Scene {
     this.#combat.register(this.#boss, this.#boss.hurtsOnContact);
     this.#eventBus.emit(GameEvents.BOSS_FIGHT_STARTED, this.#boss);
     this.#banner.show('CHEFAO!', `${this.#boss.name} — ${stats.POWER}`);
+  }
+
+  /**
+   * Fim do percurso: o cenário da arena vai aparecendo conforme o jogador se
+   * aproxima (uma imagem sobrescrevendo a outra) e fica inteiro quando a luta começa.
+   */
+  #fadeInArenaBackdrop() {
+    const { ARENA_BACKDROP_FADE_PX, ARENA_TRIGGER_OFFSET } = GameSettings.LEVEL;
+    const fightStartX = this.#arena.left + ARENA_TRIGGER_OFFSET;
+    const progress = 1 - (fightStartX - this.#player.x) / ARENA_BACKDROP_FADE_PX;
+    this.#arenaBackdrop.setAlpha(Phaser.Math.Clamp(progress, 0, 1));
   }
 
   /** Chegou na bandeira: fase concluída. */
