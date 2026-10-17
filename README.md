@@ -5,7 +5,7 @@ Escolha o **Guerreiro** (espada) ou a **Arqueira** (arco), atravesse cada fase e
 
 No menu principal:
 - **1 jogador**: escolha o personagem e a fase.
-- **2 jogadores**: Guerreiro e Arqueira na mesma tela, cada um com as suas teclas. Um não avança sem o outro: ninguém sai da tela. Quem fica sem corações volta 6 s depois ao lado do parceiro, e o game over só vem com os dois fora.
+- **2 jogadores**: Guerreiro e Arqueira na mesma tela, cada um com as suas teclas. Um não avança sem o outro: ninguém sai da tela. Cuidado com o parceiro: espada, flechas e especiais acertam ele também (o escudinho segura). Quem fica sem corações volta 6 s depois ao lado do parceiro, e o game over só vem com os dois fora.
 - **Opções**: troque as teclas do jogador 1 e do jogador 2.
 
 ![Luta contra a Abelha Rainha](docs/screenshots/fase5_rainha.jpg)

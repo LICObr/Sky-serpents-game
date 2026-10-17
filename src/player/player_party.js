@@ -10,7 +10,8 @@
  *
  * Modo 2 jogadores: quem fica sem corações sai da partida e volta depois de
  * PARTY.REVIVE_MS ao lado do parceiro, com metade dos corações. Se os dois
- * ficarem fora, é o fim (PARTY_DEFEATED → game over).
+ * ficarem fora, é o fim (PARTY_DEFEATED → game over). Com o fogo amigo
+ * ligado, um pode acertar o outro.
  * -----------------------------------------------------------------------------
  */
 class PlayerParty {
@@ -68,6 +69,12 @@ class PlayerParty {
   /** Ataques de quem está jogando. */
   handleAttacks(combat) {
     this.inGame.forEach(player => player.handleAttack(combat));
+  }
+
+  /** Fogo amigo (2 jogadores): cada jogador vira alvo dos ataques do outro. */
+  registerFriendlyFire(combat) {
+    if (!this.isCoop || !GameSettings.PARTY.FRIENDLY_FIRE) return;
+    this.#players.forEach(player => combat.register(player, false)); // atingível; encostar não machuca
   }
 
   /** Bicho derrotado: adianta a recarga do especial de todo mundo. */

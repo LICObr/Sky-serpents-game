@@ -1,8 +1,9 @@
 /**
  * combat_registry.js
  * -----------------------------------------------------------------------------
- * Cadastro central de tudo que pode ser ATINGIDO pelo jogador (bichos e
- * chefões). Mantém dois grupos do Phaser para as colisões:
+ * Cadastro central de tudo que pode ser ATINGIDO pelo jogador (bichos,
+ * chefões, árvores e, com 2 jogadores, o parceiro). Mantém dois grupos do
+ * Phaser para as colisões:
  *   - hitboxes:  atingíveis por flechas/espada
  *   - hurtboxes: machucam o jogador ao encostar
  *

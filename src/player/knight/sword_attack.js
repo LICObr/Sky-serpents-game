@@ -20,7 +20,7 @@ class SwordAttack extends PlayerAttack {
   perform(combat) {
     const player = this.player;
     combat.targets.forEach(target => {
-      if (target.distanceFrom(player) < target.meleeReach) {
+      if (target !== player && target.distanceFrom(player) < target.meleeReach) {
         target.takeHit(player, GameSettings.SWORD_ATTACK.DAMAGE);
       }
     });

@@ -11,6 +11,9 @@
  *        KnightPlayer → SwordAttack | ArcherPlayer → BowAttack
  *   - PlayerSpecial  → especial da tecla G, também da SUBCLASSE (createSpecial):
  *        KnightPlayer → DashSpecial | ArcherPlayer → ArrowStormSpecial
+ *
+ * Com 2 jogadores, cada um também é um ALVO do combate (fogo amigo): golpe,
+ * flecha ou especial do parceiro tira um coração (o escudinho segura).
  * -----------------------------------------------------------------------------
  */
 class Player extends GameEntity {
@@ -187,6 +190,22 @@ class Player extends GameEntity {
   /** Plataformas criadas pelo ataque (flechas cravadas da arqueira) ou null. */
   get attackPlatforms() {
     return this.#attack.platforms;
+  }
+
+  /** @override Fogo amigo: dá para acertar quem está jogando e não está piscando. */
+  get canBeHit() {
+    return this.isAlive && !this.#knockedOut && !this.#health.isInvulnerable;
+  }
+
+  /** @override Alcance da espada do parceiro. */
+  get meleeReach() {
+    return GameSettings.PARTY.FRIENDLY_REACH;
+  }
+
+  /** @override Golpe do parceiro (fogo amigo): perde um coração, como ao encostar num bicho. */
+  // eslint-disable-next-line no-unused-vars
+  takeHit(source, damage) {
+    this.hitByContact(ProjectileEffect.NONE);
   }
 
   /** Está no cooldown de dano (invulnerável)? */

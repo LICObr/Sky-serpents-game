@@ -87,6 +87,7 @@ class GameScene extends Phaser.Scene {
       canUse: () => !this.#flow.hasEnded
     });
     this.#party = this.#createParty();
+    this.#party.registerFriendlyFire(this.#combat); // 2 jogadores: um pode acertar o outro
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
     this.#potions = new PotionManager(this, level.POTIONS);

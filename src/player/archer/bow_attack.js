@@ -58,7 +58,8 @@ class BowAttack extends PlayerAttack {
     physics.overlap(arrows.group, combat.hitboxes, (first, second) => {
       const [arrow, targetSprite] = split(first, second);
       const target = targetSprite.getData('owner');
-      if (!arrows.isFlying(arrow) || !target || !target.canBeHit) return;
+      // a flecha não acerta quem atirou (sai de dentro dela)
+      if (!arrows.isFlying(arrow) || !target || target === this.player || !target.canBeHit) return;
       arrows.recycle(arrow);
       target.takeHit(arrow, GameSettings.BOW_ATTACK.DAMAGE);
     });

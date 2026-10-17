@@ -113,6 +113,8 @@ const GameSettings = deepFreeze({
     SCREEN_MARGIN: 24,          // ninguém passa disto da borda da tela (um espera o outro)
     REVIVE_MS: 6000,            // sem corações: volta depois disto ao lado do parceiro...
     REVIVE_HEARTS_RATIO: 0.5,   // ...com metade dos corações
+    FRIENDLY_FIRE: true,        // espada, flechas e especiais também acertam o parceiro
+    FRIENDLY_REACH: 55,         // alcance da espada contra o parceiro
     COLORS: [0xffe066, 0x6fd8ff] // pontinho de cada jogador na barra de progresso
   },
 
