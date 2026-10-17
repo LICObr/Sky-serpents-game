@@ -8,6 +8,7 @@
  *   LIGHT_SNOW → poucos flocos de neve
  *   FOG      → grandes bancos de neblina atravessando a tela devagar
  *   POLLEN   → pólen dourado subindo devagar, piscando de leve
+ *   FIREFLIES → vaga-lumes verde-água vagando e acendendo/apagando (pântano)
  * Uma fase pode combinar vários (ex.: neve fraca + neblina).
  *
  * Feito com partículas (textura fx_spark, colorida com "tint").
@@ -99,6 +100,20 @@ class WeatherEffect {
         tint: [0xfff2a0, 0xffd84a, 0xffffff],
         blendMode: 'ADD',
         frequency: 180,
+        quantity: 1
+      },
+      [WeatherType.FIREFLIES]: {
+        x: { min: 0, max: WIDTH },
+        y: { min: 120, max: HEIGHT - 60 },
+        lifespan: { min: 2500, max: 5000 },
+        speedY: { min: -18, max: 10 },
+        speedX: { min: -16, max: 16 },
+        accelerationX: { min: -10, max: 10 },
+        scale: { min: 0.25, max: 0.5 },
+        alpha: { onEmit: () => 0, onUpdate: (_particle, _key, t) => Math.sin(t * Math.PI) }, // acende e apaga
+        tint: [0x5ff2e0, 0x9cfff0, 0x3ad0c8],
+        blendMode: 'ADD',
+        frequency: 240,
         quantity: 1
       },
       [WeatherType.SPARKLES]: {

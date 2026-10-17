@@ -5,6 +5,8 @@
  *   - trechos de chão em alturas diferentes (morros/paredões)
  *   - RAMPAS (subidas e descidas) entre alturas
  *   - buracos (espaços sem chão)
+ *   - LAGOAS (WATER): buracos cheios de água com um fundo invisível — dá
+ *     para nadar (swamp_zones.js), não para cair
  *   - ilhas flutuantes (só colidem pisando por cima)
  *   - plataformas da arena do chefão (se a fase tiver chefão)
  *
@@ -39,10 +41,12 @@ class LevelMap {
     this.#solids = scene.physics.add.staticGroup();
     this.#platforms = scene.physics.add.staticGroup();
 
-    const segments = LevelMap.#widenHoles(level.GROUND, level.RAMPS)
+    const segments = LevelMap.#widenHoles(level.GROUND, level.RAMPS, level.WATER || [])
       .map(([x, width, elevation = 0]) => this.#createGround(x, width, elevation));
     level.RAMPS.forEach(([x, width, from, to], index) => this.#createRamp(index, x, width, from, to));
     segments.push(this.#createGround(level.ARENA_START_X, GameSettings.LEVEL.ARENA_WIDTH, 0));
+    // Lagoas: no lugar de buraco, um fundo invisível (dá para nadar, não para cair)
+    (level.WATER || []).forEach(([x, width]) => this.#addSolidBlock(x, GameSettings.LEVEL.LAKE_BED_Y, width));
     segments.forEach(segment => this.#roundExposedCorners(segment));
 
     level.PLATFORMS.forEach(([x, y]) => this.#createPlatform(x, y));
@@ -59,6 +63,17 @@ class LevelMap {
   get worldWidth()  { return this.#level.ARENA_START_X + GameSettings.LEVEL.ARENA_WIDTH; }
   /** Topo do mundo: 0 nas fases normais, negativo se a montanha passa do alto da tela. */
   get worldTop()    { return this.#worldTop; }
+  /**
+   * Lagoa (água) nesta posição x, ou null.
+   * @returns {{left: number, right: number, surfaceY: number}|null}
+   */
+  waterAt(x) {
+    const lake = (this.#level.WATER || []).find(([left, width]) => x >= left && x < left + width);
+    if (!lake) return null;
+    const [left, width, elevation = GameSettings.SWIM.SURFACE_ELEVATION] = lake;
+    return { left, right: left + width, surfaceY: GameSettings.LEVEL.GROUND_TOP - elevation };
+  }
+
   /** A fase sobe além da tela (a câmera precisa acompanhar para cima)? */
   get isTall()      { return this.#worldTop < 0; }
 
@@ -102,9 +117,9 @@ class LevelMap {
    * Alarga os buracos: o trecho de chão que vem DEPOIS de um buraco (nada
    * termina exatamente onde ele começa) começa um pouco mais à frente.
    */
-  static #widenHoles(ground, ramps) {
+  static #widenHoles(ground, ramps, water) {
     const extra = GameSettings.LEVEL.HOLE_EXTRA_WIDTH;
-    const ends = new Set([...ground, ...ramps].map(([x, width]) => x + width));
+    const ends = new Set([...ground, ...ramps, ...water].map(([x, width]) => x + width)); // depois de lagoa não é buraco
     return ground.map(([x, width, elevation = 0]) => {
       const afterHole = x > 0 && !ends.has(x);
       return afterHole ? [x + extra, width - extra, elevation] : [x, width, elevation];

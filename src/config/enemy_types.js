@@ -13,6 +13,10 @@
  *   SPIKY  → ouriço: anda como o slime, mas NÃO dá para pisar nele
  *   EAGLE  → águia: voa bem alto, mergulha no jogador e depois fica andando
  *            no chão, fraquinha (morre fácil)
+ *   (caverna) SONIC, DROPPER, AMBUSH — veja cada um abaixo
+ *   (pântano) TONGUE → sapo da língua que puxa | BULLFROG → sapo-boi do tremor
+ *             SWIMMER → nada na superfície da lagoa e dá bote (jacaré, cobra-d'água)
+ *             LEAPER → jacaré escondido que salta da água | LOG → jacaré-tronco
  *
  * Dá para matar pisando em cima (como no Mario) ou atacando — menos o ouriço.
  * TINT (opcional) pinta o bicho de outra cor (variações de fase).
@@ -32,13 +36,19 @@ const EnemyBehavior = Object.freeze({
   EAGLE: 'EAGLE',
   SONIC: 'SONIC',       // morcego que grita: ondas de som empurram o jogador
   DROPPER: 'DROPPER',   // aranha pendurada no teto que cai em cima do jogador
-  AMBUSH: 'AMBUSH'      // besouro que finge ser pedra e investe quando o jogador chega
+  AMBUSH: 'AMBUSH',     // besouro que finge ser pedra e investe quando o jogador chega
+  TONGUE: 'TONGUE',     // sapo que puxa o jogador com a língua
+  BULLFROG: 'BULLFROG', // sapo-boi: ao cair do pulo, tremor que empurra
+  SWIMMER: 'SWIMMER',   // nada na superfície da lagoa e dá bote
+  LEAPER: 'LEAPER',     // jacaré escondido (só os olhos) que salta da água
+  LOG: 'LOG'            // jacaré que parece tronco (dá para pisar) e acorda
 });
 
 /** Bichos que vivem no chão (nascem sobre o terreno e colidem com ele). */
 const GROUND_BEHAVIORS = Object.freeze([
   EnemyBehavior.WALKER, EnemyBehavior.SNAKE, EnemyBehavior.HOPPER,
-  EnemyBehavior.SHOOTER, EnemyBehavior.SPIKY, EnemyBehavior.AMBUSH
+  EnemyBehavior.SHOOTER, EnemyBehavior.SPIKY, EnemyBehavior.AMBUSH,
+  EnemyBehavior.TONGUE, EnemyBehavior.BULLFROG
 ]);
 
 const EnemyTypeId = Object.freeze({
@@ -71,7 +81,17 @@ const EnemyTypeId = Object.freeze({
   CENTIPEDE: 'CENTIPEDE',
   SPIDER: 'SPIDER',
   ROCK_BEETLE: 'ROCK_BEETLE',
-  MOTH: 'MOTH'
+  MOTH: 'MOTH',
+  // bichos do pântano (fase 8)
+  FROG_TONGUE: 'FROG_TONGUE',
+  FROG_POISON: 'FROG_POISON',
+  BULLFROG: 'BULLFROG',
+  GATOR: 'GATOR',
+  GATOR_LEAPER: 'GATOR_LEAPER',
+  GATOR_LOG: 'GATOR_LOG',
+  DRAGONFLY: 'DRAGONFLY',
+  MOSQUITO: 'MOSQUITO',
+  WATER_SNAKE: 'WATER_SNAKE'
 });
 
 /** Quadros de uma variação da águia (tools/eagle_variants.py). */
@@ -501,5 +521,160 @@ const ENEMY_TYPES = deepFreeze({
     CHASE_SPEED: 75,
     MELEE_REACH: 55,
     DEATH_DUST: { RADIUS: 60, MS: 1800 }
+  },
+
+  // ---------------------------------------------------------------- pântano (fase 8)
+  // Sapo-Língua: a linguada puxa o jogador para perto da boca
+  [EnemyTypeId.FROG_TONGUE]: {
+    NAME: 'Sapo-Língua',
+    BEHAVIOR: EnemyBehavior.TONGUE,
+    FRAMES: ['sapo_lingua_0', 'sapo_lingua_1'],
+    FRAME_MS: 300,
+    SCALE: 0.1,
+    HP: 22,
+    SPEED: 130,
+    JUMP_VELOCITY: -440,
+    JUMP_INTERVAL_MS: 1700,
+    JUMP_RANGE: 300,
+    MELEE_REACH: 60,
+    TONGUE: { RANGE_X: 150, RANGE_Y: 40, MS: 450, COOLDOWN_MS: 2200, PULL_FORCE: 300, COLOR: 0xd8607a }
+  },
+  // Sapo-Venenoso: pisar machuca, encostar deixa lento e ao morrer solta uma nuvem de veneno
+  [EnemyTypeId.FROG_POISON]: {
+    NAME: 'Sapo-Venenoso',
+    BEHAVIOR: EnemyBehavior.HOPPER,
+    FRAMES: ['sapo_venenoso_0', 'sapo_venenoso_1'],
+    FRAME_MS: 300,
+    SCALE: 0.1,
+    HP: 18,
+    SPEED: 170,
+    JUMP_VELOCITY: -480,
+    JUMP_INTERVAL_MS: 1200,
+    JUMP_RANGE: 320,
+    MELEE_REACH: 60,
+    STOMP_HURTS: true,
+    CONTACT_EFFECT: 'SLOW',
+    DEATH_DUST: { RADIUS: 55, MS: 1600, TINT: [0x8ae04a, 0x5cc84a, 0xc8f070] }
+  },
+  // Sapo-Boi: grandão; ao cair do pulo faz um tremor que empurra quem está no chão
+  [EnemyTypeId.BULLFROG]: {
+    NAME: 'Sapo-Boi',
+    BEHAVIOR: EnemyBehavior.BULLFROG,
+    FRAMES: ['sapo_boi_0', 'sapo_boi_1'],
+    FRAME_MS: 300,
+    SCALE: 0.17,
+    HP: 50,
+    SPEED: 110,
+    JUMP_VELOCITY: -560,
+    JUMP_INTERVAL_MS: 2300,
+    JUMP_RANGE: 360,
+    MELEE_REACH: 75,
+    QUAKE: { RADIUS: 170, FORCE: 380, COLOR: 0x6a5440 }
+  },
+  // Jacaré: nada na superfície e dá bote; pisar nas costas faz quicar (trampolim)
+  [EnemyTypeId.GATOR]: {
+    NAME: 'Jacaré',
+    BEHAVIOR: EnemyBehavior.SWIMMER,
+    FRAMES: ['jacare_0', 'jacare_1'],
+    FRAME_MS: 260,
+    SCALE: 0.14,
+    HP: 45,
+    SPEED: 45,
+    FLOAT_Y: 2,                 // centro um pouco abaixo da superfície (só as costas para fora)
+    WAVE_AMPLITUDE: 1.5,
+    WAVE_SPEED: 0.003,
+    MELEE_REACH: 80,
+    BOUNCY_BACK: true,
+    LUNGE: { RANGE_X: 190, RANGE_Y: 60, SPEED: 230, MS: 600, COOLDOWN_MS: 1800, FRAME: 'jacare_bote' }
+  },
+  // Jacaré-Saltador: só os olhos para fora; salta quando o jogador passa por cima
+  [EnemyTypeId.GATOR_LEAPER]: {
+    NAME: 'Jacaré-Saltador',
+    BEHAVIOR: EnemyBehavior.LEAPER,
+    FRAMES: ['jacare_bote'],    // saltando de boca aberta
+    EYES_FRAME: 'jacare_olhos', // escondido
+    FRAME_MS: 1000,
+    SCALE: 0.14,
+    HP: 35,
+    SPEED: 55,                  // seguindo o jogador por baixo d'água
+    HIDE_Y: 0,
+    LEAP_RANGE_X: 55,
+    LEAP_HEIGHT: 170,           // só salta se o jogador estiver até esta altura acima da água
+    LEAP_VELOCITY: -720,
+    REST_MS: 1600,
+    MELEE_REACH: 75
+  },
+  // Jacaré-Tronco: parece um tronco (dá para pisar), mas acorda, afunda e morde
+  [EnemyTypeId.GATOR_LOG]: {
+    NAME: 'Jacaré-Tronco',
+    BEHAVIOR: EnemyBehavior.LOG,
+    FRAMES: ['jacare_acordado'],
+    LOG_FRAME: 'jacare_tronco',
+    FRAME_MS: 1000,
+    SCALE: 0.15,
+    HP: 40,
+    SPEED: 22,                  // tronco indo e voltando devagar
+    DRIFT_RANGE: 40,
+    FLOAT_Y: 3,
+    AWAKE_FLOAT_Y: 10,          // acordado: afunda (só a cabeça para fora)
+    WAVE_AMPLITUDE: 1.5,
+    WAVE_SPEED: 0.0025,
+    WAKE_WARNING_MS: 900,       // treme este tempo antes de afundar
+    AWAKE_MS: 3200,
+    HUNT_SPEED: 120,
+    MELEE_REACH: 80
+  },
+  // Libélula: rasantes curtinhos e muito rápidos
+  [EnemyTypeId.DRAGONFLY]: {
+    NAME: 'Libélula',
+    BEHAVIOR: EnemyBehavior.DIVER,
+    FRAMES: ['libelula_0', 'libelula_1'],
+    FRAME_MS: 50,
+    SCALE: 0.1,
+    HP: 10,
+    SPEED: 90,
+    WAVE_AMPLITUDE: 10,
+    WAVE_SPEED: 0.01,
+    PATROL_RANGE: 140,
+    CHASE_RANGE: 0,
+    CHASE_SPEED: 0,
+    DIVE_RANGE: 260,
+    DIVE_WARNING_MS: 220,
+    DIVE_SPEED: 520,
+    DIVE_MS: 280,
+    DIVE_COOLDOWN_MS: 1300,
+    MELEE_REACH: 55
+  },
+  // Mosquito: em nuvens; a picada deixa lento
+  [EnemyTypeId.MOSQUITO]: {
+    NAME: 'Mosquito',
+    BEHAVIOR: EnemyBehavior.FLYER,
+    FRAMES: ['mosquito_0', 'mosquito_1'],
+    FRAME_MS: 40,
+    SCALE: 0.09,
+    HP: 4,
+    SPEED: 70,
+    WAVE_AMPLITUDE: 18,
+    WAVE_SPEED: 0.015,
+    PATROL_RANGE: 70,
+    CHASE_RANGE: 230,
+    CHASE_SPEED: 85,
+    MELEE_REACH: 50,
+    CONTACT_EFFECT: 'SLOW'
+  },
+  // Cobra-d'água: nada rapidinho na superfície e dá bote
+  [EnemyTypeId.WATER_SNAKE]: {
+    NAME: "Cobra-d'água",
+    BEHAVIOR: EnemyBehavior.SWIMMER,
+    FRAMES: ['cobra_agua_0', 'cobra_agua_1'],
+    FRAME_MS: 180,
+    SCALE: 0.11,
+    HP: 16,
+    SPEED: 80,
+    FLOAT_Y: 0,
+    WAVE_AMPLITUDE: 3,
+    WAVE_SPEED: 0.006,
+    MELEE_REACH: 60,
+    LUNGE: { RANGE_X: 160, RANGE_Y: 50, SPEED: 260, MS: 450, COOLDOWN_MS: 1500 }
   }
 });

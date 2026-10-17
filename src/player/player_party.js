@@ -80,14 +80,15 @@ class PlayerParty {
 
   /**
    * Chão firme ao lado de um parceiro em jogo (para renascer perto dele).
-   * @returns {{x: number, groundY: number}|null} null sem parceiro (ou se ele está sobre um buraco)
+   * @returns {{x: number, groundY: number}|null} null sem parceiro (ou se ele está sobre um buraco ou lagoa)
    */
   spotNearPartner(player) {
     const partner = this.inGame.find(other => other !== player);
     if (!partner) return null;
     for (const offset of [0, -40, 40, -80, 80, -120, 120, -160, 160]) {
-      const groundY = this.#levelMap.surfaceYAt(partner.x + offset);
-      if (groundY !== null) return { x: partner.x + offset, groundY };
+      const x = partner.x + offset;
+      const groundY = this.#levelMap.surfaceYAt(x);
+      if (groundY !== null && !this.#levelMap.waterAt(x)) return { x, groundY };
     }
     return null;
   }

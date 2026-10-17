@@ -16,8 +16,11 @@
  *   morcego → FlyerEnemy | fantasma → GhostEnemy | vespa → DiverEnemy
  *   águia → EagleEnemy | morcego-sônico → SonicBatEnemy
  *   aranha → SpiderEnemy | besouro-pedra → RockBeetleEnemy
+ *   sapo-língua → TongueFrogEnemy | sapo-boi → BullfrogEnemy
+ *   jacaré e cobra-d'água → SwimmerEnemy | jacaré-saltador → LeaperGatorEnemy
+ *   jacaré-tronco → LogGatorEnemy (também é chão: dá para pisar — standables)
  * E cuida do que alguns bichos deixam ao morrer: o morcego-gigante vira dois
- * morceguinhos (SPLIT) e a traça solta uma nuvem de pó (DEATH_DUST).
+ * morceguinhos (SPLIT) e a traça e o sapo venenoso soltam uma nuvem (DEATH_DUST).
  * -----------------------------------------------------------------------------
  */
 class EnemyManager {
@@ -30,6 +33,7 @@ class EnemyManager {
   #enemies = [];
   #dustClouds = [];  // pó das traças
   #walkers;   // bichos de chão (colidem com o terreno)
+  #standables; // bichos onde dá para ficar em pé (jacaré-tronco)
   #seeds;     // sementes das plantas cuspidoras
   #eggs;      // ovos das águias
   #waveTimer = null;
@@ -50,6 +54,7 @@ class EnemyManager {
     this.#combat = combat;
     this.#eventBus = eventBus;
     this.#walkers = scene.add.group();
+    this.#standables = scene.add.group();
     this.#seeds = new SeedPool(scene);
     this.#eggs = new EggPool(scene);
 
@@ -72,6 +77,11 @@ class EnemyManager {
   /** Projéteis dos bichos (sementes, ovos) — a cena liga as colisões. */
   get projectilePools() {
     return [this.#seeds, this.#eggs];
+  }
+
+  /** Bichos onde dá para ficar em pé (a cena liga a colisão com os jogadores). */
+  get standables() {
+    return this.#standables;
   }
 
   /** Quantos bichos ainda estão vivos. */
@@ -135,6 +145,7 @@ class EnemyManager {
     const touchesTerrain = GROUND_BEHAVIORS.includes(enemy.type.BEHAVIOR) ||
       [EnemyBehavior.EAGLE, EnemyBehavior.DROPPER].includes(enemy.type.BEHAVIOR);
     if (touchesTerrain) this.#walkers.add(enemy.sprite);
+    if (enemy.type.BEHAVIOR === EnemyBehavior.LOG) this.#standables.add(enemy.sprite);
     return enemy;
   }
 
@@ -237,11 +248,11 @@ class EnemyManager {
     return x;
   }
 
-  /** Há chão no x e também um pouco antes e depois (não é beirada de buraco)? */
+  /** Há chão no x e também um pouco antes e depois (não é beirada de buraco nem lagoa)? */
   #isFirmGround(x) {
     const margin = GameSettings.ENEMY.RANDOM_SPAWN.EDGE_MARGIN;
     const map = this.#levelMap;
-    return [x - margin, x, x + margin].every(px => map.surfaceYAt(px) !== null);
+    return [x - margin, x, x + margin].every(px => map.surfaceYAt(px) !== null && !map.waterAt(px));
   }
 
   #isNearCamera(x, margin) {
@@ -255,7 +266,9 @@ class EnemyManager {
     if (!type) throw new RangeError(`Tipo de inimigo desconhecido: ${spawn.TYPE}`);
 
     // Bichos de chão nascem um pouco acima do terreno e caem nele
-    const groundY = (levelMap.surfaceYAt(spawn.X) ?? GameSettings.LEVEL.GROUND_TOP) - 20;
+    // (sobre uma lagoa: na superfície da água, para cair numa vitória-régia)
+    const lake = levelMap.waterAt(spawn.X);
+    const groundY = (lake ? lake.surfaceY : levelMap.surfaceYAt(spawn.X) ?? GameSettings.LEVEL.GROUND_TOP) - 20;
     const args = [scene, spawn.X, spawn.Y, type, match, eventBus];
     const groundArgs = [scene, spawn.X, groundY, type, match, eventBus];
 
@@ -272,6 +285,11 @@ class EnemyManager {
       case EnemyBehavior.SONIC:   return new SonicBatEnemy(...args);
       case EnemyBehavior.DROPPER: return new SpiderEnemy(...args, levelMap);
       case EnemyBehavior.AMBUSH:  return new RockBeetleEnemy(...groundArgs, levelMap);
+      case EnemyBehavior.TONGUE:   return new TongueFrogEnemy(...groundArgs);
+      case EnemyBehavior.BULLFROG: return new BullfrogEnemy(...groundArgs);
+      case EnemyBehavior.SWIMMER:  return new SwimmerEnemy(...args, levelMap);
+      case EnemyBehavior.LEAPER:   return new LeaperGatorEnemy(...args, levelMap);
+      case EnemyBehavior.LOG:      return new LogGatorEnemy(...args, levelMap);
       default:
         throw new RangeError(`Comportamento desconhecido: ${type.BEHAVIOR}`);
     }

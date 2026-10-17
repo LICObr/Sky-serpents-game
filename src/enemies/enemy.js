@@ -8,8 +8,10 @@
  * Cada subclasse implementa apenas behave() — o jeito de se mover:
  *   WalkerEnemy (anda) → SnakeEnemy (cobrinha), SpikyEnemy (ouriço)
  *   FlyerEnemy (voa)   → GhostEnemy (some), DiverEnemy (vespa, rasante)
- *   HopperEnemy (sapo, pula) | ShooterEnemy (planta, cospe sementes)
+ *   HopperEnemy (sapo, pula) → TongueFrogEnemy (língua), BullfrogEnemy (sapo-boi)
+ *   ShooterEnemy (planta, cospe sementes)
  *   EagleEnemy (águia: voa alto, mergulha e depois anda no chão)
+ *   SwimmerEnemy (jacaré, cobra-d'água), LeaperGatorEnemy, LogGatorEnemy (pântano)
  * -----------------------------------------------------------------------------
  */
 class Enemy extends GameEntity {
@@ -66,8 +68,8 @@ class Enemy extends GameEntity {
     this.#hp = Math.min(this.#hp, hp);
   }
 
-  /** Dá para matar pisando em cima? (o ouriço espinhoso não deixa) */
-  get stompable() { return true; }
+  /** Dá para matar pisando em cima? (o ouriço espinhoso e quem tem STOMP_HURTS não deixam) */
+  get stompable() { return !this.#type.STOMP_HURTS; }
 
   /** Troca os quadros sozinho no ritmo de FRAME_MS? (o sapo controla os dele) */
   get cyclesFrames() { return true; }

@@ -67,11 +67,6 @@ class EagleEnemy extends Enemy {
     this.#nextDiveCheck = scene.time.now + Phaser.Math.Between(0, type.DIVE_CHECK_MS * 2);
   }
 
-  /** @override Algumas não podem ser pisadas (pisar machuca, como no ouriço). */
-  get stompable() {
-    return !this.type.STOMP_HURTS;
-  }
-
   /** @override Coberta pelas asas (truque) não apanha. */
   get canBeHit() {
     return super.canBeHit && !this.#trick.shielded;

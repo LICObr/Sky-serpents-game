@@ -21,6 +21,16 @@
  *   - CHECKPOINTS: pontos de renascimento (x)
  *   - FALLING_ROCKS: (opcional) pedras caindo do teto durante a fase inteira
  *                  (veja world/falling_rocks.js e a fase 7)
+ *   - WATER:       (opcional) LAGOAS [inícioX, largura, elevaçãoDaSuperfície?]
+ *                  no lugar de um buraco (entre dois trechos de chão): quem cai
+ *                  NADA (veja world/swamp_zones.js e a fase 8). Superfície
+ *                  padrão na elevação 40 — deixe as margens um pouco acima
+ *                  (ex.: 64) para dar para sair pulando.
+ *   - LILY_PADS:   (opcional) vitórias-régias [x, x, ...] sobre as lagoas:
+ *                  plataformas que afundam se alguém ficar em cima
+ *   - MUD:         (opcional) faixas de LAMA [inícioX, largura]: andar lento
+ *                  e pulo mais baixo
+ *   - bichos de água (jacarés, cobra-d'água): o X precisa estar sobre uma lagoa
  *   - STAR_TIMES:  tempo máximo (segundos) para ganhar 3, 2 e 1 estrela
  *                  { THREE, TWO, ONE }; mais lento que ONE → nenhuma
  *   - ARENA:       tela final com o CHEFÃO (plataformas em coordenadas
@@ -39,7 +49,7 @@
  *     dá para alcançar pulando
  *
  * Para criar uma fase nova:
- *   1. copie um level_XX.js, troque o nome da constante (LEVEL_06...) e o NUMBER
+ *   1. copie um level_XX.js, troque o nome da constante (LEVEL_08...) e o NUMBER
  *   2. adicione a constante na lista de levels.js
  *   3. adicione o <script> do arquivo no index.html (antes de levels.js)
  * -----------------------------------------------------------------------------

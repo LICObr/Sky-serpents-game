@@ -52,7 +52,10 @@ const ASSET_MANIFEST = Object.freeze([
     platform_musgo: 'plataforma_musgo.png',
     // Caverna (tools/cave_background.py, tools/cave_terrain.py, tools/cave_creatures.py)
     bg_caverna: 'fundo_caverna.png', chao_caverna: 'chao_caverna.png', terra_caverna: 'terra_caverna.png',
-    platform_caverna: 'plataforma_caverna.png', pedra_caverna: 'pedra_caverna.png'
+    platform_caverna: 'plataforma_caverna.png', pedra_caverna: 'pedra_caverna.png',
+    // Pântano (tools/swamp_background.py, tools/swamp_terrain.py, tools/swamp_creatures.py)
+    bg_pantano: 'fundo_pantano.png', chao_pantano: 'chao_pantano.png', terra_pantano: 'terra_pantano.png',
+    platform_pantano: 'plataforma_pantano.png', vitoria_regia: 'vitoria_regia.png', lama: 'lama.png'
   }),
 
   // Guerreiro
@@ -97,6 +100,17 @@ const ASSET_MANIFEST = Object.freeze([
     aranha_0: 'aranha_0.png', aranha_1: 'aranha_1.png',
     besouro_dormindo: 'besouro_dormindo.png', besouro_0: 'besouro_0.png', besouro_1: 'besouro_1.png',
     traca_0: 'traca_0.png', traca_1: 'traca_1.png'
+  }),
+  // bichos do pântano (tools/swamp_creatures.py)
+  ...imagesIn('inimigos/pantano', {
+    sapo_lingua_0: 'sapo_lingua_0.png', sapo_lingua_1: 'sapo_lingua_1.png',
+    sapo_venenoso_0: 'sapo_venenoso_0.png', sapo_venenoso_1: 'sapo_venenoso_1.png',
+    sapo_boi_0: 'sapo_boi_0.png', sapo_boi_1: 'sapo_boi_1.png',
+    jacare_0: 'jacare_0.png', jacare_1: 'jacare_1.png', jacare_bote: 'jacare_bote.png', jacare_olhos: 'jacare_olhos.png',
+    jacare_tronco: 'jacare_tronco.png', jacare_acordado: 'jacare_acordado.png',
+    libelula_0: 'libelula_0.png', libelula_1: 'libelula_1.png',
+    mosquito_0: 'mosquito_0.png', mosquito_1: 'mosquito_1.png',
+    cobra_agua_0: 'cobra_agua_0.png', cobra_agua_1: 'cobra_agua_1.png'
   }),
   ...imagesIn('inimigos/morcego', {
     morcego_0: 'morcego_0.png', morcego_1: 'morcego_1.png',

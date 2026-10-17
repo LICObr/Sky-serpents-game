@@ -1,8 +1,9 @@
 /**
  * dust_cloud.js
  * -----------------------------------------------------------------------------
- * Nuvem de PÓ que a traça solta ao morrer: fica um pouquinho no ar e quem
- * passar por dentro dela fica lento (o mesmo efeito do gelo da serpente).
+ * Nuvem de PÓ que a traça solta ao morrer (e de VENENO, a do sapo
+ * venenoso): fica um pouquinho no ar e quem passar por dentro dela fica
+ * lento (o mesmo efeito do gelo da serpente).
  * -----------------------------------------------------------------------------
  */
 class DustCloud {
@@ -17,9 +18,9 @@ class DustCloud {
    * @param {Phaser.Scene} scene
    * @param {number} x
    * @param {number} y
-   * @param {{RADIUS: number, MS: number}} config DEATH_DUST do tipo do bicho
+   * @param {{RADIUS: number, MS: number, TINT?: number[]}} config DEATH_DUST do tipo do bicho
    */
-  constructor(scene, x, y, { RADIUS, MS }) {
+  constructor(scene, x, y, { RADIUS, MS, TINT = [0xd8ccb0, 0xb8a888, 0xe8dcc0] }) {
     this.#scene = scene;
     this.#x = x;
     this.#y = y;
@@ -32,7 +33,7 @@ class DustCloud {
         speed: { min: 5, max: 30 },
         scale: { start: 0.45, end: 0.9 },
         alpha: { start: 0.45, end: 0 },
-        tint: [0xd8ccb0, 0xb8a888, 0xe8dcc0],
+        tint: TINT,
         frequency: 60,
         emitZone: { type: 'random', source: new Phaser.Geom.Circle(0, 0, RADIUS * 0.6) }
       });

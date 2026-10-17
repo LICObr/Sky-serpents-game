@@ -17,6 +17,9 @@
  *
  * 1 ou 2 jogadores (PlayerParty): bichos e chefões miram no mais perto, e
  * com dois a câmera (PartyCamera) não deixa ninguém sair da tela.
+ *
+ * Extras de algumas fases: pedras caindo (caverna), lagoas para nadar, lama
+ * e vitórias-régias (pântano).
  * -----------------------------------------------------------------------------
  */
 class GameScene extends Phaser.Scene {
@@ -45,6 +48,8 @@ class GameScene extends Phaser.Scene {
   #progress;
   #arenaBackdrop = null; // cenário próprio da arena (aparece no fim do percurso)
   #fallingRocks = null;  // pedras caindo do teto (caverna)
+  #swamp = null;         // água das lagoas e lama (pântano)
+  #lilyPads = null;      // vitórias-régias (pântano)
 
   constructor() {
     super({ key: SceneKeys.GAME });
@@ -92,6 +97,8 @@ class GameScene extends Phaser.Scene {
     this.#fallingRocks = level.FALLING_ROCKS
       ? new FallingRocks(this, this.#levelMap, this.#party, level.FALLING_ROCKS)
       : null;
+    this.#swamp = level.WATER || level.MUD ? new SwampZones(this, level, this.#levelMap, this.#party) : null;
+    this.#lilyPads = level.LILY_PADS ? new LilyPads(this, level.LILY_PADS, this.#levelMap) : null;
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
     this.#potions = new PotionManager(this, level.POTIONS);
@@ -141,6 +148,7 @@ class GameScene extends Phaser.Scene {
     this.#timer.tick(delta);
     this.#clock.update();
     this.#background.update();
+    if (this.#swamp) this.#swamp.update(time); // antes de mover: água e lama mudam o andar
     this.#party.update();
     this.#camera.update(); // depois de mover: com 2 jogadores ninguém sai da tela
     this.#party.handleAttacks(this.#combat);
@@ -149,6 +157,7 @@ class GameScene extends Phaser.Scene {
     this.#enemies.update(time, this.#party);
     this.#coins.update();
     if (this.#fallingRocks) this.#fallingRocks.update(time);
+    if (this.#lilyPads) this.#lilyPads.update(time);
     this.#checkpoints.update(this.#party.frontX);
 
     if (this.#arenaBackdrop && !this.#arena.isStarted) this.#fadeInArenaBackdrop();
@@ -287,6 +296,16 @@ class GameScene extends Phaser.Scene {
     physics.collider(playerSprites, this.#levelMap.platforms);
     physics.collider(playerSprites, this.#trees.group);
     this.#enemies.addObstacles(this.#trees.group); // bichos também esbarram nelas
+
+    // Pântano: vitórias-régias afundam com o peso do jogador (os sapos ficam em
+    // cima delas sem afundar) e o jacaré-tronco aguenta o jogador até acordar
+    if (this.#lilyPads) {
+      physics.collider(playerSprites, this.#lilyPads.group, (_playerSprite, pad) => this.#lilyPads.onStoodOn(pad));
+      this.#enemies.addObstacles(this.#lilyPads.group);
+    }
+    physics.collider(playerSprites, this.#enemies.standables,
+      (_playerSprite, log) => log.getData('owner').onStoodOn(),
+      (_playerSprite, log) => log.getData('owner').isStandable);
 
     // Projétil do chefão atinge o jogador
     physics.overlap(playerSprites, this.#fireballs.group, (playerSprite, fireball) => {

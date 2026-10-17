@@ -7,6 +7,7 @@
  *     pular nem atacar. Depois de descongelar fica um tempinho imune.
  *   - EMPURRADO (vento do rabo da águia): por um instante o vento manda no
  *     andar (o jogador não consegue frear).
+ *   - NADANDO (lagoa do pântano) e NA LAMA: anda mais devagar enquanto durar.
  * Para criar novos efeitos (veneno, escudo...) basta adicionar aqui.
  * -----------------------------------------------------------------------------
  */
@@ -15,6 +16,8 @@ class PlayerStatus {
   #slowUntil = 0;
   #frozenUntil = 0;
   #pushedUntil = 0;
+  #waterDepth = null; // profundidade dos pés na água (null = fora da água)
+  #inMud = false;
   #freezeImmuneUntil = 0;
   #iceBlock = null;
   #wasFrozen = false;
@@ -27,7 +30,35 @@ class PlayerStatus {
   /** Multiplicador atual de velocidade (1 = normal). */
   get speedMultiplier() {
     if (this.isFrozen) return 0;
-    return this.isSlowed ? GameSettings.SLOW_EFFECT.SPEED_MULTIPLIER : 1;
+    let multiplier = this.isSlowed ? GameSettings.SLOW_EFFECT.SPEED_MULTIPLIER : 1;
+    if (this.isSwimming) multiplier *= GameSettings.SWIM.SPEED_MULTIPLIER;
+    if (this.#inMud) multiplier *= GameSettings.MUD.SPEED_MULTIPLIER;
+    return multiplier;
+  }
+
+  /** Pulo mais baixo na lama (gruda nos pés). */
+  get jumpMultiplier() {
+    return this.#inMud ? GameSettings.MUD.JUMP_MULTIPLIER : 1;
+  }
+
+  /** Dentro da água? */
+  get isSwimming() {
+    return this.#waterDepth !== null;
+  }
+
+  /** Quanto os pés estão abaixo da superfície da água (null = fora da água). */
+  get waterDepth() {
+    return this.#waterDepth;
+  }
+
+  /** Marca a profundidade na água (null = saiu da água). */
+  setWaterDepth(depth) {
+    this.#waterDepth = depth;
+  }
+
+  /** Pisando na lama? */
+  setInMud(inMud) {
+    this.#inMud = inMud;
   }
 
   /** Preso no gelo? */

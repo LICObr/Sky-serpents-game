@@ -2,8 +2,8 @@
  * player_movement.js
  * -----------------------------------------------------------------------------
  * Responsável por TODA a locomoção do jogador: andar (com os quadros da
- * caminhada), pular e agachar. A velocidade vem do personagem escolhido
- * e pode ser reduzida por efeitos (ex.: gelo).
+ * caminhada), pular, agachar e NADAR (lagoas do pântano). A velocidade vem
+ * do personagem escolhido e pode ser reduzida por efeitos (gelo, água, lama).
  * -----------------------------------------------------------------------------
  */
 class PlayerMovement {
@@ -11,6 +11,7 @@ class PlayerMovement {
   #input;
   #isDucking = false;
   #lastGroundedAt = 0;
+  #nextStrokeAt = 0; // próxima braçada (nadando)
 
   /**
    * @param {Player} player dono deste componente
@@ -93,11 +94,27 @@ class PlayerMovement {
    * ("coyote time" — evita falhar o pulo ao descer degraus de rampa).
    */
   #handleJump(sprite, now) {
+    if (this.#player.status.isSwimming) {
+      this.#swim(sprite, now);
+      return;
+    }
     const grounded = now - this.#lastGroundedAt <= GameSettings.PLAYER.COYOTE_TIME_MS;
     const goingUp = sprite.body.velocity.y < 0;
     if (this.#input.isJumpHeld() && grounded && !goingUp) {
-      sprite.setVelocityY(GameSettings.PLAYER.JUMP_VELOCITY);
+      sprite.setVelocityY(GameSettings.PLAYER.JUMP_VELOCITY * this.#player.status.jumpMultiplier);
       this.#lastGroundedAt = 0; // não deixa pular duas vezes no mesmo instante
     }
+  }
+
+  /**
+   * Nadando: segurar pular dá braçadas para cima; perto da superfície é o
+   * pulo normal (para sair da água).
+   */
+  #swim(sprite, now) {
+    const cfg = GameSettings.SWIM;
+    if (!this.#input.isJumpHeld() || now < this.#nextStrokeAt) return;
+    this.#nextStrokeAt = now + cfg.STROKE_MS;
+    const nearSurface = this.#player.status.waterDepth < cfg.SURFACE_JUMP_DEPTH;
+    sprite.setVelocityY(nearSurface ? GameSettings.PLAYER.JUMP_VELOCITY : cfg.STROKE_VELOCITY);
   }
 }

@@ -19,7 +19,8 @@ const TerrainThemeId = Object.freeze({
   JUNGLE_ICE: 'JUNGLE_ICE',
   HONEY: 'HONEY',
   MOSS: 'MOSS',
-  CAVE: 'CAVE'
+  CAVE: 'CAVE',
+  SWAMP: 'SWAMP'
 });
 
 /** Tipos de clima. */
@@ -29,7 +30,8 @@ const WeatherType = Object.freeze({
   SPARKLES: 'SPARKLES', // brilhos mágicos piscando
   LIGHT_SNOW: 'LIGHT_SNOW', // poucos flocos de neve
   FOG: 'FOG',           // bancos de neblina passando devagar
-  POLLEN: 'POLLEN'      // pólen dourado flutuando
+  POLLEN: 'POLLEN',     // pólen dourado flutuando
+  FIREFLIES: 'FIREFLIES' // vaga-lumes verde-água (como os cogumelos do pântano)
 });
 
 const TERRAIN_THEMES = deepFreeze({
@@ -66,5 +68,10 @@ const TERRAIN_THEMES = deepFreeze({
   [TerrainThemeId.CAVE]: {
     TOP_TEXTURE: 'chao_caverna', FILL_TEXTURE: 'terra_caverna', PLATFORM_TEXTURE: 'platform_caverna',
     WEATHER: [WeatherType.SPARKLES, WeatherType.FOG]
+  },
+  // Pântano: musgo encharcado sobre lama, neblina e vaga-lumes verde-água
+  [TerrainThemeId.SWAMP]: {
+    TOP_TEXTURE: 'chao_pantano', FILL_TEXTURE: 'terra_pantano', PLATFORM_TEXTURE: 'platform_pantano',
+    WEATHER: [WeatherType.FOG, WeatherType.FIREFLIES]
   }
 });

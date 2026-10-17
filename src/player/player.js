@@ -257,6 +257,20 @@ class Player extends GameEntity {
     this.#status.push(MS);
   }
 
+  /**
+   * Entrou ou saiu da água (pântano). Dentro dela a gravidade quase some e
+   * afunda devagar; pular vira braçada (PlayerMovement).
+   * @param {number|null} depth profundidade dos pés (null = fora da água)
+   */
+  setWaterDepth(depth) {
+    const cfg = GameSettings.SWIM;
+    const body = this.sprite.body;
+    const swimming = depth !== null;
+    if (swimming !== this.#status.isSwimming) body.setGravityY(swimming ? -GameSettings.PHYSICS.GRAVITY_Y * cfg.BUOYANCY : 0);
+    this.#status.setWaterDepth(depth);
+    if (swimming && body.velocity.y > cfg.MAX_SINK_SPEED) body.setVelocityY(cfg.MAX_SINK_SPEED); // afunda devagar
+  }
+
   /** Pulinho depois de pisar em um inimigo. */
   bounce() {
     this.sprite.setVelocityY(GameSettings.PLAYER.STOMP_BOUNCE_Y);

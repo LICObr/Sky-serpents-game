@@ -83,7 +83,8 @@ const GameSettings = deepFreeze({
     ARENA_WIDTH: 800,           // a arena do chefão ocupa uma tela inteira
     ARENA_TRIGGER_OFFSET: 140,  // quanto entrar na arena para a luta começar
     ARENA_BACKDROP_FADE_PX: 800, // cenário próprio da arena: começa a aparecer a esta distância
-    SKY_ABOVE_TERRAIN: 200      // céu acima do ponto mais alto (montanha mais alta que a tela)
+    SKY_ABOVE_TERRAIN: 200,     // céu acima do ponto mais alto (montanha mais alta que a tela)
+    LAKE_BED_Y: 590             // fundo das lagoas (WATER): ninguém afunda além disto
   },
 
   PLATFORMS: {
@@ -110,6 +111,44 @@ const GameSettings = deepFreeze({
     PUSH: { LIFT_Y: -260, MS: 420 }, // empurrão (vento): pulinho e tempo sem controle
     // Sem corações: tomba para a esquerda e fica deitado, meio transparente
     DEATH: { FALL_MS: 450, ALPHA: 0.45, LYING_HEIGHT: 18, PULSE_MS: 900 }
+  },
+
+  // Água das lagoas (pântano): nada mais devagar e boia
+  SWIM: {
+    SURFACE_ELEVATION: 40,      // altura padrão da superfície das lagoas (como a elevação do chão)
+    SPEED_MULTIPLIER: 0.55,     // anda (nada) mais devagar
+    BUOYANCY: 0.78,             // a água tira quase toda a gravidade...
+    MAX_SINK_SPEED: 110,        // ...e afunda devagarzinho (cair na água freia na hora)
+    ENTER_DEPTH: 8,             // pés este tanto abaixo da superfície = dentro da água
+    STROKE_VELOCITY: -300,      // segurando pular: braçadas para cima...
+    STROKE_MS: 280,             // ...uma a cada este tempo
+    SURFACE_JUMP_DEPTH: 34,     // perto da superfície, pular é o pulo normal (para sair da água)
+    COLOR: 0x35566a,            // cinza-azulado, como a água do fundo
+    ALPHA: 0.55,
+    DEEP_ALPHA: 0.3,            // escurece mais perto do fundo
+    SURFACE_COLOR: 0xa8d8d0,
+    BUBBLE_MS: 420,             // bolhas subindo de quem está nadando
+    DEPTH: 2.5                  // desenhada NA FRENTE dos jogadores (parecem dentro da água)
+  },
+
+  // Lama (pântano): anda devagar e o pulo fica mais baixo (gruda nos pés)
+  MUD: {
+    SPEED_MULTIPLIER: 0.5,
+    JUMP_MULTIPLIER: 0.85,
+    HEIGHT: 14,                 // faixa de lama por cima do chão
+    TILE_SCALE: 0.2,
+    BUBBLE_MS: 700              // bolhas estourando na lama
+  },
+
+  // Vitórias-régias: boiam na lagoa e AFUNDAM se alguém ficar em cima
+  LILY_PAD: {
+    TEXTURE: 'vitoria_regia',
+    SCALE: 0.2,
+    SINK_AFTER_MS: 1000,        // alguém pisou: balança este tempo e afunda
+    SINK_DEPTH: 34,             // o quanto desce ao afundar
+    SUNK_MS: 1800,              // fica no fundo e depois volta
+    WOBBLE_DEG: 4,              // balança avisando que vai afundar
+    BOB_PX: 1.5                 // boiando: sobe e desce de leve
   },
 
   // Modo 2 JOGADORES na mesma tela
