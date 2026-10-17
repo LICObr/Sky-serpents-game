@@ -1,8 +1,8 @@
 /**
  * player_movement.js
  * -----------------------------------------------------------------------------
- * Responsável por TODA a locomoção do jogador: andar, pular, agachar e o
- * pequeno "balanço" ao caminhar. A velocidade vem do personagem escolhido
+ * Responsável por TODA a locomoção do jogador: andar (com os quadros da
+ * caminhada), pular e agachar. A velocidade vem do personagem escolhido
  * e pode ser reduzida por efeitos (ex.: gelo).
  * -----------------------------------------------------------------------------
  */
@@ -10,7 +10,6 @@ class PlayerMovement {
   #player;
   #input;
   #isDucking = false;
-  #shakeStep = 0;
   #lastGroundedAt = 0;
 
   /**
@@ -35,8 +34,7 @@ class PlayerMovement {
     // Enquanto agachado o jogador não anda nem pula
     if (this.#handleDuck(sprite)) return;
 
-    this.#applyWalkShake(sprite);
-    this.#handleHorizontal(sprite);
+    this.#handleHorizontal(sprite, now);
     this.#handleJump(sprite, now);
   }
 
@@ -71,31 +69,23 @@ class PlayerMovement {
     return false;
   }
 
-  /** Leve oscilação vertical enquanto caminha no chão. */
-  #applyWalkShake(sprite) {
-    if (!this.#input.isLeftHeld() && !this.#input.isRightHeld()) return;
-    if (!sprite.body.blocked.down) return;
-
-    const { SHAKE_FREQUENCY, SHAKE_AMPLITUDE } = GameSettings.PLAYER;
-    this.#shakeStep++;
-    sprite.y += Math.sin(this.#shakeStep * SHAKE_FREQUENCY) * SHAKE_AMPLITUDE;
-  }
-
-  /** Andar para a esquerda/direita. */
-  #handleHorizontal(sprite) {
+  /** Andar para a esquerda/direita: no chão mostra os quadros da caminhada. */
+  #handleHorizontal(sprite, now) {
     const speed = this.#player.character.WALK_SPEED * this.#player.status.speedMultiplier;
 
     if (this.#input.isLeftHeld()) {
       sprite.setVelocityX(-speed);
       this.#player.face(false);
-      this.#player.showPose(PlayerPose.STAND);
     } else if (this.#input.isRightHeld()) {
       sprite.setVelocityX(speed);
       this.#player.face(true);
-      this.#player.showPose(PlayerPose.STAND);
     } else {
       sprite.setVelocityX(0);
     }
+
+    // Andando no chão: quadros da caminhada; parado ou no ar: pose parada
+    if (sprite.body.velocity.x !== 0 && sprite.body.blocked.down) this.#player.walk(now);
+    else this.#player.stopWalking();
   }
 
   /**

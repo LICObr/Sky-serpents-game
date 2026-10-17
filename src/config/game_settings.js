@@ -96,9 +96,7 @@ const GameSettings = deepFreeze({
     DEPTH: 2,                   // desenhado na frente de inimigos e chefões
     JUMP_VELOCITY: -580,
 
-    // "Balanço" ao caminhar
-    SHAKE_FREQUENCY: 0.4,
-    SHAKE_AMPLITUDE: 0.8,
+    WALK_FRAME_MS: 110,         // tempo de cada quadro da caminhada (passo, parado, passo, parado)
 
     HIT_KNOCKBACK_Y: -300,
     DAMAGE_COOLDOWN_MS: 1500,   // após levar dano, fica invulnerável (piscando) por este tempo

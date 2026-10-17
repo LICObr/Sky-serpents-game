@@ -21,6 +21,8 @@ class Player extends GameEntity {
   #health;
   #status;
   #bodyOffsetY;     // posição original da hitbox dentro do sprite
+  #walkFrame = -1;  // quadro atual da caminhada
+  #nextWalkFrameAt = 0;
 
   /**
    * @param {Phaser.Scene} scene
@@ -115,6 +117,31 @@ class Player extends GameEntity {
   showPose(pose) {
     const textures = this.#character.TEXTURES[pose];
     this.setTextureIfChanged(this.#facingRight ? textures.RIGHT : textures.LEFT);
+  }
+
+  /** Andando no chão: troca os quadros da caminhada (sem cortar a pose de ataque). */
+  walk(now) {
+    if (this.#isShowing(PlayerPose.ATTACK)) return;
+    const frames = this.#character.TEXTURES.WALK[this.#facingRight ? 'RIGHT' : 'LEFT'];
+    if (now >= this.#nextWalkFrameAt) {
+      this.#walkFrame = (this.#walkFrame + 1) % frames.length;
+      this.#nextWalkFrameAt = now + GameSettings.PLAYER.WALK_FRAME_MS;
+    }
+    this.setTextureIfChanged(frames[this.#walkFrame]);
+  }
+
+  /** Parou ou está no ar: volta para a pose parada (sem cortar a pose de ataque). */
+  stopWalking() {
+    this.#walkFrame = -1; // ao voltar a andar, começa pelo primeiro passo
+    this.#nextWalkFrameAt = 0;
+    if (!this.#isShowing(PlayerPose.ATTACK)) this.showPose(PlayerPose.STAND);
+  }
+
+  /** A textura atual é a desta pose (virado para qualquer lado)? */
+  #isShowing(pose) {
+    const { RIGHT, LEFT } = this.#character.TEXTURES[pose];
+    const key = this.sprite.texture.key;
+    return key === RIGHT || key === LEFT;
   }
 
   /** Movimentação e efeitos do frame. */

@@ -55,7 +55,10 @@ const ASSET_MANIFEST = Object.freeze([
     heroi_ataque_direita: 'heroi_ataque_direita.png',
     heroi_ataque_esquerda: 'heroi_ataque_esquerda.png',
     heroi_agachado_direita: 'heroi_agachado_direita.png',
-    heroi_agachado_esquerda: 'heroi_agachado_esquerda.png'
+    heroi_agachado_esquerda: 'heroi_agachado_esquerda.png',
+    // caminhada (tools/walk_frames.py)
+    heroi_passo_a_direita: 'heroi_passo_a_direita.png', heroi_passo_b_direita: 'heroi_passo_b_direita.png',
+    heroi_passo_a_esquerda: 'heroi_passo_a_esquerda.png', heroi_passo_b_esquerda: 'heroi_passo_b_esquerda.png'
   }),
 
   // Arqueira
@@ -66,6 +69,9 @@ const ASSET_MANIFEST = Object.freeze([
     arqueira_ataque_esquerda: 'arqueira_ataque_esquerda.png',
     arqueira_agachada_direita: 'arqueira_agachada_direita.png',
     arqueira_agachada_esquerda: 'arqueira_agachada_esquerda.png',
+    // caminhada (tools/walk_frames.py)
+    arqueira_passo_a_direita: 'arqueira_passo_a_direita.png', arqueira_passo_b_direita: 'arqueira_passo_b_direita.png',
+    arqueira_passo_a_esquerda: 'arqueira_passo_a_esquerda.png', arqueira_passo_b_esquerda: 'arqueira_passo_b_esquerda.png',
     flecha: 'flecha.png'
   }),
 

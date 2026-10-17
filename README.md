@@ -93,6 +93,7 @@ python tools/boss_intros.py
 
 | Script | O que gera |
 | --- | --- |
+| `walk_frames.py` | quadros de caminhada dos personagens (mexe só pernas e mão) |
 | `boss_intros.py` | imagens de abertura dos dragões e da serpente |
 | `bee_boss_sprites.py` | colmeia (cenário + recorte), animação da Abelha Rainha, mel |
 | `coin_sprite.py` | a moeda |
