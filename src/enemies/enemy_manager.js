@@ -6,10 +6,8 @@
  *   - SORTEIA bichos extras em lugares aleatórios a cada partida
  *     (RANDOM_ENEMIES: quem anda só nasce em chão firme, quem voa no céu);
  *   - solta ONDAS: de tempos em tempos surge um bicho à frente do jogador,
- *     respeitando um limite de bichos da onda perto da câmera (para até a
- *     luta com o chefão começar). Uma fase pode ter vários grupos de ondas,
- *     e um grupo pode começar mais adiante (FROM_X) e ir apertando o ritmo
- *     até o chefão (CLOSEST_INTERVAL_MS / CLOSEST_MAX_NEAR);
+ *     respeitando um limite de bichos perto da câmera (para até a luta
+ *     com o chefão começar);
  *   - atualiza só os bichos perto da câmera (os outros "dormem" — mais leve).
  *
  * Escolhe a classe certa de cada tipo (padrão "Factory"):
@@ -30,7 +28,7 @@ class EnemyManager {
   #walkers;   // bichos de chão (colidem com o terreno)
   #seeds;     // sementes das plantas cuspidoras
   #eggs;      // ovos das águias
-  #wavesOn = false;
+  #waveTimer = null;
 
   /**
    * @param {Phaser.Scene} scene
@@ -92,7 +90,8 @@ class EnemyManager {
 
   /** Para de soltar ondas (ex.: quando a luta com o chefão começa). */
   stopWaves() {
-    this.#wavesOn = false;
+    if (this.#waveTimer) this.#waveTimer.remove();
+    this.#waveTimer = null;
   }
 
   /**
@@ -152,50 +151,28 @@ class EnemyManager {
     });
   }
 
-  /** Começa a soltar ondas de bichos à frente do jogador (cada grupo no seu ritmo). */
+  /** Começa a soltar ondas de bichos à frente do jogador. */
   #startWaves() {
     const waves = this.#level.RANDOM_ENEMIES && this.#level.RANDOM_ENEMIES.WAVES;
     if (!waves) return;
-    this.#wavesOn = true;
-    [].concat(waves).forEach(wave => this.#scheduleWave(wave));
-  }
 
-  /** Agenda o próximo bicho do grupo (o intervalo encurta perto do chefão). */
-  #scheduleWave(wave) {
-    const progress = Math.max(0, this.#waveProgress(wave));
-    const delay = Phaser.Math.Linear(wave.INTERVAL_MS, wave.CLOSEST_INTERVAL_MS ?? wave.INTERVAL_MS, progress);
-    this.#scene.time.delayedCall(delay, () => {
-      if (!this.#wavesOn) return;
-      this.#spawnWave(wave);
-      this.#scheduleWave(wave);
+    this.#waveTimer = this.#scene.time.addEvent({
+      delay: waves.INTERVAL_MS,
+      loop: true,
+      callback: () => this.#spawnWave(waves)
     });
   }
 
-  /**
-   * Quanto a câmera já andou no trecho do grupo: 0 no começo (FROM_X),
-   * 1 perto da arena; negativo = ainda não chegou no trecho.
-   */
-  #waveProgress(wave) {
-    const { SAFE_BEFORE_ARENA } = GameSettings.ENEMY.RANDOM_SPAWN;
-    const from = wave.FROM_X || 0;
-    const to = this.#level.ARENA_START_X - SAFE_BEFORE_ARENA;
-    return Math.min(1, (this.#scene.cameras.main.worldView.right - from) / (to - from));
-  }
-
-  /** Um bicho novo logo além da borda direita da tela (se não houver bichos da onda demais). */
-  #spawnWave(wave) {
-    const progress = this.#waveProgress(wave);
-    if (progress < 0) return; // o trecho deste grupo ainda não começou
-    const maxNear = Math.round(Phaser.Math.Linear(wave.MAX_NEAR, wave.CLOSEST_MAX_NEAR ?? wave.MAX_NEAR, progress));
-    const ofThisWave = enemy => wave.TYPES.some(id => ENEMY_TYPES[id] === enemy.type);
-    const nearby = this.#enemies.filter(e => e.isAlive && ofThisWave(e) && this.#isNearCamera(e.x, 0)).length;
-    if (nearby >= maxNear) return;
+  /** Um bicho novo logo além da borda direita da tela (se não houver bichos demais). */
+  #spawnWave(waves) {
+    const nearby = this.#enemies.filter(e => e.isAlive && this.#isNearCamera(e.x, 0)).length;
+    if (nearby >= waves.MAX_NEAR) return;
 
     const { WAVE_AHEAD_X, SAFE_BEFORE_ARENA } = GameSettings.ENEMY.RANDOM_SPAWN;
     const x = this.#scene.cameras.main.worldView.right + WAVE_AHEAD_X;
     if (x > this.#level.ARENA_START_X - SAFE_BEFORE_ARENA) return; // nada de ondas perto da arena
 
-    const type = Phaser.Utils.Array.GetRandom(wave.TYPES);
+    const type = Phaser.Utils.Array.GetRandom(waves.TYPES);
     if (GROUND_BEHAVIORS.includes(ENEMY_TYPES[type].BEHAVIOR)) {
       if (this.#isFirmGround(x)) this.#spawn({ TYPE: type, X: x });
     } else {
@@ -209,13 +186,12 @@ class EnemyManager {
    */
   #randomFlyerY(type, x) {
     const { FLYER_Y, FLYER_CLEARANCE } = GameSettings.ENEMY.RANDOM_SPAWN;
-    const height = ENEMY_TYPES[type].SOAR_Y || FLYER_Y; // águias voam mais alto
     const range = ENEMY_TYPES[type].PATROL_RANGE || 0;
     let highestTop = GameSettings.LEVEL.GROUND_TOP;
     for (let px = x - range; px <= x + range; px += 16) {
       highestTop = Math.min(highestTop, this.#levelMap.surfaceYAt(px) ?? highestTop);
     }
-    return Math.min(Phaser.Math.Between(height.MIN, height.MAX), highestTop - FLYER_CLEARANCE);
+    return Math.min(Phaser.Math.Between(FLYER_Y.MIN, FLYER_Y.MAX), highestTop - FLYER_CLEARANCE);
   }
 
   /** Sorteia um x com chão firme (sem buraco nem beirada) e longe de outros bichos. */
