@@ -8,26 +8,22 @@
  *   - frontX          → o mais à frente (checkpoint, chegada, fim do percurso)
  *   - inGame          → quem está jogando agora
  *
- * Modo 2 jogadores: quem fica sem corações sai da partida e volta depois de
- * PARTY.REVIVE_MS ao lado do parceiro, com metade dos corações. Se os dois
- * ficarem fora, é o fim (PARTY_DEFEATED → game over). Com o fogo amigo
- * ligado, um pode acertar o outro.
+ * Modo 2 jogadores: quem fica sem corações está fora até o fim da fase (o
+ * outro continua sozinho). Se os dois ficarem fora, é o fim (PARTY_DEFEATED →
+ * game over). Com o fogo amigo ligado, um pode acertar o outro.
  * -----------------------------------------------------------------------------
  */
 class PlayerParty {
-  #scene;
   #players;
   #eventBus;
   #levelMap;
 
   /**
-   * @param {Phaser.Scene} scene
    * @param {Player[]} players
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {LevelMap} levelMap para achar chão firme ao renascer
    */
-  constructor(scene, players, eventBus, levelMap) {
-    this.#scene = scene;
+  constructor(players, eventBus, levelMap) {
     this.#players = players;
     this.#eventBus = eventBus;
     this.#levelMap = levelMap;
@@ -38,7 +34,7 @@ class PlayerParty {
   get isCoop()  { return this.#players.length > 1; }
   get sprites() { return this.#players.map(player => player.sprite); }
 
-  /** Quem está jogando agora (no modo 2 jogadores, quem caiu fica um tempo fora). */
+  /** Quem está jogando agora (no modo 2 jogadores, quem ficou sem corações está fora). */
   get inGame() {
     return this.#players.filter(player => !player.isKnockedOut);
   }
@@ -101,27 +97,10 @@ class PlayerParty {
     return players.map(player => player.x);
   }
 
-  /** Ficou sem corações: sai um tempo (se o parceiro ainda joga) ou é o fim. */
+  /** Ficou sem corações: está fora até o fim da fase (ou é o fim, se não sobrou ninguém). */
   #onPlayerDied(player) {
     const partnerInGame = this.inGame.some(other => other !== player);
-    if (!partnerInGame) {
-      this.#eventBus.emit(GameEvents.PARTY_DEFEATED);
-      return;
-    }
-    player.knockOut();
-    this.#scene.time.delayedCall(GameSettings.PARTY.REVIVE_MS, () => this.#revive(player));
-  }
-
-  /** Volta ao lado do parceiro com parte dos corações. */
-  #revive(player) {
-    if (!this.inGame.some(other => other !== player)) return; // os dois caíram: a partida acabou
-    const spot = this.spotNearPartner(player);
-    if (!spot) {
-      // parceiro pulando sobre um buraco: tenta de novo daqui a pouco
-      this.#scene.time.delayedCall(500, () => this.#revive(player));
-      return;
-    }
-    const hearts = Math.max(1, Math.ceil(player.health.maxHearts * GameSettings.PARTY.REVIVE_HEARTS_RATIO));
-    player.revive(spot.x, spot.groundY, hearts);
+    if (partnerInGame) player.knockOut();
+    else this.#eventBus.emit(GameEvents.PARTY_DEFEATED);
   }
 }

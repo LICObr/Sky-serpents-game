@@ -19,7 +19,7 @@
 class Player extends GameEntity {
   #character;
   #slot;                // 0 = jogador 1, 1 = jogador 2
-  #knockedOut = false;  // sem corações, esperando voltar (modo 2 jogadores)
+  #knockedOut = false;  // sem corações: fora até o fim da fase (modo 2 jogadores)
   #facingRight = true;
   #movement;
   #attack;
@@ -253,26 +253,12 @@ class Player extends GameEntity {
     return this.y > GameSettings.LEVEL.PIT_Y;
   }
 
-  /** Sem corações no modo 2 jogadores: some até voltar (PlayerParty). */
+  /** Sem corações no modo 2 jogadores: some até o fim da fase (PlayerParty). */
   knockOut() {
     this.#knockedOut = true;
     this.#shield.hide();
     this.sprite.setVisible(false);
     this.sprite.body.enable = false;
-  }
-
-  /**
-   * Volta para a partida ao lado do parceiro, piscando (sem tomar dano por um tempo).
-   * @param {number} x
-   * @param {number} groundY altura do chão naquele ponto
-   * @param {number} hearts corações com que volta
-   */
-  revive(x, groundY, hearts) {
-    this.#knockedOut = false;
-    this.sprite.setVisible(true);
-    this.sprite.body.enable = true;
-    this.respawnAt(x, groundY);
-    this.#health.revive(hearts);
   }
 
   /**

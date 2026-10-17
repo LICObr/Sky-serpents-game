@@ -205,7 +205,7 @@ class GameScene extends Phaser.Scene {
   #onPlayerFell(player) {
     // Buraco sempre tira coração, mesmo durante o cooldown de dano
     player.health.takeDamage({ force: true });
-    if (player.health.isDead) return; // (com 2 jogadores ele sai um tempo e volta depois)
+    if (player.health.isDead) return; // (com 2 jogadores ele está fora até o fim da fase)
     const spot = this.#party.spotNearPartner(player);
     if (spot) {
       player.respawnAt(spot.x, spot.groundY);
@@ -223,7 +223,7 @@ class GameScene extends Phaser.Scene {
       const input = new InputController(this, keys, slot === 0 ? this.#touch : null);
       return PlayerFactory.create(this, character, slot, input, this.#eventBus, this.#match);
     });
-    return new PlayerParty(this, players, this.#eventBus, this.#levelMap);
+    return new PlayerParty(players, this.#eventBus, this.#levelMap);
   }
 
   /**

@@ -68,13 +68,6 @@ class PlayerHealth {
     this.#invulnerableUntil = Math.max(this.#invulnerableUntil, this.#player.scene.time.now + ms);
   }
 
-  /** Volta para a partida com alguns corações, piscando como depois de um dano (modo 2 jogadores). */
-  revive(hearts) {
-    this.#hearts = Math.min(hearts, this.#maxHearts);
-    this.#emitHeartsChanged();
-    this.#startDamageCooldown();
-  }
-
   /** Recupera um coração (até o máximo). */
   heal() {
     if (this.isFull) return;
