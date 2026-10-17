@@ -16,6 +16,7 @@ const LEVEL_03 = {
   },
   TERRAIN: TerrainThemeId.MYSTIC,
   ARENA_START_X: 4000,
+  STAR_TIMES: { THREE: 120, TWO: 180, ONE: 300 }, // segundos para 3, 2 e 1 estrela
   GROUND: [
     [0, 360], [360, 120, 48], [480, 120, 96], [792, 240], [1096, 200],
     [1456, 120, 80], [1640, 120, 80], [1824, 160, 80], [2144, 260],

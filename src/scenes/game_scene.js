@@ -19,6 +19,7 @@
 class GameScene extends Phaser.Scene {
   #match;
   #eventBus;
+  #timer;
   #flow;
   #background;
   #levelMap;
@@ -34,6 +35,7 @@ class GameScene extends Phaser.Scene {
   #boss = null;
   #trees;
   #playerHud;
+  #clock;
   #banner;
   #touch;
   #progress;
@@ -59,7 +61,8 @@ class GameScene extends Phaser.Scene {
     // Canal de comunicação entre as classes (recriado a cada partida)
     this.#eventBus = new Phaser.Events.EventEmitter();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.#eventBus.removeAllListeners());
-    this.#flow = new GameFlow(this, this.#match, this.#eventBus);
+    this.#timer = new LevelTimer();
+    this.#flow = new GameFlow(this, this.#match, this.#eventBus, this.#timer);
     MusicPlayer.ensurePlaying(this);
 
     // Mundo (a ordem de criação define o que fica desenhado por cima)
@@ -101,6 +104,7 @@ class GameScene extends Phaser.Scene {
     this.#playerHud = new PlayerHUD(this, this.#player, this.#eventBus); // corações, especial e escudinho
     new CoinHUD(this, this.#eventBus);
     this.#progress = new LevelProgressBar(this, finishX, this.#eventBus);
+    this.#clock = new LevelClockHUD(this, this.#timer);
     // Chefão chamando bichos (ex.: morceguinhos do urso, vespas da colmeia)
     this.#eventBus.on(GameEvents.BOSS_SUMMON, (spawn, onSpawned) => onSpawned(this.#enemies.spawnEnemy(spawn)));
     // Luta em etapas: derrotou um chefão que tem "próximo" → ele aparece
@@ -122,9 +126,11 @@ class GameScene extends Phaser.Scene {
     this.#setupPause();
   }
 
-  update(time) {
+  update(time, delta) {
     if (this.#flow.hasEnded) return;
 
+    this.#timer.tick(delta);
+    this.#clock.update();
     this.#background.update();
     this.#player.update();
     this.#player.handleAttack(this.#combat);

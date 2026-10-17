@@ -21,6 +21,7 @@ const LEVEL_05 = {
     SHOT_CHANCE: 1.15, PROJECTILE_SPEED: 1.1, SPECIAL_INTERVAL: 0.85
   },
   ARENA_START_X: 4400,
+  STAR_TIMES: { THREE: 180, TWO: 270, ONE: 420 }, // mais longa: montanha e dois chefões
   GROUND: [
     [0, 440], [568, 220, 64], [788, 200, 128], [1148, 180, 48],
     [1392, 200], [1592, 160, 64], [1752, 140, 128], [1956, 200, 96],

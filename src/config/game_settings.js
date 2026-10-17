@@ -493,7 +493,18 @@ const GameSettings = deepFreeze({
     COLUMNS: 6,
     BOX: { WIDTH: 90, HEIGHT: 64 },
     GAP: { X: 20, Y: 16 },
-    START_Y: 150
+    START_Y: 150,
+    NUMBER_Y: -7,               // número um pouco acima do meio...
+    STARS_Y: 18,                // ...e as estrelas embaixo dele
+    STAR_RADIUS: 5
+  },
+
+  // Estrelas pelo tempo da fase (as metas ficam em cada fase: STAR_TIMES)
+  STARS: {
+    STORAGE_KEY: 'skySerpents.progress', // fases concluídas, melhor tempo e estrelas
+    COLOR: 0xffd93b,
+    OUTLINE: 0x7a4a00,
+    RADIUS: 6
   },
 
   HUD: {
@@ -509,6 +520,8 @@ const GameSettings = deepFreeze({
     COINS: { RIGHT_X: 780, Y: 30, ICON_SCALE: 0.42, GAP: 8, TEXT_SIZE: 14 },
     // Progresso da fase no topo (no lugar onde aparece a barra do chefão)
     PROGRESS: { X: 250, Y: 28, WIDTH: 400, HEIGHT: 14, ALPHA: 0.35, DOT_RADIUS: 7, FLAG_HEIGHT: 26 },
+    // Relógio da fase, logo depois da bandeirinha
+    CLOCK: { X: 688, Y: 28, SIZE: 8 },
     BANNER_DURATION_MS: 2200,
     DEPTH: 10
   },

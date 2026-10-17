@@ -18,6 +18,7 @@ const LEVEL_04 = {
     SHOT_CHANCE: 1.15, PROJECTILE_SPEED: 1.1, SPECIAL_INTERVAL: 0.85
   },
   ARENA_START_X: 4000,
+  STAR_TIMES: { THREE: 120, TWO: 180, ONE: 300 }, // segundos para 3, 2 e 1 estrela
   GROUND: [
     [0, 600], [728, 300, 64], [1156, 364], [1584, 320], [1904, 160, 48],
     [2064, 240, 96], [2496, 440], [3000, 340], [3468, 200, 64], [3796, 204]

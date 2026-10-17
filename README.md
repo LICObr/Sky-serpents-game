@@ -49,6 +49,8 @@ O jogo também pausa sozinho quando a janela perde o foco (trocar de aba, minimi
 
 **Moedas:** cada bicho derrotado tem 30% de chance de deixar uma moeda. O total fica guardado no navegador e aparece no canto superior direito (no jogo e no menu).
 
+**Estrelas:** o relógio no topo da tela conta o tempo da fase (a pausa não conta). Terminando rápido você ganha até 3 estrelas — os tempos de cada fase ficam em `STAR_TIMES`, no arquivo dela. Na escolha de fase, as fases concluídas ganham um check verde e mostram as estrelas e o recorde.
+
 ## Estrutura do projeto
 
 ```

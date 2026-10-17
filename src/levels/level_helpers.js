@@ -19,6 +19,8 @@
  *                        jogador (até um limite de bichos perto da câmera)
  *   - POTIONS:     poções de vida [x, y]
  *   - CHECKPOINTS: pontos de renascimento (x)
+ *   - STAR_TIMES:  tempo máximo (segundos) para ganhar 3, 2 e 1 estrela
+ *                  { THREE, TWO, ONE }; mais lento que ONE → nenhuma
  *   - ARENA:       tela final com o CHEFÃO (plataformas em coordenadas
  *                  relativas ao início da arena)
  *   - CHALLENGE:   progressão da fase (multiplicadores sobre a velocidade e os

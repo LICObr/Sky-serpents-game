@@ -16,6 +16,7 @@ const LEVEL_01 = {
   },
   TERRAIN: TerrainThemeId.MEADOW,
   ARENA_START_X: 4000,
+  STAR_TIMES: { THREE: 120, TWO: 180, ONE: 300 }, // segundos para 3, 2 e 1 estrela
   GROUND: [
     [0, 520], [680, 260, 64], [1068, 292],
     [1424, 220], [1644, 200, 48], [1844, 240, 96],

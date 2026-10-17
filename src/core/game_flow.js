@@ -6,21 +6,25 @@
  * e mostra a tela final com as opções:
  *   derrota → [R] tentar de novo | [F] escolher fase | [ENTER] menu
  *   vitória → [ENTER] próxima fase | [F] escolher fase | [M] menu
+ * Na vitória o tempo da fase vira estrelas e fica guardado (LevelProgress).
  * -----------------------------------------------------------------------------
  */
 class GameFlow {
   #scene;
   #match;
+  #timer;
   #hasEnded = false;
 
   /**
    * @param {Phaser.Scene} scene
    * @param {MatchConfig} match
    * @param {Phaser.Events.EventEmitter} eventBus
+   * @param {LevelTimer} timer tempo da fase (vale estrelas)
    */
-  constructor(scene, match, eventBus) {
+  constructor(scene, match, eventBus, timer) {
     this.#scene = scene;
     this.#match = match;
+    this.#timer = timer;
     eventBus.on(GameEvents.PLAYER_DIED, () => this.gameOver());
     // Luta em etapas (NEXT_BOSS): a vitória só vem no último chefão
     eventBus.on(GameEvents.BOSS_DEFEATED, boss => {
@@ -54,6 +58,11 @@ class GameFlow {
   victory(subtitle) {
     if (!this.#end()) return;
 
+    const level = this.#match.level;
+    const elapsedMs = this.#timer.elapsedMs;
+    const stars = StarRating.count(level, elapsedMs);
+    const beatRecord = LevelProgress.record(level.NUMBER, elapsedMs, stars);
+
     const options = this.#match.hasNextLevel
       ? [
           { label: '[ENTER] Próxima fase', key: 'ENTER', action: () => this.#restart(this.#match.nextLevel()) },
@@ -69,7 +78,8 @@ class GameFlow {
       title: this.#match.hasNextLevel ? 'FASE CONCLUIDA!' : 'VOCE ZEROU O JOGO!',
       subtitle,
       color: '#ffe066',
-      options
+      options,
+      result: { time: LevelTimer.format(elapsedMs), stars, beatRecord }
     });
   }
 
@@ -80,6 +90,7 @@ class GameFlow {
   #end() {
     if (this.#hasEnded) return false;
     this.#hasEnded = true;
+    this.#timer.stop();
     this.#scene.physics.pause();
     return true;
   }

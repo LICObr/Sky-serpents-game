@@ -17,6 +17,7 @@ class LevelSelectScene extends Phaser.Scene {
   #slots = [];
   #selected = 0;
   #info;
+  #goals;
   #background;
 
   constructor() {
@@ -58,8 +59,9 @@ class LevelSelectScene extends Phaser.Scene {
       }));
     }
 
-    this.#info = this.add.text(WIDTH / 2, HEIGHT - 58, '', UiStyle.text(10)).setOrigin(0.5);
-    this.add.text(WIDTH / 2, HEIGHT - 26, 'SETAS escolher    ENTER jogar    ESC voltar',
+    this.#info = this.add.text(WIDTH / 2, HEIGHT - 72, '', UiStyle.text(10)).setOrigin(0.5);
+    this.#goals = this.add.text(WIDTH / 2, HEIGHT - 50, '', UiStyle.text(7, '#ffd93b')).setOrigin(0.5);
+    this.add.text(WIDTH / 2, HEIGHT - 22, 'SETAS escolher    ENTER jogar    ESC voltar',
       UiStyle.text(7, '#c8c0e0')).setOrigin(0.5);
 
     this.#select(LevelSelectScene.#lastIndex);
@@ -91,6 +93,14 @@ class LevelSelectScene extends Phaser.Scene {
     this.#info
       .setText(level ? `Fase ${number}  -  ${level.NAME}` : `Fase ${number}  -  em desenvolvimento`)
       .setColor(level ? '#ffffff' : '#ff7a6a');
+    this.#goals.setText(level ? LevelSelectScene.#goalsLine(level) : '');
+  }
+
+  /** Recorde (se já concluída) e o tempo para cada estrela. */
+  static #goalsLine(level) {
+    const { bestMs } = LevelProgress.of(level.NUMBER);
+    const record = bestMs === null ? 'Ainda não concluída' : `Recorde ${LevelTimer.format(bestMs)}`;
+    return `${record}   -   ${StarRating.goalsText(level)}`;
   }
 
   #play(index) {

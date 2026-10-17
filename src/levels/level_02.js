@@ -16,6 +16,7 @@ const LEVEL_02 = {
   },
   TERRAIN: TerrainThemeId.ICE,
   ARENA_START_X: 4000,
+  STAR_TIMES: { THREE: 120, TWO: 180, ONE: 300 }, // segundos para 3, 2 e 1 estrela
   GROUND: [
     [0, 400], [528, 200, 64], [792, 160, 64], [1080, 240, 128],
     [1576, 236], [1876, 200], [2076, 160, 56], [2300, 200, 56],
