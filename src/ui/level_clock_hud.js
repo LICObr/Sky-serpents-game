@@ -1,7 +1,7 @@
 /**
  * level_clock_hud.js
  * -----------------------------------------------------------------------------
- * RELÓGIO da fase no topo da tela, ao lado da bandeirinha de chegada
+ * RELÓGIO da fase no topo da tela, embaixo da bandeirinha de chegada
  * (terminar rápido vale mais estrelas).
  * -----------------------------------------------------------------------------
  */

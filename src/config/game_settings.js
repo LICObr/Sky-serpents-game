@@ -543,7 +543,7 @@ const GameSettings = deepFreeze({
     // HUD de cada jogador: o 1 no canto esquerdo, o 2 no direito (embaixo das moedas)
     PLAYERS: [
       { HEARTS_X: 30, Y: 30, SIDE: 'LEFT' },
-      { HEARTS_X: 770, Y: 72, SIDE: 'RIGHT' }
+      { HEARTS_X: 770, Y: 86, SIDE: 'RIGHT' }
     ],
     // Caixinhas de recarga embaixo dos corações (especial e escudinho)
     COOLDOWN: { SIZE: 30, ROW_GAP: 38 },
@@ -556,8 +556,8 @@ const GameSettings = deepFreeze({
     COINS: { RIGHT_X: 780, Y: 30, ICON_SCALE: 0.42, GAP: 8, TEXT_SIZE: 14 },
     // Progresso da fase no topo (no lugar onde aparece a barra do chefão)
     PROGRESS: { X: 250, Y: 28, WIDTH: 400, HEIGHT: 14, ALPHA: 0.35, DOT_RADIUS: 7, FLAG_HEIGHT: 26 },
-    // Relógio da fase, logo depois da bandeirinha
-    CLOCK: { X: 688, Y: 28, SIZE: 8 },
+    // Relógio da fase embaixo da bandeirinha (as moedas crescem para a esquerda e não chegam nele)
+    CLOCK: { X: 650, Y: 52, SIZE: 8 },
     BANNER_DURATION_MS: 2200,
     DEPTH: 10
   },
