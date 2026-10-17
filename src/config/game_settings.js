@@ -510,10 +510,11 @@ const GameSettings = deepFreeze({
   SPECIAL: {
     COOLDOWN_MS: 25000,
     KILL_REDUCTION_MS: 2000,    // cada bicho derrotado adianta a recarga em 2s
-    ARROW_STORM: {              // arqueira: flechas para todas as direções
-      ARROWS: 16,
+    ARROW_STORM: {              // arqueira: leque de flechas para a frente
+      ARROWS: 6,                // flechas por onda
       WAVES: 2,
-      WAVE_DELAY_MS: 160
+      WAVE_DELAY_MS: 160,
+      FAN_DEG: 180              // de reto para cima até reto para baixo (nada para trás)
     },
     DASH: {                     // guerreiro: investida com dano contínuo
       DURATION_MS: 500,
