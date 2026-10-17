@@ -160,6 +160,7 @@ const GameSettings = deepFreeze({
       SAFE_BEFORE_ARENA: 250,   // nem colado na arena do chefão
       MIN_DISTANCE: 70,         // distância mínima entre bichos sorteados
       FLYER_Y: { MIN: 200, MAX: 360 },
+      FLYER_CLEARANCE: 60,      // quem voa fica pelo menos isto acima do morro mais alto por perto
       EDGE_MARGIN: 30,          // quem anda precisa de chão firme dos dois lados
       WAVE_AHEAD_X: 80,         // a onda surge um pouco além da borda da tela
       MAX_TRIES: 30

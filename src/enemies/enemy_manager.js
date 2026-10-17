@@ -139,8 +139,8 @@ class EnemyManager {
     }
     for (let i = 0; i < random.FLYERS.COUNT; i++) {
       const x = this.#findFreeX(minX, maxX);
-      const y = Phaser.Math.Between(FLYER_Y.MIN, FLYER_Y.MAX);
-      this.#spawn({ TYPE: Phaser.Utils.Array.GetRandom(random.FLYERS.TYPES), X: x, Y: y });
+      const type = Phaser.Utils.Array.GetRandom(random.FLYERS.TYPES);
+      this.#spawn({ TYPE: type, X: x, Y: this.#randomFlyerY(type, x) });
     }
     // Raros (ex.: águia), voando bem alto
     (random.SPECIALS || []).forEach(({ TYPE, COUNT }) => {
@@ -168,7 +168,7 @@ class EnemyManager {
     const nearby = this.#enemies.filter(e => e.isAlive && this.#isNearCamera(e.x, 0)).length;
     if (nearby >= waves.MAX_NEAR) return;
 
-    const { WAVE_AHEAD_X, SAFE_BEFORE_ARENA, FLYER_Y } = GameSettings.ENEMY.RANDOM_SPAWN;
+    const { WAVE_AHEAD_X, SAFE_BEFORE_ARENA } = GameSettings.ENEMY.RANDOM_SPAWN;
     const x = this.#scene.cameras.main.worldView.right + WAVE_AHEAD_X;
     if (x > this.#level.ARENA_START_X - SAFE_BEFORE_ARENA) return; // nada de ondas perto da arena
 
@@ -176,8 +176,22 @@ class EnemyManager {
     if (GROUND_BEHAVIORS.includes(ENEMY_TYPES[type].BEHAVIOR)) {
       if (this.#isFirmGround(x)) this.#spawn({ TYPE: type, X: x });
     } else {
-      this.#spawn({ TYPE: type, X: x, Y: Phaser.Math.Between(FLYER_Y.MIN, FLYER_Y.MAX) });
+      this.#spawn({ TYPE: type, X: x, Y: this.#randomFlyerY(type, x) });
     }
+  }
+
+  /**
+   * Altura sorteada para quem voa: no céu, mas sempre acima do terreno mais
+   * alto por onde ele vai patrulhar (senão nasce dentro de uma montanha).
+   */
+  #randomFlyerY(type, x) {
+    const { FLYER_Y, FLYER_CLEARANCE } = GameSettings.ENEMY.RANDOM_SPAWN;
+    const range = ENEMY_TYPES[type].PATROL_RANGE || 0;
+    let highestTop = GameSettings.LEVEL.GROUND_TOP;
+    for (let px = x - range; px <= x + range; px += 16) {
+      highestTop = Math.min(highestTop, this.#levelMap.surfaceYAt(px) ?? highestTop);
+    }
+    return Math.min(Phaser.Math.Between(FLYER_Y.MIN, FLYER_Y.MAX), highestTop - FLYER_CLEARANCE);
   }
 
   /** Sorteia um x com chão firme (sem buraco nem beirada) e longe de outros bichos. */
