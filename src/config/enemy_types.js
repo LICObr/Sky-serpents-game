@@ -29,13 +29,16 @@ const EnemyBehavior = Object.freeze({
   SHOOTER: 'SHOOTER',
   DIVER: 'DIVER',
   SPIKY: 'SPIKY',
-  EAGLE: 'EAGLE'
+  EAGLE: 'EAGLE',
+  SONIC: 'SONIC',       // morcego que grita: ondas de som empurram o jogador
+  DROPPER: 'DROPPER',   // aranha pendurada no teto que cai em cima do jogador
+  AMBUSH: 'AMBUSH'      // besouro que finge ser pedra e investe quando o jogador chega
 });
 
 /** Bichos que vivem no chão (nascem sobre o terreno e colidem com ele). */
 const GROUND_BEHAVIORS = Object.freeze([
   EnemyBehavior.WALKER, EnemyBehavior.SNAKE, EnemyBehavior.HOPPER,
-  EnemyBehavior.SHOOTER, EnemyBehavior.SPIKY
+  EnemyBehavior.SHOOTER, EnemyBehavior.SPIKY, EnemyBehavior.AMBUSH
 ]);
 
 const EnemyTypeId = Object.freeze({
@@ -60,7 +63,15 @@ const EnemyTypeId = Object.freeze({
   EAGLE_GOLD: 'EAGLE_GOLD',
   EAGLE_FAN: 'EAGLE_FAN',
   EAGLE_WIDE: 'EAGLE_WIDE',
-  EAGLE_BLACK: 'EAGLE_BLACK'
+  EAGLE_BLACK: 'EAGLE_BLACK',
+  // bichos da caverna (fase 7)
+  BAT_VAMPIRE: 'BAT_VAMPIRE',
+  BAT_SONIC: 'BAT_SONIC',
+  BAT_GIANT: 'BAT_GIANT',
+  CENTIPEDE: 'CENTIPEDE',
+  SPIDER: 'SPIDER',
+  ROCK_BEETLE: 'ROCK_BEETLE',
+  MOTH: 'MOTH'
 });
 
 /** Quadros de uma variação da águia (tools/eagle_variants.py). */
@@ -376,5 +387,119 @@ const ENEMY_TYPES = deepFreeze({
     REBOUND: { RISE_SPEED: 70, PAUSE_MS: 900 }, // sobe devagarzinho, na velocidade do morcego
     // ao subir de volta solta 3 penas afiadas que caem balançando
     TRICK: { ID: 'FEATHER_DARTS', COUNT: 3, SPREAD_X: 90, SPEED_Y: 60, TEXTURE: 'aguia_pena' }
+  },
+
+  // ---------------------------------------------------------------- caverna (fase 7)
+  // Vampiro: dá rasante como a vespa e a mordida deixa o jogador lento
+  [EnemyTypeId.BAT_VAMPIRE]: {
+    NAME: 'Morcego-Vampiro',
+    BEHAVIOR: EnemyBehavior.DIVER,
+    FRAMES: ['morcego_vampiro_0', 'morcego_vampiro_1'],
+    FRAME_MS: 120,
+    SCALE: 0.1,
+    HP: 16,
+    SPEED: 75,
+    WAVE_AMPLITUDE: 24,
+    WAVE_SPEED: 0.005,
+    PATROL_RANGE: 140,
+    CHASE_RANGE: 0,
+    CHASE_SPEED: 0,
+    DIVE_RANGE: 280,
+    DIVE_WARNING_MS: 400,
+    DIVE_SPEED: 380,
+    DIVE_MS: 650,
+    DIVE_COOLDOWN_MS: 2400,
+    MELEE_REACH: 60,
+    CONTACT_EFFECT: 'SLOW'      // a mordida deixa lento
+  },
+  // Sônico: de tempos em tempos para no ar e grita — o som empurra o jogador
+  [EnemyTypeId.BAT_SONIC]: {
+    NAME: 'Morcego-Sônico',
+    BEHAVIOR: EnemyBehavior.SONIC,
+    FRAMES: ['morcego_sonico_0', 'morcego_sonico_1'],
+    FRAME_MS: 140,
+    SCALE: 0.1,
+    HP: 16,
+    SPEED: 60,
+    WAVE_AMPLITUDE: 20,
+    WAVE_SPEED: 0.004,
+    PATROL_RANGE: 120,
+    CHASE_RANGE: 0,
+    CHASE_SPEED: 0,
+    MELEE_REACH: 60,
+    SONIC: { EVERY_MS: 3500, SCREAM_MS: 600, RADIUS: 240, FORCE: 440 } // o grito alcança quem está no chão embaixo
+  },
+  // Gigante: grandão e lento; ao morrer vira dois morceguinhos
+  [EnemyTypeId.BAT_GIANT]: {
+    NAME: 'Morcego-Gigante',
+    BEHAVIOR: EnemyBehavior.FLYER,
+    FRAMES: ['morcego_gigante_0', 'morcego_gigante_1'],
+    FRAME_MS: 200,
+    SCALE: 0.17,
+    HP: 40,
+    SPEED: 50,
+    WAVE_AMPLITUDE: 26,
+    WAVE_SPEED: 0.003,
+    PATROL_RANGE: 140,
+    CHASE_RANGE: 240,
+    CHASE_SPEED: 70,
+    MELEE_REACH: 80,
+    SPLIT: { TYPE: 'BAT', COUNT: 2 }
+  },
+  // Centopeia: rápida e espinhuda (pisar nela machuca, como no ouriço)
+  [EnemyTypeId.CENTIPEDE]: {
+    NAME: 'Centopeia',
+    BEHAVIOR: EnemyBehavior.SPIKY,
+    FRAMES: ['centopeia_0', 'centopeia_1'],
+    FRAME_MS: 90,
+    SCALE: 0.1,
+    HP: 24,
+    SPEED: 95,
+    MELEE_REACH: 70
+  },
+  // Aranha: pendurada no fio lá no alto; cai quando o jogador passa embaixo
+  [EnemyTypeId.SPIDER]: {
+    NAME: 'Aranha',
+    BEHAVIOR: EnemyBehavior.DROPPER,
+    FRAMES: ['aranha_0', 'aranha_1'],
+    FRAME_MS: 160,
+    SCALE: 0.1,
+    HP: 18,
+    SPEED: 55,
+    MELEE_REACH: 60,
+    DROP_RANGE_X: 60,
+    DROP_SPEED: 260
+  },
+  // Besouro-Pedra: finge ser pedra (não apanha); acorda investindo
+  [EnemyTypeId.ROCK_BEETLE]: {
+    NAME: 'Besouro-Pedra',
+    BEHAVIOR: EnemyBehavior.AMBUSH,
+    FRAMES: ['besouro_0', 'besouro_1'],
+    SLEEP_FRAME: 'besouro_dormindo',
+    FRAME_MS: 110,
+    SCALE: 0.11,
+    HP: 30,
+    SPEED: 60,
+    MELEE_REACH: 65,
+    WAKE_RANGE_X: 170,
+    CHARGE_SPEED: 300,
+    CHARGE_MS: 700
+  },
+  // Traça: voa em zigue-zague, frágil; ao morrer solta pó que deixa lento
+  [EnemyTypeId.MOTH]: {
+    NAME: 'Traça',
+    BEHAVIOR: EnemyBehavior.FLYER,
+    FRAMES: ['traca_0', 'traca_1'],
+    FRAME_MS: 80,
+    SCALE: 0.09,
+    HP: 6,
+    SPEED: 80,
+    WAVE_AMPLITUDE: 40,
+    WAVE_SPEED: 0.012,
+    PATROL_RANGE: 90,
+    CHASE_RANGE: 220,
+    CHASE_SPEED: 75,
+    MELEE_REACH: 55,
+    DEATH_DUST: { RADIUS: 60, MS: 1800 }
   }
 });

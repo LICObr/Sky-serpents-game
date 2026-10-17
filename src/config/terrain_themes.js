@@ -18,7 +18,8 @@ const TerrainThemeId = Object.freeze({
   MYSTIC: 'MYSTIC',
   JUNGLE_ICE: 'JUNGLE_ICE',
   HONEY: 'HONEY',
-  MOSS: 'MOSS'
+  MOSS: 'MOSS',
+  CAVE: 'CAVE'
 });
 
 /** Tipos de clima. */
@@ -60,5 +61,10 @@ const TERRAIN_THEMES = deepFreeze({
     TOP_TEXTURE: 'chao_musgo', FILL_TEXTURE: 'terra', PLATFORM_TEXTURE: 'platform_musgo',
     SNOW: { TOP_TEXTURE: 'chao_neve', FROM_ELEVATION: 640 },
     WEATHER: [WeatherType.FOG, WeatherType.LIGHT_SNOW]
+  },
+  // Caverna: chão de pedra com musgo, brilhos de cristal e névoa
+  [TerrainThemeId.CAVE]: {
+    TOP_TEXTURE: 'chao_caverna', FILL_TEXTURE: 'terra_caverna', PLATFORM_TEXTURE: 'platform_caverna',
+    WEATHER: [WeatherType.SPARKLES, WeatherType.FOG]
   }
 });

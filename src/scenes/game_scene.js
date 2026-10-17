@@ -44,6 +44,7 @@ class GameScene extends Phaser.Scene {
   #touch;
   #progress;
   #arenaBackdrop = null; // cenário próprio da arena (aparece no fim do percurso)
+  #fallingRocks = null;  // pedras caindo do teto (caverna)
 
   constructor() {
     super({ key: SceneKeys.GAME });
@@ -88,6 +89,9 @@ class GameScene extends Phaser.Scene {
     });
     this.#party = this.#createParty();
     this.#party.registerFriendlyFire(this.#combat); // 2 jogadores: um pode acertar o outro
+    this.#fallingRocks = level.FALLING_ROCKS
+      ? new FallingRocks(this, this.#levelMap, this.#party, level.FALLING_ROCKS)
+      : null;
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
     this.#potions = new PotionManager(this, level.POTIONS);
@@ -144,6 +148,7 @@ class GameScene extends Phaser.Scene {
     this.#progress.update();
     this.#enemies.update(time, this.#party);
     this.#coins.update();
+    if (this.#fallingRocks) this.#fallingRocks.update(time);
     this.#checkpoints.update(this.#party.frontX);
 
     if (this.#arenaBackdrop && !this.#arena.isStarted) this.#fadeInArenaBackdrop();

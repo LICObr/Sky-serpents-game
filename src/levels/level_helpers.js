@@ -19,6 +19,8 @@
  *                        jogador (até um limite de bichos perto da câmera)
  *   - POTIONS:     poções de vida [x, y]
  *   - CHECKPOINTS: pontos de renascimento (x)
+ *   - FALLING_ROCKS: (opcional) pedras caindo do teto durante a fase inteira
+ *                  (veja world/falling_rocks.js e a fase 7)
  *   - STAR_TIMES:  tempo máximo (segundos) para ganhar 3, 2 e 1 estrela
  *                  { THREE, TWO, ONE }; mais lento que ONE → nenhuma
  *   - ARENA:       tela final com o CHEFÃO (plataformas em coordenadas

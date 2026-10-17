@@ -53,6 +53,7 @@ O jogo também pausa sozinho quando a janela perde o foco (trocar de aba, minimi
 | 4 | Selva Gelada | Urso Polar |
 | 5 | Floresta do Mel | Colmeia → Abelha Rainha |
 | 6 | Montanha da Selva | Filhote de Águia (chama a mamãe) |
+| 7 | Caverna Profunda | — (pedras caindo do teto; termina na bandeira) |
 
 **Moedas:** cada bicho derrotado tem 30% de chance de deixar uma moeda. O total fica guardado no navegador e aparece no canto superior direito (no jogo e no menu).
 
@@ -114,6 +115,7 @@ python tools/boss_intros.py
 | `tall_jungle_background.py` / `moss_terrain.py` | árvores altíssimas do fundo e chão de musgo com neve da Montanha da Selva |
 | `eaglet_boss_sprites.py` | filhote de águia (3 poses), ninho vazio da arena, minhoca e graveto |
 | `eagle_variants.py` | as 5 águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra) |
+| `cave_background.py` / `cave_terrain.py` / `cave_creatures.py` | fundo infinito da caverna (arte espelhada), chão de pedra e os bichos da caverna |
 | `jungle_background.py` | fundo da Selva Gelada |
 | `dragon_sheet.py`, `bear_sheet.py`, `bear_retouch.py` | folhas de animação dos chefões |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |

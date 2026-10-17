@@ -14,7 +14,10 @@
  *   slime → WalkerEnemy | cobrinha → SnakeEnemy | ouriço → SpikyEnemy
  *   sapo → HopperEnemy | planta → ShooterEnemy
  *   morcego → FlyerEnemy | fantasma → GhostEnemy | vespa → DiverEnemy
- *   águia → EagleEnemy
+ *   águia → EagleEnemy | morcego-sônico → SonicBatEnemy
+ *   aranha → SpiderEnemy | besouro-pedra → RockBeetleEnemy
+ * E cuida do que alguns bichos deixam ao morrer: o morcego-gigante vira dois
+ * morceguinhos (SPLIT) e a traça solta uma nuvem de pó (DEATH_DUST).
  * -----------------------------------------------------------------------------
  */
 class EnemyManager {
@@ -25,6 +28,7 @@ class EnemyManager {
   #combat;
   #eventBus;
   #enemies = [];
+  #dustClouds = [];  // pó das traças
   #walkers;   // bichos de chão (colidem com o terreno)
   #seeds;     // sementes das plantas cuspidoras
   #eggs;      // ovos das águias
@@ -57,6 +61,7 @@ class EnemyManager {
     eventBus.on(GameEvents.ENEMY_DEFEATED, enemy => {
       combat.unregister(enemy);
       this.#enemies = this.#enemies.filter(e => e !== enemy);
+      this.#leaveBehind(enemy);
     });
 
     level.ENEMIES.forEach(spawn => this.#spawn(spawn));
@@ -111,6 +116,14 @@ class EnemyManager {
       if (this.#isNearCamera(enemy.x, margin)) enemy.update(time, party.nearestTo(enemy.x, enemy.y));
       else enemy.sleep();
     });
+    this.#dustClouds = this.#dustClouds.filter(cloud => {
+      if (cloud.isDone) {
+        cloud.destroy();
+        return false;
+      }
+      cloud.update(party.inGame);
+      return true;
+    });
     this.projectilePools.forEach(pool => pool.update(time));
   }
 
@@ -119,7 +132,8 @@ class EnemyManager {
     const enemy = EnemyManager.#create(this.#scene, spawn, this.#levelMap, this.#match, this.#eventBus, this.#seeds, this.#eggs);
     this.#enemies.push(enemy);
     this.#combat.register(enemy, true);
-    const touchesTerrain = GROUND_BEHAVIORS.includes(enemy.type.BEHAVIOR) || enemy.type.BEHAVIOR === EnemyBehavior.EAGLE;
+    const touchesTerrain = GROUND_BEHAVIORS.includes(enemy.type.BEHAVIOR) ||
+      [EnemyBehavior.EAGLE, EnemyBehavior.DROPPER].includes(enemy.type.BEHAVIOR);
     if (touchesTerrain) this.#walkers.add(enemy.sprite);
     return enemy;
   }
@@ -149,6 +163,15 @@ class EnemyManager {
         this.#spawn({ TYPE, X: this.#findFreeX(minX, maxX), Y: Phaser.Math.Between(soar.MIN, soar.MAX) });
       }
     });
+  }
+
+  /** O que fica de um bicho derrotado: morcego-gigante vira dois; traça solta pó. */
+  #leaveBehind(enemy) {
+    const { SPLIT, DEATH_DUST } = enemy.type;
+    for (let i = 0; i < (SPLIT ? SPLIT.COUNT : 0); i++) {
+      this.spawnEnemy({ TYPE: SPLIT.TYPE, X: enemy.x + (i - (SPLIT.COUNT - 1) / 2) * 30, Y: enemy.y });
+    }
+    if (DEATH_DUST) this.#dustClouds.push(new DustCloud(this.#scene, enemy.x, enemy.y, DEATH_DUST));
   }
 
   /** Começa a soltar ondas de bichos à frente do jogador. */
@@ -246,6 +269,9 @@ class EnemyManager {
       case EnemyBehavior.GHOST:   return new GhostEnemy(...args);
       case EnemyBehavior.DIVER:   return new DiverEnemy(...args);
       case EnemyBehavior.EAGLE:   return new EagleEnemy(...args, levelMap, eggs);
+      case EnemyBehavior.SONIC:   return new SonicBatEnemy(...args);
+      case EnemyBehavior.DROPPER: return new SpiderEnemy(...args, levelMap);
+      case EnemyBehavior.AMBUSH:  return new RockBeetleEnemy(...groundArgs, levelMap);
       default:
         throw new RangeError(`Comportamento desconhecido: ${type.BEHAVIOR}`);
     }

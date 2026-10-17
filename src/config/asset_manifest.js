@@ -49,7 +49,10 @@ const ASSET_MANIFEST = Object.freeze([
     arvore_mel_0: 'arvore_mel_0.png', arvore_mel_1: 'arvore_mel_1.png',
     // Montanha da selva (tools/tall_jungle_background.py e tools/moss_terrain.py)
     bg_selva_alta: 'fundo_selva_alta.png', chao_musgo: 'chao_musgo.png', chao_neve: 'chao_neve.png',
-    platform_musgo: 'plataforma_musgo.png'
+    platform_musgo: 'plataforma_musgo.png',
+    // Caverna (tools/cave_background.py, tools/cave_terrain.py, tools/cave_creatures.py)
+    bg_caverna: 'fundo_caverna.png', chao_caverna: 'chao_caverna.png', terra_caverna: 'terra_caverna.png',
+    platform_caverna: 'plataforma_caverna.png', pedra_caverna: 'pedra_caverna.png'
   }),
 
   // Guerreiro
@@ -84,6 +87,16 @@ const ASSET_MANIFEST = Object.freeze([
     slime_0: 'slime_0.png', slime_1: 'slime_1.png',
     slime_gelo_0: 'slime_gelo_0.png', slime_gelo_1: 'slime_gelo_1.png',
     slime_rosa_0: 'slime_rosa_0.png', slime_rosa_1: 'slime_rosa_1.png'
+  }),
+  // bichos da caverna (tools/cave_creatures.py)
+  ...imagesIn('inimigos/caverna', {
+    morcego_vampiro_0: 'morcego_vampiro_0.png', morcego_vampiro_1: 'morcego_vampiro_1.png',
+    morcego_sonico_0: 'morcego_sonico_0.png', morcego_sonico_1: 'morcego_sonico_1.png',
+    morcego_gigante_0: 'morcego_gigante_0.png', morcego_gigante_1: 'morcego_gigante_1.png',
+    centopeia_0: 'centopeia_0.png', centopeia_1: 'centopeia_1.png',
+    aranha_0: 'aranha_0.png', aranha_1: 'aranha_1.png',
+    besouro_dormindo: 'besouro_dormindo.png', besouro_0: 'besouro_0.png', besouro_1: 'besouro_1.png',
+    traca_0: 'traca_0.png', traca_1: 'traca_1.png'
   }),
   ...imagesIn('inimigos/morcego', {
     morcego_0: 'morcego_0.png', morcego_1: 'morcego_1.png',
