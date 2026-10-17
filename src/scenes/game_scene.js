@@ -33,7 +33,7 @@ class GameScene extends Phaser.Scene {
   #goal = null;    // bandeira de chegada (fases sem chefão)
   #boss = null;
   #trees;
-  #specialHud;
+  #playerHud;
   #banner;
   #touch;
   #progress;
@@ -97,10 +97,9 @@ class GameScene extends Phaser.Scene {
     }
 
     // Interface
-    new HeartsHUD(this, this.#player.health.maxHearts, this.#eventBus);
+    this.#playerHud = new PlayerHUD(this, this.#player, this.#eventBus); // corações, especial e escudinho
     new CoinHUD(this, this.#eventBus);
     this.#progress = new LevelProgressBar(this, finishX, this.#eventBus);
-    this.#specialHud = new SpecialHUD(this, this.#player);
     // Chefão chamando bichos (ex.: morceguinhos do urso, vespas da colmeia)
     this.#eventBus.on(GameEvents.BOSS_SUMMON, (spawn, onSpawned) => onSpawned(this.#enemies.spawnEnemy(spawn)));
     // Luta em etapas: derrotou um chefão que tem "próximo" → ele aparece
@@ -128,7 +127,7 @@ class GameScene extends Phaser.Scene {
     this.#background.update();
     this.#player.update();
     this.#player.handleAttack(this.#combat);
-    this.#specialHud.update();
+    this.#playerHud.update();
     this.#progress.update(this.#player.x);
     this.#enemies.update(time, this.#player);
     this.#coins.update();

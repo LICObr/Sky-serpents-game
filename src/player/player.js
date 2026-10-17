@@ -6,6 +6,7 @@
  *   - PlayerMovement → andar, pular, agachar
  *   - PlayerHealth   → corações, dano, cura
  *   - PlayerStatus   → efeitos temporários (lentidão, congelado)
+ *   - PlayerShield   → escudinho do agachar (segura um golpe e recarrega)
  *   - PlayerAttack   → definido pela SUBCLASSE (createAttack):
  *        KnightPlayer → SwordAttack | ArcherPlayer → BowAttack
  *   - PlayerSpecial  → especial da tecla G, também da SUBCLASSE (createSpecial):
@@ -20,6 +21,7 @@ class Player extends GameEntity {
   #special;
   #health;
   #status;
+  #shield;
   #bodyOffsetY;     // posição original da hitbox dentro do sprite
   #walkFrame = -1;  // quadro atual da caminhada
   #nextWalkFrameAt = 0;
@@ -52,6 +54,7 @@ class Player extends GameEntity {
     this.#movement = new PlayerMovement(this, input);
     this.#health = new PlayerHealth(this, match.playerHearts, eventBus);
     this.#status = new PlayerStatus(this);
+    this.#shield = new PlayerShield(this);
     this.#attack = this.createAttack(input);
     this.#special = this.createSpecial(input, this.#attack);
   }
@@ -81,6 +84,7 @@ class Player extends GameEntity {
   get special()     { return this.#special; }
   get health()      { return this.#health; }
   get status()      { return this.#status; }
+  get shield()      { return this.#shield; }
   get facingRight() { return this.#facingRight; }
   get isDucking()   { return this.#movement.isDucking; }
 
@@ -154,6 +158,7 @@ class Player extends GameEntity {
       this.#movement.update();
     }
     this.#status.update();
+    this.#shield.update();
     this.#attack.updateProjectiles();
   }
 
@@ -185,6 +190,7 @@ class Player extends GameEntity {
    * @returns {boolean} false se estava no cooldown de dano (o projétil passa direto)
    */
   hitByProjectile(effect) {
+    if (this.#blockedByShield()) return true; // o escudinho segurou (o projétil some)
     // Bola de gelo do urso: só congela, não tira coração
     if (effect === ProjectileEffect.FREEZE) {
       this.#status.apply(effect);
@@ -197,7 +203,16 @@ class Player extends GameEntity {
 
   /** Encostou em bicho/chefão (respeita o cooldown de dano). */
   hitByContact(effect) {
+    if (this.#blockedByShield()) return;
     if (this.#health.takeDamage()) this.#status.apply(effect);
+  }
+
+  /**
+   * O golpe bateu no escudinho do agachar? Piscando (cooldown de dano) o
+   * golpe não faria nada mesmo, então o escudo não é gasto.
+   */
+  #blockedByShield() {
+    return !this.#health.isInvulnerable && this.#shield.tryBlock();
   }
 
   /** Pulinho depois de pisar em um inimigo. */

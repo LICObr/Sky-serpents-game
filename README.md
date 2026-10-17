@@ -25,7 +25,7 @@ Depois abra <http://localhost:8000> no navegador.
 | --- | --- | --- |
 | Andar | ← → ou A D | analógico (encoste na parte esquerda da tela) |
 | Pular | ↑ ou W | analógico para cima |
-| Agachar | ↓ ou S | analógico para baixo |
+| Agachar (escudinho: segura 1 golpe, recarrega em 8 s) | ↓ ou S | analógico para baixo |
 | Atacar | Espaço | botão **ESPAÇO** |
 | Especial | G | botão **G** |
 | Pausar | P | botão **II** |

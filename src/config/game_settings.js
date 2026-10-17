@@ -107,6 +107,17 @@ const GameSettings = deepFreeze({
     COYOTE_TIME_MS: 110         // ainda dá para pular logo após sair do chão
   },
 
+  // Escudinho do AGACHAR: segura UM golpe e quebra; depois precisa recarregar
+  DUCK_SHIELD: {
+    COOLDOWN_MS: 8000,          // depois de quebrar: 8s agachando sem escudo
+    BLOCK_GRACE_MS: 900,        // o mesmo golpe (bicho encostado) não machuca logo em seguida
+    SCALE: 0.45,                // ~16px na tela: bem pequenininho
+    ALPHA: 0.5,                 // transparente
+    ABOVE_HEAD: 4,              // distância acima da cabeça (px)
+    POP_MS: 120,                // aparece crescendo rapidinho
+    BREAK_MS: 300               // ao quebrar: cresce e some
+  },
+
   // Efeito do gelo (deixa o jogador lento)
   // Bola de gelo do Urso Polar: congela (não tira coração)
   FREEZE_EFFECT: {
@@ -487,6 +498,8 @@ const GameSettings = deepFreeze({
 
   HUD: {
     HEARTS: { TEXTURE: 'heart', X: 30, Y: 30, SPACING: 40, SCALE: 0.09 },
+    // Caixinhas de recarga embaixo dos corações (especial e escudinho)
+    COOLDOWN: { SIZE: 30, ROW_GAP: 38 },
     BOSS_BAR: {
       X: 250, Y: 20, WIDTH: 400, HEIGHT: 20,
       COLOR: 0xff0000, BACK_COLOR: 0x000000, BACK_ALPHA: 0.35,

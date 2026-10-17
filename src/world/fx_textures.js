@@ -8,6 +8,7 @@
  *   - fx_snowball:  bola de neve (o urso vira uma quando é derrotado)
  *   - fx_ice_block: bloco de gelo transparente (jogador congelado)
  *   - fx_icicle:    pino de gelo pontudo (cai do céu na luta do urso)
+ *   - fx_shield:    escudinho azul-claro (defesa do agachar)
  *
  * fx_glow e fx_spark são brancas: a cor é aplicada com "tint" na hora de usar.
  * -----------------------------------------------------------------------------
@@ -18,7 +19,8 @@ const FxTextureKeys = Object.freeze({
   ICE_WAVE: 'fx_ice_wave',
   SNOWBALL: 'fx_snowball',
   ICE_BLOCK: 'fx_ice_block',
-  ICICLE: 'fx_icicle'
+  ICICLE: 'fx_icicle',
+  SHIELD: 'fx_shield'
 });
 
 class FxTextures {
@@ -34,6 +36,35 @@ class FxTextures {
     FxTextures.#snowball(scene, FxTextureKeys.SNOWBALL);
     FxTextures.#iceBlock(scene, FxTextureKeys.ICE_BLOCK);
     FxTextures.#icicle(scene, FxTextureKeys.ICICLE);
+    FxTextures.#shield(scene, FxTextureKeys.SHIELD);
+  }
+
+  /** Escudinho de cavaleiro (borda reta em cima e ponta embaixo) com uma cruz. */
+  static #shield(scene, key) {
+    if (scene.textures.exists(key)) return;
+    const texture = scene.textures.createCanvas(key, 36, 42);
+    const ctx = texture.getContext();
+    ctx.beginPath();
+    ctx.moveTo(4, 5);
+    ctx.quadraticCurveTo(18, 0, 32, 5);   // borda de cima
+    ctx.lineTo(32, 20);
+    ctx.quadraticCurveTo(31, 33, 18, 40); // lado direito até a ponta
+    ctx.quadraticCurveTo(5, 33, 4, 20);   // lado esquerdo
+    ctx.closePath();
+    const gradient = ctx.createLinearGradient(0, 0, 36, 42);
+    gradient.addColorStop(0, '#e8f7ff');
+    gradient.addColorStop(1, '#6fb8ff');
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(18, 8); ctx.lineTo(18, 34);
+    ctx.moveTo(10, 16); ctx.lineTo(26, 16);
+    ctx.strokeStyle = 'rgba(42, 95, 158, 0.8)';
+    ctx.stroke();
+    texture.refresh();
   }
 
   /** Pino de gelo (estalactite) com a ponta para baixo. */
