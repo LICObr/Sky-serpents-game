@@ -98,7 +98,14 @@ const ASSET_MANIFEST = Object.freeze([
   ...imagesIn('inimigos/ourico', { ourico_0: 'ourico_0.png', ourico_1: 'ourico_1.png' }),
   ...imagesIn('inimigos/aguia', {
     aguia_0: 'aguia_0.png', aguia_1: 'aguia_1.png', aguia_mergulho: 'aguia_mergulho.png', aguia_ovo: 'aguia_ovo.png',
-    aguia_chao_0: 'aguia_chao_0.png', aguia_chao_1: 'aguia_chao_1.png'
+    aguia_chao_0: 'aguia_chao_0.png', aguia_chao_1: 'aguia_chao_1.png',
+    // variações (tools/eagle_variants.py)
+    ...['lanca', 'dourada', 'leque', 'larga', 'negra'].reduce((files, name) => ({
+      ...files,
+      [`aguia_${name}_0`]: `aguia_${name}_0.png`, [`aguia_${name}_1`]: `aguia_${name}_1.png`,
+      [`aguia_${name}_mergulho`]: `aguia_${name}_mergulho.png`,
+      [`aguia_${name}_chao_0`]: `aguia_${name}_chao_0.png`, [`aguia_${name}_chao_1`]: `aguia_${name}_chao_1.png`
+    }), {})
   }),
 
   // Chefões (cada um com o seu projétil)

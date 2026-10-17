@@ -8,8 +8,8 @@
  *   - vira o olhar a cada 4 s (direita ↔ esquerda) e joga MINHOCAS em arco
  *     para o lado em que está olhando (elas se contorcem no ar e caem);
  *   - de tempos em tempos CHAMA A MAMÃE: olha para cima de bico aberto, a
- *     tela treme, caem gravetos da árvore e chegam ÁGUIAS pelo alto, uma de
- *     cada vez (até 7 voando);
+ *     tela treme, caem gravetos da árvore e chegam ÁGUIAS de todos os tipos
+ *     pelo alto, uma de cada vez (até 7 voando);
  *   - bravo (menos da metade da vida): balança mais rápido e joga 3 minhocas.
  * -----------------------------------------------------------------------------
  */
@@ -180,7 +180,7 @@ class EagletBoss extends Boss {
     this.#eagles = this.#eagles.filter(eagle => eagle.isAlive);
     if (this.#eagles.length >= cfg.MAX_EAGLES) return;
     const spawn = {
-      TYPE: EnemyTypeId[this.stats.EAGLE_TYPE],
+      TYPE: EnemyTypeId[Phaser.Utils.Array.GetRandom(this.stats.EAGLE_TYPES)],
       X: Phaser.Math.Between(this.arena.left + 60, this.arena.right - 60),
       Y: Phaser.Math.Between(cfg.EAGLE_Y.MIN, cfg.EAGLE_Y.MAX)
     };

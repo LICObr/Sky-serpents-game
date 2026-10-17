@@ -113,6 +113,7 @@ python tools/boss_intros.py
 | `honey_background.py` / `honey_terrain.py` | fundo infinito, terreno e árvores amarelas da Floresta do Mel |
 | `tall_jungle_background.py` / `moss_terrain.py` | árvores altíssimas do fundo e chão de musgo com neve da Montanha da Selva |
 | `eaglet_boss_sprites.py` | filhote de águia (3 poses), ninho vazio da arena, minhoca e graveto |
+| `eagle_variants.py` | as 5 águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra) |
 | `jungle_background.py` | fundo da Selva Gelada |
 | `dragon_sheet.py`, `bear_sheet.py`, `bear_retouch.py` | folhas de animação dos chefões |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |

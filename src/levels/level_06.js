@@ -7,7 +7,8 @@
  * alta que a tela: a câmera sobe junto. Sobe-se por rampas e paredões de
  * 64px (pulando), com neve do meio para cima; depois uma descida longa até
  * a clareira do ninho, que aparece aos poucos no fim do percurso. Grama cor
- * de musgo bem falhada e árvores altíssimas no fundo.
+ * de musgo bem falhada e árvores altíssimas no fundo. No caminho, as cinco
+ * águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra).
  * -----------------------------------------------------------------------------
  */
 const LEVEL_06 = {
@@ -63,7 +64,13 @@ const LEVEL_06 = {
     ...flyers(EnemyTypeId.BAT, [
       [700, 300], [1600, 250], [2500, 60], [3000, -160],
       [3800, -520], [4600, -520], [5300, -250], [6400, 260]
-    ])
+    ]),
+    // as cinco águias diferentes, duas de cada, voando acima do terreno
+    ...flyers(EnemyTypeId.EAGLE_SHARP, [[800, 250], [3550, -430]]),
+    ...flyers(EnemyTypeId.EAGLE_GOLD, [[1400, 200], [4250, -700]]),
+    ...flyers(EnemyTypeId.EAGLE_FAN, [[1750, 250], [5400, -380]]),
+    ...flyers(EnemyTypeId.EAGLE_WIDE, [[2500, 0], [6000, -40]]),
+    ...flyers(EnemyTypeId.EAGLE_BLACK, [[3050, -250], [6500, 200]])
   ],
   RANDOM_ENEMIES: {
     WALKERS: { TYPES: [EnemyTypeId.FROG, EnemyTypeId.SNAKE_FIRE, EnemyTypeId.HEDGEHOG], COUNT: 6 },

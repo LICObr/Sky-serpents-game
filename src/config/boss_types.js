@@ -234,6 +234,7 @@ const BOSS_TYPES = deepFreeze({
     LAYOUT: 'eaglet_layout',    // onde ele fica na arena (filhote.json)
     MAX_HP: 500,                // igual aos outros chefões
     SPEED: 0,
-    EAGLE_TYPE: 'EAGLE'         // as águias que já existem no jogo
+    // a mamãe chega com águias de todos os tipos (sorteadas)
+    EAGLE_TYPES: ['EAGLE', 'EAGLE_SHARP', 'EAGLE_GOLD', 'EAGLE_FAN', 'EAGLE_WIDE', 'EAGLE_BLACK']
   }
 });

@@ -54,7 +54,53 @@ const EnemyTypeId = Object.freeze({
   PLANT_MYSTIC: 'PLANT_MYSTIC',
   WASP: 'WASP',
   HEDGEHOG: 'HEDGEHOG',
-  EAGLE: 'EAGLE'
+  EAGLE: 'EAGLE',
+  // variações da águia (fase 6)
+  EAGLE_SHARP: 'EAGLE_SHARP',
+  EAGLE_GOLD: 'EAGLE_GOLD',
+  EAGLE_FAN: 'EAGLE_FAN',
+  EAGLE_WIDE: 'EAGLE_WIDE',
+  EAGLE_BLACK: 'EAGLE_BLACK'
+});
+
+/** Quadros de uma variação da águia (tools/eagle_variants.py). */
+const eagleFrames = name => ({
+  FRAMES: [`aguia_${name}_0`, `aguia_${name}_1`],
+  DIVE_FRAME: `aguia_${name}_mergulho`,
+  GROUND_FRAMES: [`aguia_${name}_chao_0`, `aguia_${name}_chao_1`]
+});
+
+/** Águia original: as variações (fase 6) partem dela. */
+const EAGLE_BASE = deepFreeze({
+  NAME: 'Águia',
+  BEHAVIOR: EnemyBehavior.EAGLE,
+  FRAMES: ['aguia_0', 'aguia_1'],              // voando (asas cima/baixo)
+  DIVE_FRAME: 'aguia_mergulho',                 // asas fechadas no mergulho
+  GROUND_FRAMES: ['aguia_chao_0', 'aguia_chao_1'], // andando no chão
+  FRAME_MS: 170,
+  SCALE: 0.085,               // um pouco maior que a vespa
+  HP: 30,
+  SPEED: 70,                  // voando lá no alto
+  SOAR_Y: { MIN: 60, MAX: 120 },
+  PATROL_RANGE: 220,
+  DIVE_CHECK_MS: 1300,        // de quanto em quanto tempo "pensa" em mergulhar
+  DIVE_CHANCE_PERCENT: 40,    // ...e a chance de mergulhar (do nada!)
+  DIVE_TRIGGER_X: 280,        // só mergulha se o jogador estiver perto (na horizontal)
+  DIVE_WARNING_MS: 300,       // grito/pisca antes de mergulhar
+  DIVE_SPEED: 440,
+  DIVE_MAX_MS: 1600,
+  GROUND_SPEED: 35,           // no chão anda devagar e desajeitada
+  GROUND_HP: 1,               // no chão morre com um golpe
+  MELEE_REACH: 60,
+  // Ovos soltos enquanto voa (param depois do mergulho)
+  EGG: {
+    TEXTURE: 'aguia_ovo',
+    INTERVAL_MS: { MIN: 5000, MAX: 7000 }, // ~1 a cada 6 segundos
+    SCALE: 0.09,
+    GRAVITY: 110,             // cai devagarzinho...
+    MAX_FALL_SPEED: 150,      // ...e nunca rápido demais
+    KEEP_MOMENTUM: 0.8        // continua parte do embalo horizontal do voo
+  }
 });
 
 const ENEMY_TYPES = deepFreeze({
@@ -279,35 +325,46 @@ const ENEMY_TYPES = deepFreeze({
   },
 
   // --- Águia (rara) -----------------------------------------------------------
-  [EnemyTypeId.EAGLE]: {
-    NAME: 'Águia',
-    BEHAVIOR: EnemyBehavior.EAGLE,
-    FRAMES: ['aguia_0', 'aguia_1'],              // voando (asas cima/baixo)
-    DIVE_FRAME: 'aguia_mergulho',                 // asas fechadas no mergulho
-    GROUND_FRAMES: ['aguia_chao_0', 'aguia_chao_1'], // andando no chão
-    FRAME_MS: 170,
-    SCALE: 0.085,               // um pouco maior que a vespa
-    HP: 30,
-    SPEED: 70,                  // voando lá no alto
-    SOAR_Y: { MIN: 60, MAX: 120 },
-    PATROL_RANGE: 220,
-    DIVE_CHECK_MS: 1300,        // de quanto em quanto tempo "pensa" em mergulhar
-    DIVE_CHANCE_PERCENT: 40,    // ...e a chance de mergulhar (do nada!)
-    DIVE_TRIGGER_X: 280,        // só mergulha se o jogador estiver perto (na horizontal)
-    DIVE_WARNING_MS: 300,       // grito/pisca antes de mergulhar
-    DIVE_SPEED: 440,
-    DIVE_MAX_MS: 1600,
-    GROUND_SPEED: 35,           // no chão anda devagar e desajeitada
-    GROUND_HP: 1,               // no chão morre com um golpe
-    MELEE_REACH: 60,
-    // Ovos soltos enquanto voa (param depois do mergulho)
-    EGG: {
-      TEXTURE: 'aguia_ovo',
-      INTERVAL_MS: { MIN: 5000, MAX: 7000 }, // ~1 a cada 6 segundos
-      SCALE: 0.09,
-      GRAVITY: 110,             // cai devagarzinho...
-      MAX_FALL_SPEED: 150,      // ...e nunca rápido demais
-      KEEP_MOMENTUM: 0.8        // continua parte do embalo horizontal do voo
-    }
+  [EnemyTypeId.EAGLE]: EAGLE_BASE,
+
+  // Bico de lança: mergulha mais vezes, quase sem avisar, e MUITO rápido
+  [EnemyTypeId.EAGLE_SHARP]: {
+    ...EAGLE_BASE, ...eagleFrames('lanca'),
+    NAME: 'Águia-Bico-de-Lança',
+    DIVE_CHECK_MS: 1000,
+    DIVE_CHANCE_PERCENT: 65,
+    DIVE_WARNING_MS: 180,
+    DIVE_SPEED: 640
+  },
+  // Dourada: solta 3 ovos de uma vez, em leque, e com mais frequência
+  [EnemyTypeId.EAGLE_GOLD]: {
+    ...EAGLE_BASE, ...eagleFrames('dourada'),
+    NAME: 'Águia-Dourada',
+    EGG: { ...EAGLE_BASE.EGG, COUNT: 3, SPREAD_X: 70, INTERVAL_MS: { MIN: 3500, MAX: 5000 } }
+  },
+  // Rabo de leque: voa rápido em zigue-zague, subindo e descendo
+  [EnemyTypeId.EAGLE_FAN]: {
+    ...EAGLE_BASE, ...eagleFrames('leque'),
+    NAME: 'Águia-Rabo-de-Leque',
+    SPEED: 120,
+    PATROL_RANGE: 300,
+    SOAR_WAVE: { HEIGHT: 40, SPEED: 0.006 }
+  },
+  // Asa larga: maior, mergulha rápido de asas ABERTAS (área maior para acertar)
+  [EnemyTypeId.EAGLE_WIDE]: {
+    ...EAGLE_BASE, ...eagleFrames('larga'),
+    NAME: 'Águia-Asa-Larga',
+    SCALE: 0.11,
+    HP: 45,
+    DIVE_SPEED: 560,
+    DIVE_OPEN_WINGS: { SCALE: 1.4 }
+  },
+  // Negra: não pousa — depois do mergulho sobe de novo e volta a mergulhar
+  [EnemyTypeId.EAGLE_BLACK]: {
+    ...EAGLE_BASE, ...eagleFrames('negra'),
+    NAME: 'Águia-Negra',
+    DIVE_SPEED: 500,
+    DIVE_CHANCE_PERCENT: 55,
+    REBOUND: { RISE_SPEED: 260, PAUSE_MS: 900 }
   }
 });

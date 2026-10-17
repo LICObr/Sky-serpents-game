@@ -12,12 +12,19 @@
  *   GROUNDED depois de bater no chão fica andando desajeitada e FRACA
  *            (vida reduzida: morre com um golpe ou uma pisada) — e não
  *            solta mais ovos
+ *
+ * Cada tipo de águia muda o jeito (enemy_types.js):
+ *   EGG.COUNT        ovos de uma vez, em leque (ex.: a dourada solta 3)
+ *   SOAR_WAVE        sobe e desce enquanto voa (a de rabo em leque faz zigue-zague)
+ *   DIVE_OPEN_WINGS  mergulha de asas ABERTAS, maior (área maior para acertar)
+ *   REBOUND          não pousa: depois do mergulho sobe de novo (RISE) e volta a mergulhar
  * -----------------------------------------------------------------------------
  */
 const EagleState = Object.freeze({
   SOAR: 'SOAR',
   WARN: 'WARN',
   DIVE: 'DIVE',
+  RISE: 'RISE',          // volta para o alto depois do mergulho (águias que não pousam)
   GROUNDED: 'GROUNDED'
 });
 
@@ -66,6 +73,7 @@ class EagleEnemy extends Enemy {
       case EagleState.SOAR:     this.#soar(time, player); break;
       case EagleState.WARN:     this.#warn(time, player); break;
       case EagleState.DIVE:     this.#dive(time); break;
+      case EagleState.RISE:     this.#rise(time); break;
       case EagleState.GROUNDED: this.#walk(time); break;
     }
   }
@@ -84,7 +92,8 @@ class EagleEnemy extends Enemy {
     if (this.x < this.#homeX - type.PATROL_RANGE) this.#direction = 1;
     if (this.x > this.#homeX + type.PATROL_RANGE) this.#direction = -1;
 
-    const targetY = this.#soarY + Math.sin(time * 0.002) * 12;
+    const wave = type.SOAR_WAVE || { HEIGHT: 12, SPEED: 0.002 };
+    const targetY = this.#soarY + Math.sin(time * wave.SPEED) * wave.HEIGHT;
     sprite.setVelocity(this.#direction * this.speed, (targetY - this.y) * 3);
     sprite.setFlipX(this.#direction > 0); // a arte olha para a esquerda
     sprite.setRotation(0);
@@ -106,9 +115,13 @@ class EagleEnemy extends Enemy {
     this.#nextEggTime = time + this.#eggInterval();
 
     const egg = this.type.EGG;
+    const count = egg.COUNT || 1;
     const vx = this.sprite.body.velocity.x * egg.KEEP_MOMENTUM;
-    const dropped = this.#eggs.spawn(this.x, this.y + this.sprite.displayHeight * 0.3, egg.TEXTURE, 0, 0);
-    if (dropped) dropped.setVelocity(vx, 0); // começa parado na vertical e vai caindo
+    for (let i = 0; i < count; i++) {
+      const spread = (i - (count - 1) / 2) * (egg.SPREAD_X || 0); // vários ovos: em leque
+      const dropped = this.#eggs.spawn(this.x, this.y + this.sprite.displayHeight * 0.3, egg.TEXTURE, 0, 0);
+      if (dropped) dropped.setVelocity(vx + spread, 0); // começa parado na vertical e vai caindo
+    }
   }
 
   #eggInterval() {
@@ -124,11 +137,13 @@ class EagleEnemy extends Enemy {
     else this.restoreTint();
     if (time < this.#stateEndsAt) return;
 
-    // Mergulho: asas fechadas, bico apontando para o jogador
+    // Mergulho: asas fechadas (ou abertas e maior), bico apontando para o jogador
     const angle = Phaser.Math.Angle.Between(this.x, this.y, player.x, player.y);
     const speed = this.type.DIVE_SPEED;
+    const openWings = this.type.DIVE_OPEN_WINGS;
     this.restoreTint();
-    this.setTextureIfChanged(this.type.DIVE_FRAME);
+    this.setTextureIfChanged(openWings ? this.type.FRAMES[0] : this.type.DIVE_FRAME);
+    if (openWings) sprite.setScale(this.type.SCALE * openWings.SCALE);
     sprite.setFlipX(false);
     sprite.setRotation(angle - Math.PI); // a arte olha para a esquerda (PI)
     sprite.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
@@ -136,10 +151,32 @@ class EagleEnemy extends Enemy {
     this.#stateEndsAt = time + this.type.DIVE_MAX_MS;
   }
 
-  /** Desce até bater no chão (ou cansar e cair). */
+  /** Desce até bater no chão (ou cansar): pousa, ou sobe de novo se for das que não pousam. */
   #dive(time) {
     const body = this.sprite.body;
-    if (body.blocked.down || body.touching.down || time > this.#stateEndsAt) this.#land();
+    const hitGround = body.blocked.down || body.touching.down || body.blocked.left || body.blocked.right;
+    if (!hitGround && time <= this.#stateEndsAt) return;
+    if (this.type.REBOUND) this.#startRising();
+    else this.#land();
+  }
+
+  /** Volta a voar para o alto (de asas abertas, no tamanho normal). */
+  #startRising() {
+    const sprite = this.sprite;
+    this.#state = EagleState.RISE;
+    sprite.setRotation(0);
+    sprite.setScale(this.type.SCALE);
+    sprite.setVelocity(0, -this.type.REBOUND.RISE_SPEED);
+    this.setTextureIfChanged(this.type.FRAMES[0]);
+  }
+
+  /** Subindo: quando chega na altura do voo, volta a planar (e a pensar em mergulhar). */
+  #rise(time) {
+    this.sprite.setVelocityY(-this.type.REBOUND.RISE_SPEED);
+    this.#animate(time, this.type.FRAMES);
+    if (this.y > this.#soarY) return;
+    this.#state = EagleState.SOAR;
+    this.#nextDiveCheck = time + this.type.REBOUND.PAUSE_MS;
   }
 
   /** Pousou: passa a andar no chão, fraquinha. */
@@ -148,6 +185,7 @@ class EagleEnemy extends Enemy {
     this.#state = EagleState.GROUNDED;
     this.#direction = sprite.body.velocity.x > 0 ? 1 : -1;
     sprite.setRotation(0);
+    sprite.setScale(this.type.SCALE); // se mergulhou de asas abertas, volta ao tamanho normal
     sprite.setVelocity(0, 0);
     sprite.body.setAllowGravity(true);
     this.setTextureIfChanged(this.type.GROUND_FRAMES[0]);
