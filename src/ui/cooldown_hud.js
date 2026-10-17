@@ -43,9 +43,10 @@ class CooldownHUD {
     // Preenchimento DENTRO da caixinha: cresce de baixo para cima via scaleY
     // (mudar a altura do retângulo não atualiza a origem e ele "vazava" para baixo)
     this.#fill = fixed(scene.add.rectangle(x + 2, y + SIZE / 2 - 2, SIZE - 4, SIZE - 4, 0x6fb8ff, 0.7).setOrigin(0, 1));
+    const textSize = text ? Math.min(12, Math.floor((SIZE - 4) / text.length)) : 0; // tecla de nome comprido diminui
     this.#content = fixed(icon
       ? scene.add.image(x + SIZE / 2, y, icon).setScale(GameSettings.DUCK_SHIELD.SCALE)
-      : scene.add.text(x + SIZE / 2, y + 1, text, UiStyle.text(12)).setOrigin(0.5));
+      : scene.add.text(x + SIZE / 2, y + 1, text, UiStyle.text(textSize)).setOrigin(0.5));
     this.#label = fixed(scene.add.text(x + SIZE + 8, y, '', UiStyle.text(8)).setOrigin(0, 0.5));
   }
 

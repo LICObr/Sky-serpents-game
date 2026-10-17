@@ -79,7 +79,8 @@ class GameScene extends Phaser.Scene {
       onPause: () => this.#openPause(PauseMode.PAUSE),
       canUse: () => !this.#flow.hasEnded
     });
-    this.#player = PlayerFactory.create(this, new InputController(this, this.#touch), this.#eventBus, this.#match);
+    const input = new InputController(this, KeyBindings.soloInputKeys(), this.#touch);
+    this.#player = PlayerFactory.create(this, input, this.#eventBus, this.#match);
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
     this.#potions = new PotionManager(this, level.POTIONS, this.#player.health);

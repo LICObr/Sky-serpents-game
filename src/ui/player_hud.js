@@ -23,7 +23,7 @@ class PlayerHUD {
 
     new HeartsHUD(scene, player.health.maxHearts, eventBus);
     this.#special = new CooldownHUD(scene, x, hearts.Y + ROW_GAP, {
-      text: 'G',
+      text: KeyBindings.label(KeyBindings.forPlayer(0).SPECIAL),
       remainingMs: () => player.special.remainingMs,
       totalMs: GameSettings.SPECIAL.COOLDOWN_MS,
       pulse: true

@@ -26,11 +26,14 @@ Depois abra <http://localhost:8000> no navegador.
 | Andar | ← → ou A D | analógico (encoste na parte esquerda da tela) |
 | Pular | ↑ ou W | analógico para cima |
 | Agachar (escudinho: segura 1 golpe, recarrega em 8 s) | ↓ ou S | analógico para baixo |
-| Atacar | Espaço | botão **ESPAÇO** |
-| Especial | G | botão **G** |
+| Atacar | Espaço ou K | botão **ESPAÇO** |
+| Especial | G ou L | botão **G** |
 | Pausar | P | botão **II** |
 | Reiniciar a fase | R (pede confirmação) | pela pausa |
 | Voltar ao menu | ESC (pede confirmação) | pela pausa |
+
+Essas são as teclas padrão: jogando sozinho valem as do jogador 1 (WASD, Espaço, G) e as do
+jogador 2 (setas, K, L). Elas ficam em `src/config/controls.js` e a escolha é guardada no navegador.
 
 O jogo também pausa sozinho quando a janela perde o foco (trocar de aba, minimizar).
 

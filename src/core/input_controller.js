@@ -3,16 +3,11 @@
  * -----------------------------------------------------------------------------
  * Traduz o teclado (e os controles de toque do celular) em "intenções" do
  * jogador (andar, pular, agachar, atacar). O resto do jogo nunca lê teclas
- * diretamente: se um dia quiser trocar os controles ou adicionar um gamepad,
- * só esta classe muda.
+ * diretamente: se um dia quiser adicionar um gamepad, só esta classe muda.
  *
- * Controles (setas OU WASD):
- *   ← / →  ou  A / D          andar
- *   ↑  ou  W  ou  Page Up     pular
- *   ↓  ou  S  ou  Page Down   agachar
- *   Espaço                    atacar
- *   G                         especial
- * No celular: analógico + botões ESPAÇO e G (veja touch_controls.js).
+ * As teclas de cada ação vêm de KeyBindings (tela de OPÇÕES): sozinho valem
+ * as dos dois jogadores; com dois jogadores, cada um tem um InputController
+ * com as suas. No celular: analógico + botões ESPAÇO e G (touch_controls.js).
  * -----------------------------------------------------------------------------
  */
 class InputController {
@@ -20,27 +15,28 @@ class InputController {
   #right;
   #jump;
   #duck;
-  #attackKey;
-  #specialKey;
+  #attack;
+  #special;
   #touch;
 
   /**
    * @param {Phaser.Scene} scene
+   * @param {Object<string, string[]>} keyNames teclas de cada ação (ControlAction),
+   *   com os nomes de Phaser.Input.Keyboard.KeyCodes (ex.: { LEFT: ['A', 'LEFT'], ... })
    * @param {TouchControls} [touch] controles na tela (celular)
    */
-  constructor(scene, touch = null) {
+  constructor(scene, keyNames, touch = null) {
     this.#touch = touch;
     const keyboard = scene.input.keyboard;
-    const KeyCodes = Phaser.Input.Keyboard.KeyCodes;
-    const keys = (...codes) => codes.map(code => keyboard.addKey(code));
+    const keys = action => keyNames[action].map(name => keyboard.addKey(Phaser.Input.Keyboard.KeyCodes[name]));
 
     // Cada ação aceita várias teclas
-    this.#left = keys(KeyCodes.LEFT, KeyCodes.A);
-    this.#right = keys(KeyCodes.RIGHT, KeyCodes.D);
-    this.#jump = keys(KeyCodes.UP, KeyCodes.W, KeyCodes.PAGE_UP);
-    this.#duck = keys(KeyCodes.DOWN, KeyCodes.S, KeyCodes.PAGE_DOWN);
-    this.#attackKey = keyboard.addKey(KeyCodes.SPACE);
-    this.#specialKey = keyboard.addKey(KeyCodes.G);
+    this.#left = keys(ControlAction.LEFT);
+    this.#right = keys(ControlAction.RIGHT);
+    this.#jump = keys(ControlAction.JUMP);
+    this.#duck = keys(ControlAction.DUCK);
+    this.#attack = keys(ControlAction.ATTACK);
+    this.#special = keys(ControlAction.SPECIAL);
   }
 
   isLeftHeld()  { return InputController.#anyDown(this.#left) || Boolean(this.#touch?.left); }
@@ -51,17 +47,22 @@ class InputController {
   /** true apenas no frame em que a tecla (ou o botão) de ataque foi pressionado. */
   isAttackJustPressed() {
     const touched = this.#touch ? this.#touch.consumeAttack() : false;
-    return Phaser.Input.Keyboard.JustDown(this.#attackKey) || touched;
+    return InputController.#anyJustDown(this.#attack) || touched;
   }
 
   /** true apenas no frame em que a tecla (ou o botão) do especial foi pressionado. */
   isSpecialJustPressed() {
     const touched = this.#touch ? this.#touch.consumeSpecial() : false;
-    return Phaser.Input.Keyboard.JustDown(this.#specialKey) || touched;
+    return InputController.#anyJustDown(this.#special) || touched;
   }
 
   /** Alguma das teclas está pressionada? */
   static #anyDown(keys) {
     return keys.some(key => key.isDown);
+  }
+
+  /** Alguma das teclas acabou de ser apertada (neste frame)? */
+  static #anyJustDown(keys) {
+    return keys.some(key => Phaser.Input.Keyboard.JustDown(key));
   }
 }

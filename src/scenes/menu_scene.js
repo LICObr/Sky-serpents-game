@@ -42,8 +42,7 @@ class MenuScene extends Phaser.Scene {
     this.#rows = [this.#characterPicker, playButton];
     this.#focus(0);
 
-    this.add.text(WIDTH / 2, HEIGHT - 34,
-      'SETAS/WASD mover   ESPACO atacar   G especial   P pausa   ESC menu',
+    this.add.text(WIDTH / 2, HEIGHT - 34, `${KeyBindings.soloHint()}   P pausa`,
       UiStyle.text(7, '#c8c0e0')).setOrigin(0.5);
     this.add.text(WIDTH / 2, HEIGHT - 16, 'Dica: pule em cima dos bichos para esmagá-los!',
       UiStyle.text(7, '#8fd18a')).setOrigin(0.5);
