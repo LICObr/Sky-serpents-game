@@ -5,6 +5,8 @@
  *   - LENTIDÃO (gelo da serpente): anda mais devagar;
  *   - CONGELADO (bola de gelo do urso): preso num bloco de gelo, sem andar,
  *     pular nem atacar. Depois de descongelar fica um tempinho imune.
+ *   - EMPURRADO (vento do rabo da águia): por um instante o vento manda no
+ *     andar (o jogador não consegue frear).
  * Para criar novos efeitos (veneno, escudo...) basta adicionar aqui.
  * -----------------------------------------------------------------------------
  */
@@ -12,6 +14,7 @@ class PlayerStatus {
   #player;
   #slowUntil = 0;
   #frozenUntil = 0;
+  #pushedUntil = 0;
   #freezeImmuneUntil = 0;
   #iceBlock = null;
   #wasFrozen = false;
@@ -30,6 +33,16 @@ class PlayerStatus {
   /** Preso no gelo? */
   get isFrozen() {
     return this.#player.scene.time.now < this.#frozenUntil;
+  }
+
+  /** Sendo levado pelo vento? */
+  get isPushed() {
+    return this.#player.scene.time.now < this.#pushedUntil;
+  }
+
+  /** O vento manda no andar por um tempo. */
+  push(ms) {
+    this.#pushedUntil = this.#player.scene.time.now + ms;
   }
 
   get isSlowed() {

@@ -107,6 +107,7 @@ const GameSettings = deepFreeze({
     BLINK_ALPHA: 0.15,          // transparência no "apagado" do piscar
     STOMP_BOUNCE_Y: -420,       // pulinho ao pisar em um inimigo
     COYOTE_TIME_MS: 110,        // ainda dá para pular logo após sair do chão
+    PUSH: { LIFT_Y: -260, MS: 420 }, // empurrão (vento): pulinho e tempo sem controle
     // Sem corações: tomba para a esquerda e fica deitado, meio transparente
     DEATH: { FALL_MS: 450, ALPHA: 0.45, LYING_HEIGHT: 18, PULSE_MS: 900 }
   },

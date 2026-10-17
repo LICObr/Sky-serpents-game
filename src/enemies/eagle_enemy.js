@@ -18,6 +18,9 @@
  *   SOAR_WAVE        sobe e desce enquanto voa (a de rabo em leque faz zigue-zague)
  *   DIVE_OPEN_WINGS  mergulha de asas ABERTAS, maior (área maior para acertar)
  *   REBOUND          não pousa: depois do mergulho sobe de novo (RISE) e volta a mergulhar
+ *   STOMP_HURTS      pisar nela machuca (como no ouriço)
+ *   TRICK            truque próprio (eagle_tricks.js): bico entalado, vento do
+ *                    rabo, escudo de asas, penas afiadas...
  * -----------------------------------------------------------------------------
  */
 const EagleState = Object.freeze({
@@ -31,6 +34,7 @@ const EagleState = Object.freeze({
 class EagleEnemy extends Enemy {
   #levelMap;
   #eggs;
+  #trick;
   #nextEggTime = 0;
   #state = EagleState.SOAR;
   #homeX;
@@ -58,8 +62,25 @@ class EagleEnemy extends Enemy {
     this.#nextEggTime = scene.time.now + this.#eggInterval();
     this.#homeX = x;
     this.#soarY = y;
+    this.#trick = EagleTrick.create(this, type.TRICK, eggs);
     this.sprite.body.setAllowGravity(false);
     this.#nextDiveCheck = scene.time.now + Phaser.Math.Between(0, type.DIVE_CHECK_MS * 2);
+  }
+
+  /** @override Algumas não podem ser pisadas (pisar machuca, como no ouriço). */
+  get stompable() {
+    return !this.type.STOMP_HURTS;
+  }
+
+  /** @override Coberta pelas asas (truque) não apanha. */
+  get canBeHit() {
+    return super.canBeHit && !this.#trick.shielded;
+  }
+
+  /** @override Leva junto o que o truque criou (vento, escudinho). */
+  destroy() {
+    this.#trick.destroy();
+    super.destroy();
   }
 
   /** @override A águia escolhe os próprios quadros conforme o estado. */
@@ -74,7 +95,7 @@ class EagleEnemy extends Enemy {
       case EagleState.WARN:     this.#warn(time, player); break;
       case EagleState.DIVE:     this.#dive(time); break;
       case EagleState.RISE:     this.#rise(time); break;
-      case EagleState.GROUNDED: this.#walk(time); break;
+      case EagleState.GROUNDED: this.#walk(time, player); break;
     }
   }
 
@@ -168,6 +189,7 @@ class EagleEnemy extends Enemy {
     sprite.setScale(this.type.SCALE);
     sprite.setVelocity(0, -this.type.REBOUND.RISE_SPEED);
     this.setTextureIfChanged(this.type.FRAMES[0]);
+    this.#trick.onRise(this.scene.time.now);
   }
 
   /** Subindo: quando chega na altura do voo, volta a planar (e a pensar em mergulhar). */
@@ -191,10 +213,12 @@ class EagleEnemy extends Enemy {
     this.setTextureIfChanged(this.type.GROUND_FRAMES[0]);
     sprite.body.setSize(sprite.frame.realWidth * 0.8, sprite.frame.realHeight * 0.9, true);
     this.weakenTo(this.type.GROUND_HP);
+    this.#trick.onLand(this.scene.time.now);
   }
 
-  /** Anda devagar, virando nas paredes e nas beiradas. */
-  #walk(time) {
+  /** Anda devagar, virando nas paredes e nas beiradas (o truque pode tomar o controle). */
+  #walk(time, player) {
+    if (this.#trick.walk(time, player)) return;
     const sprite = this.sprite;
     const body = sprite.body;
     const lookahead = GameSettings.ENEMY.LEDGE_LOOKAHEAD;

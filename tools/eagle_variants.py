@@ -10,6 +10,7 @@ reconhecer de longe, além da cor:
   aguia_leque_*    rabo enorme em LEQUE, tipo pavão, com pontas coloridas (vermelha)
   aguia_larga_*    asas com o DOBRO do comprimento (escura; no jogo ela é maior)
   aguia_negra_*    MOICANO de espinhos, olhos vermelhos e rabo espetado (preta)
+  aguia_pena       pena afiada que a negra solta ao subir
 
 Cada variação tem os mesmos quadros da original: voo (2), mergulho e chão (2).
 
@@ -82,16 +83,19 @@ def spear_beak(grid, extra=7):
 
 
 def crown(grid):
-    """Coroa de ouro em cima da cabeça, com uma joia vermelha no meio."""
-    grid = pad(grid, top=3)
+    """Coroa de ouro PONTUDA em cima da cabeça, com uma joia vermelha no meio."""
+    grid = pad(grid, top=5)
     y, left, right = head_top(grid)
     middle = (left + right) // 2
     for x in range(left - 1, right + 2):
-        put(grid, x, y - 1, "e")
-    put(grid, middle, y - 1, "E")
-    for x in (left - 1, middle, right + 1):
+        put(grid, x, y - 1, "e")            # aro
+    put(grid, middle, y - 1, "E")           # joia
+    for x in (left - 1, right + 1):         # pontas dos lados
         put(grid, x, y - 2, "e")
-    put(grid, middle, y - 3, "z")
+        put(grid, x, y - 3, "z")
+    for h in range(2, 5):                   # ponta do meio, bem alta
+        put(grid, middle, y - h, "e")
+    put(grid, middle, y - 5, "z")
     return grid
 
 
@@ -140,6 +144,20 @@ def punk(grid):
     return grid
 
 
+# Pena afiada (a águia negra solta três ao subir)
+FEATHER = """
+..c..
+.cCc.
+.cCc.
+cCCCc
+cCCCc
+.cCc.
+.cCc.
+..c..
+..c..
+"""
+
+
 # ---------------------------------------------------------------- quadros
 def frames(name, *shapes):
     """Todos os quadros de uma variação, com os traços aplicados em ordem."""
@@ -164,6 +182,7 @@ if __name__ == "__main__":
         **frames("leque", peacock_tail),
         **frames("larga", long_wings),
         **frames("negra", punk),
+        "aguia_pena.png": render(FEATHER, palette_overrides=COLORS["negra"]),
     }
     for filename, image in sprites.items():
         image.save(FOLDER / filename)

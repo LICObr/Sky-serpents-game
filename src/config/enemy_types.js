@@ -334,13 +334,16 @@ const ENEMY_TYPES = deepFreeze({
     DIVE_CHECK_MS: 1000,
     DIVE_CHANCE_PERCENT: 65,
     DIVE_WARNING_MS: 180,
-    DIVE_SPEED: 640
+    DIVE_SPEED: 640,
+    // o bico entala no chão por 2 s (hora de bater!) e depois ela dá estocadas
+    TRICK: { ID: 'STUCK_BEAK', STUCK_MS: 2000, LUNGE_EVERY_MS: 2800, LUNGE_MS: 350, LUNGE_SPEED: 320, LUNGE_RANGE_X: 260 }
   },
   // Dourada: solta 3 ovos de uma vez, em leque, e com mais frequência
   [EnemyTypeId.EAGLE_GOLD]: {
     ...EAGLE_BASE, ...eagleFrames('dourada'),
     NAME: 'Águia-Dourada',
-    EGG: { ...EAGLE_BASE.EGG, COUNT: 3, SPREAD_X: 70, INTERVAL_MS: { MIN: 3500, MAX: 5000 } }
+    EGG: { ...EAGLE_BASE.EGG, COUNT: 3, SPREAD_X: 70, INTERVAL_MS: { MIN: 3500, MAX: 5000 } },
+    STOMP_HURTS: true           // coroa pontuda: pisar nela machuca, como no ouriço
   },
   // Rabo de leque: voa rápido em zigue-zague, subindo e descendo
   [EnemyTypeId.EAGLE_FAN]: {
@@ -348,7 +351,10 @@ const ENEMY_TYPES = deepFreeze({
     NAME: 'Águia-Rabo-de-Leque',
     SPEED: 120,
     PATROL_RANGE: 300,
-    SOAR_WAVE: { HEIGHT: 40, SPEED: 0.006 }
+    SOAR_WAVE: { HEIGHT: 40, SPEED: 0.006 },
+    GROUND_SPEED: 90,           // no chão anda bem mais rápido
+    // no chão abana o rabo: o vento empurra o jogador para trás
+    TRICK: { ID: 'TAIL_GUST', EVERY_MS: 2600, RANGE_X: 240, RANGE_Y: 90, FORCE: 520 }
   },
   // Asa larga: maior, mergulha rápido de asas ABERTAS (área maior para acertar)
   [EnemyTypeId.EAGLE_WIDE]: {
@@ -357,7 +363,9 @@ const ENEMY_TYPES = deepFreeze({
     SCALE: 0.11,
     HP: 45,
     DIVE_SPEED: 560,
-    DIVE_OPEN_WINGS: { SCALE: 1.4 }
+    DIVE_OPEN_WINGS: { SCALE: 1.4 },
+    // no chão se cobre com as asas: nesse tempo nada acerta
+    TRICK: { ID: 'WING_SHIELD', EVERY_MS: 4000, MS: 1600 }
   },
   // Negra: não pousa — depois do mergulho sobe de novo e volta a mergulhar
   [EnemyTypeId.EAGLE_BLACK]: {
@@ -365,6 +373,8 @@ const ENEMY_TYPES = deepFreeze({
     NAME: 'Águia-Negra',
     DIVE_SPEED: 500,
     DIVE_CHANCE_PERCENT: 55,
-    REBOUND: { RISE_SPEED: 260, PAUSE_MS: 900 }
+    REBOUND: { RISE_SPEED: 260, PAUSE_MS: 900 },
+    // ao subir de volta solta 3 penas afiadas que caem balançando
+    TRICK: { ID: 'FEATHER_DARTS', COUNT: 3, SPREAD_X: 90, SPEED_Y: 60, TEXTURE: 'aguia_pena' }
   }
 });

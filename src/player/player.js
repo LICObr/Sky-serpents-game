@@ -163,10 +163,11 @@ class Player extends GameEntity {
     this.#attack.updateProjectiles(); // flechas no ar seguem mesmo com o jogador fora
     if (this.#knockedOut) return;
 
+    const windBlown = this.#status.isPushed; // empurrado: o vento manda no andar
     if (this.#status.isFrozen) {
       // Congelado: parado no bloco de gelo (só a gravidade age)
       this.sprite.setVelocityX(0);
-    } else if (!(this.#special.isActive && this.#special.controlsMovement)) {
+    } else if (!windBlown && !(this.#special.isActive && this.#special.controlsMovement)) {
       // Durante a investida o movimento é controlado pelo especial
       this.#movement.update();
     }
@@ -241,6 +242,19 @@ class Player extends GameEntity {
    */
   #blockedByShield() {
     return !this.#health.isInvulnerable && this.#shield.tryBlock();
+  }
+
+  /**
+   * Empurrado para trás (ex.: vento do rabo da águia): sai voando um pouco,
+   * sem conseguir andar por um instante. Não tira coração.
+   * @param {number} directionX 1 = para a direita, -1 = para a esquerda
+   * @param {number} force velocidade do empurrão
+   */
+  pushBack(directionX, force) {
+    if (this.#knockedOut) return;
+    const { LIFT_Y, MS } = GameSettings.PLAYER.PUSH;
+    this.sprite.setVelocity(directionX * force, LIFT_Y);
+    this.#status.push(MS);
   }
 
   /** Pulinho depois de pisar em um inimigo. */
