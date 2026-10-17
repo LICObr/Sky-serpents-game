@@ -36,6 +36,7 @@ class GameScene extends Phaser.Scene {
   #specialHud;
   #banner;
   #touch;
+  #progress;
   #arenaBackdrop = null; // cenário próprio da arena (aparece no fim do percurso)
 
   constructor() {
@@ -87,16 +88,17 @@ class GameScene extends Phaser.Scene {
     this.#trees = new TreeManager(this, level.TREES || [], this.#levelMap, this.#combat);
 
     // Final da fase: arena do chefão OU bandeira de chegada
+    const finishX = this.#match.hasBoss ? level.ARENA_START_X : level.ARENA_START_X + GameSettings.GOAL_FLAG.X_IN_END_ZONE;
     if (this.#match.hasBoss) {
       this.#arena = new BossArena(this, level.ARENA_START_X);
     } else {
-      const goalX = level.ARENA_START_X + GameSettings.GOAL_FLAG.X_IN_END_ZONE;
-      this.#goal = new GoalFlag(this, goalX, this.#levelMap.surfaceYAt(goalX), () => this.#onGoalReached());
+      this.#goal = new GoalFlag(this, finishX, this.#levelMap.surfaceYAt(finishX), () => this.#onGoalReached());
     }
 
     // Interface
     new HeartsHUD(this, this.#player.health.maxHearts, this.#eventBus);
     new CoinHUD(this, this.#eventBus);
+    this.#progress = new LevelProgressBar(this, finishX, this.#eventBus);
     this.#specialHud = new SpecialHUD(this, this.#player);
     // Chefão chamando bichos (ex.: morceguinhos do urso, vespas da colmeia)
     this.#eventBus.on(GameEvents.BOSS_SUMMON, (spawn, onSpawned) => onSpawned(this.#enemies.spawnEnemy(spawn)));
@@ -126,6 +128,7 @@ class GameScene extends Phaser.Scene {
     this.#player.update();
     this.#player.handleAttack(this.#combat);
     this.#specialHud.update();
+    this.#progress.update(this.#player.x);
     this.#enemies.update(time, this.#player);
     this.#coins.update();
     this.#checkpoints.update(this.#player.x);

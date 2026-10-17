@@ -493,6 +493,8 @@ const GameSettings = deepFreeze({
     },
     // Moedas no canto superior direito (no jogo e no menu)
     COINS: { RIGHT_X: 780, Y: 30, ICON_SCALE: 0.42, GAP: 8, TEXT_SIZE: 14 },
+    // Progresso da fase no topo (no lugar onde aparece a barra do chefão)
+    PROGRESS: { X: 250, Y: 28, WIDTH: 400, HEIGHT: 14, ALPHA: 0.35, DOT_RADIUS: 7, FLAG_HEIGHT: 26 },
     BANNER_DURATION_MS: 2200,
     DEPTH: 10
   },
