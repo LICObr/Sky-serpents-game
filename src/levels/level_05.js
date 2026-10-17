@@ -2,8 +2,9 @@
  * level_05.js — FASE 5: Floresta do Mel
  * -----------------------------------------------------------------------------
  * Chefão: Colmeia → Abelha Rainha. O que cada campo significa: veja level_helpers.js.
- * Percurso cheio de morros e ilhas (dá para ir por cima ou por baixo) e só
- * VESPAS no caminho. A luta final acontece no cenário da colmeia.
+ * Percurso cheio de morros e ilhas (dá para ir por cima ou por baixo), uma
+ * MONTANHA bem alta no fim e só VESPAS no caminho. A luta final acontece no
+ * cenário da colmeia.
  * -----------------------------------------------------------------------------
  */
 const LEVEL_05 = {
@@ -23,27 +24,31 @@ const LEVEL_05 = {
   GROUND: [
     [0, 440], [568, 220, 64], [788, 200, 128], [1148, 180, 48],
     [1392, 200], [1592, 160, 64], [1752, 140, 128], [1956, 200, 96],
-    [2348, 300], [2712, 160, 48], [2872, 140, 112], [3076, 220, 64],
-    [3424, 260], [3684, 180, 64], [3992, 408]
+    // a MONTANHA: rampa, dois paredões para subir pulando e o pico
+    [2348, 100], [2704, 176, 128], [2880, 112, 192], [2992, 96, 256],
+    [3216, 176, 320],         // pico
+    [3776, 112, 128], [4144, 256]
   ],
   RAMPS: [
     [440, 128, 0, 64],        // subida para o primeiro morro
     [988, 160, 128, 48],      // descida do morro alto
     [2156, 192, 96, 0],       // descida longa
-    [3296, 128, 64, 0],
-    [3864, 128, 64, 0]        // descida antes da arena
+    [2448, 256, 0, 128],      // pé da montanha
+    [3088, 128, 256, 320],    // chegada ao pico
+    [3392, 384, 320, 128],    // descida do pico
+    [3888, 256, 128, 0]       // descida antes da arena
   ],
   // Ilhas em várias alturas: caminho de cima (mais alto) ou de baixo
   PLATFORMS: [
     [250, 470], [660, 400], [760, 320], [1360, 440], [1820, 335], [1900, 255],
-    [2400, 470], [2480, 385], [2560, 300], [2640, 215], [2800, 390], [3044, 420],
-    [3500, 470], [3600, 390], [4100, 470], [4250, 400]
+    [2400, 470], [2480, 385], [2560, 300], [2640, 215],   // escadinha até a poção
+    [4180, 470], [4250, 400]
   ],
   // Só vespas nesta fase
   ENEMIES: [
     ...flyers(EnemyTypeId.WASP, [
       [700, 300], [1150, 280], [1500, 320], [1900, 230], [2300, 300],
-      [2600, 200], [3000, 280], [3350, 300], [3750, 260], [4150, 300]
+      [2600, 200], [3000, 200], [3360, 150], [3750, 260], [4150, 300]
     ])
   ],
   RANDOM_ENEMIES: {
@@ -52,7 +57,7 @@ const LEVEL_05 = {
     WAVES: { INTERVAL_MS: 7000, TYPES: [EnemyTypeId.WASP], MAX_NEAR: 4 }
   },
   POTIONS: [[1900, 205], [2640, 165]],
-  CHECKPOINTS: [100, 1450, 2400, 3450],
+  CHECKPOINTS: [100, 1450, 2400, 3260],   // o último fica no pico
   ARENA: {
     BOSS: BossTypeId.HIVE,
     BACKDROP: 'hive_scene',   // a clareira da colmeia (sem ela): aparece aos poucos no fim do percurso
