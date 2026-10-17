@@ -55,8 +55,8 @@ const LEVEL_06 = {
   ],
   TREES: [540, 1160, 2715, 4300, 6750],
   ENEMIES: [
-    ...walkers(EnemyTypeId.FROG, [600, 1300, 2700]),
-    ...walkers(EnemyTypeId.FROG_ICE, [3700, 4950]),
+    ...walkers(EnemyTypeId.FROG, [1300]),
+    ...walkers(EnemyTypeId.FROG_ICE, [4950]),
     ...walkers(EnemyTypeId.SNAKE_FIRE, [900, 1750]),
     ...walkers(EnemyTypeId.HEDGEHOG, [1950, 6400]),
     ...walkers(EnemyTypeId.PLANT, [1420, 3360]),
@@ -73,9 +73,10 @@ const LEVEL_06 = {
     ...flyers(EnemyTypeId.EAGLE_BLACK, [[3050, -250], [6500, 200]])
   ],
   RANDOM_ENEMIES: {
-    WALKERS: { TYPES: [EnemyTypeId.FROG, EnemyTypeId.SNAKE_FIRE, EnemyTypeId.HEDGEHOG], COUNT: 6 },
+    WALKERS: { TYPES: [EnemyTypeId.SNAKE_FIRE, EnemyTypeId.HEDGEHOG], COUNT: 6 },
     FLYERS: { TYPES: [EnemyTypeId.BAT], COUNT: 4 },
-    WAVES: { INTERVAL_MS: 8000, TYPES: [EnemyTypeId.BAT, EnemyTypeId.FROG], MAX_NEAR: 4 }
+    // ondas: 2 morcegos para cada sapo (sapo demais deixava a fase chata)
+    WAVES: { INTERVAL_MS: 8000, TYPES: [EnemyTypeId.BAT, EnemyTypeId.BAT, EnemyTypeId.FROG], MAX_NEAR: 4 }
   },
   POTIONS: [[1430, 280], [3176, -190], [4264, -670]],
   CHECKPOINTS: [100, 1100, 2150, 3150, 4200, 5450],
