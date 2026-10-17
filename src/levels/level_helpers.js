@@ -29,6 +29,8 @@
  *                  em enemy_types.js e a dos chefões em boss_types.js.
  *
  * Medidas úteis para criar fases (com a física atual):
+ *   - montanha mais alta que a tela? Pode: o mundo e a câmera sobem junto
+ *     (veja a fase 6; ilhas e bichos acima da tela usam y negativo)
  *   - o pulo alcança ~100px de altura e ~85px de distância
  *   - paredões de até ~64px dão para subir pulando
  *   - chão nível 0 fica em y = 540; uma ilha em y = (topo do chão - 70)

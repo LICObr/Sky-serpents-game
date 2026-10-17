@@ -126,7 +126,7 @@ class GameScene extends Phaser.Scene {
     if (level.INTRO) LevelIntro.play(this, level.INTRO, () => this.#banner.show(`FASE ${level.NUMBER}`, level.NAME));
     else this.#banner.show(`FASE ${level.NUMBER}`, level.NAME);
 
-    this.#camera = new PartyCamera(this, this.#party, this.#levelMap.worldWidth);
+    this.#camera = new PartyCamera(this, this.#party, this.#levelMap);
     this.#setupCollisions();
     this.#setupPause();
   }
@@ -262,9 +262,10 @@ class GameScene extends Phaser.Scene {
     this.scene.pause();
   }
 
-  /** Limites do mundo: laterais fechadas, embaixo aberto (buracos). */
+  /** Limites do mundo: laterais fechadas, em cima e embaixo abertos (buracos). */
   #setupWorldBounds() {
-    this.physics.world.setBounds(0, 0, this.#levelMap.worldWidth, GameSettings.SCREEN.HEIGHT, true, true, false, false);
+    const { worldWidth, worldTop } = this.#levelMap;
+    this.physics.world.setBounds(0, worldTop, worldWidth, GameSettings.SCREEN.HEIGHT - worldTop, true, true, false, false);
   }
 
   /**

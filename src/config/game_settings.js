@@ -50,7 +50,8 @@ const GameSettings = deepFreeze({
 
   CAMERA: {
     LERP: 0.12,                 // suavidade ao seguir o jogador
-    DEADZONE_WIDTH: 120
+    DEADZONE_WIDTH: 120,
+    DEADZONE_HEIGHT: 180        // fases mais altas que a tela: a câmera sobe junto
   },
 
   BACKGROUND: {
@@ -81,7 +82,8 @@ const GameSettings = deepFreeze({
     RESPAWN_HEIGHT: 60,         // renasce um pouco acima do chão do checkpoint
     ARENA_WIDTH: 800,           // a arena do chefão ocupa uma tela inteira
     ARENA_TRIGGER_OFFSET: 140,  // quanto entrar na arena para a luta começar
-    ARENA_BACKDROP_FADE_PX: 800 // cenário próprio da arena: começa a aparecer a esta distância
+    ARENA_BACKDROP_FADE_PX: 800, // cenário próprio da arena: começa a aparecer a esta distância
+    SKY_ABOVE_TERRAIN: 200      // céu acima do ponto mais alto (montanha mais alta que a tela)
   },
 
   PLATFORMS: {

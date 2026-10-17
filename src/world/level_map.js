@@ -26,6 +26,7 @@ class LevelMap {
   #floors = []; // retângulos { left, right, top } onde dá para pisar
   #grounds = []; // só o chão sólido (para saber a altura do terreno)
   #arenaPlatforms;
+  #worldTop;     // topo do mundo (negativo quando a montanha passa da tela)
 
   /**
    * @param {Phaser.Scene} scene
@@ -46,12 +47,20 @@ class LevelMap {
 
     level.PLATFORMS.forEach(([x, y]) => this.#createPlatform(x, y));
     this.#arenaPlatforms = level.ARENA ? this.#buildArenaPlatforms() : [];
+
+    // Montanha mais alta que a tela: o mundo (e a câmera) sobe até um pouco acima do pico
+    const highest = Math.min(...this.#floors.map(floor => floor.top));
+    this.#worldTop = Math.min(0, highest - GameSettings.LEVEL.SKY_ABOVE_TERRAIN);
   }
 
   get solids()      { return this.#solids; }
   get platforms()   { return this.#platforms; }
   get arenaStartX() { return this.#level.ARENA_START_X; }
   get worldWidth()  { return this.#level.ARENA_START_X + GameSettings.LEVEL.ARENA_WIDTH; }
+  /** Topo do mundo: 0 nas fases normais, negativo se a montanha passa do alto da tela. */
+  get worldTop()    { return this.#worldTop; }
+  /** A fase sobe além da tela (a câmera precisa acompanhar para cima)? */
+  get isTall()      { return this.#worldTop < 0; }
 
   /** Plataformas da arena do chefão (onde surgem as poções durante a luta). */
   get arenaPlatforms() { return this.#arenaPlatforms; }
@@ -107,8 +116,8 @@ class LevelMap {
     const { GROUND_TOP, TOP_STRIP_HEIGHT, TERRAIN_BOTTOM, GROUND_TILE_SCALE } = GameSettings.LEVEL;
     const top = GROUND_TOP - elevation;
 
-    // Visual: faixa de grama em cima + terra até embaixo
-    const grass = this.#scene.add.tileSprite(x, top, width, TOP_STRIP_HEIGHT, this.#theme.TOP_TEXTURE)
+    // Visual: faixa de grama (ou neve, no alto) em cima + terra até embaixo
+    const grass = this.#scene.add.tileSprite(x, top, width, TOP_STRIP_HEIGHT, this.#topTexture(elevation))
       .setOrigin(0, 0).setTileScale(GROUND_TILE_SCALE);
     const dirt = this.#scene.add.tileSprite(x, top + TOP_STRIP_HEIGHT, width, TERRAIN_BOTTOM - top - TOP_STRIP_HEIGHT, this.#theme.FILL_TEXTURE)
       .setOrigin(0, 0).setTileScale(GROUND_TILE_SCALE);
@@ -197,7 +206,8 @@ class LevelMap {
     tops.forEach((top, i) => {
       const columnX = i * RAMP_STEP_WIDTH;
       const localTop = top - minTop;
-      ctx.fillStyle = pattern(this.#theme.TOP_TEXTURE, localTop); // grama alinhada ao topo do degrau
+      const elevation = GameSettings.LEVEL.GROUND_TOP - top;
+      ctx.fillStyle = pattern(this.#topTexture(elevation), localTop); // grama alinhada ao topo do degrau
       ctx.fillRect(columnX, localTop, RAMP_STEP_WIDTH, RAMP_GRASS_HEIGHT);
       ctx.fillStyle = dirt;
       ctx.fillRect(columnX, localTop + RAMP_GRASS_HEIGHT, RAMP_STEP_WIDTH, height - localTop - RAMP_GRASS_HEIGHT);
@@ -205,6 +215,12 @@ class LevelMap {
 
     canvasTexture.refresh();
     this.#scene.add.image(x, minTop, key).setOrigin(0, 0);
+  }
+
+  /** Topo do chão nesta elevação: grama, ou neve acima da linha de neve do tema. */
+  #topTexture(elevation) {
+    const snow = this.#theme.SNOW;
+    return snow && elevation >= snow.FROM_ELEVATION ? snow.TOP_TEXTURE : this.#theme.TOP_TEXTURE;
   }
 
   /** Bloco sólido invisível (do topo até o fundo do terreno). */

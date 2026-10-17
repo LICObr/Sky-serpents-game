@@ -7,6 +7,8 @@
  *   - PLATFORM_TEXTURE ilha flutuante na cor do tema
  *   - TREE_TEXTURES    (opcional) árvores quebráveis [inteira, rachada];
  *                      sem ele, usa as de GameSettings.TREE
+ *   - SNOW             (opcional) { TOP_TEXTURE, FROM_ELEVATION }: do alto
+ *                      dessa elevação para cima o topo do chão é de neve
  *   - WEATHER          lista de efeitos de clima (veja weather_effect.js)
  * -----------------------------------------------------------------------------
  */
@@ -15,7 +17,8 @@ const TerrainThemeId = Object.freeze({
   ICE: 'ICE',
   MYSTIC: 'MYSTIC',
   JUNGLE_ICE: 'JUNGLE_ICE',
-  HONEY: 'HONEY'
+  HONEY: 'HONEY',
+  MOSS: 'MOSS'
 });
 
 /** Tipos de clima. */
@@ -51,5 +54,11 @@ const TERRAIN_THEMES = deepFreeze({
     TOP_TEXTURE: 'chao_mel', FILL_TEXTURE: 'terra_mel', PLATFORM_TEXTURE: 'platform_mel',
     TREE_TEXTURES: ['arvore_mel_0', 'arvore_mel_1'],   // árvores amarelas
     WEATHER: [WeatherType.POLLEN]
+  },
+  // Montanha da selva: grama cor de musgo bem falhada e neve no alto da montanha
+  [TerrainThemeId.MOSS]: {
+    TOP_TEXTURE: 'chao_musgo', FILL_TEXTURE: 'terra', PLATFORM_TEXTURE: 'platform_musgo',
+    SNOW: { TOP_TEXTURE: 'chao_neve', FROM_ELEVATION: 640 },
+    WEATHER: [WeatherType.FOG, WeatherType.LIGHT_SNOW]
   }
 });

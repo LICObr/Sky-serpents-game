@@ -52,6 +52,7 @@ O jogo também pausa sozinho quando a janela perde o foco (trocar de aba, minimi
 | 3 | Santuário Místico | Dragão Rosa Místico |
 | 4 | Selva Gelada | Urso Polar |
 | 5 | Floresta do Mel | Colmeia → Abelha Rainha |
+| 6 | Montanha da Selva | — (montanha gigante, termina na bandeira) |
 
 **Moedas:** cada bicho derrotado tem 30% de chance de deixar uma moeda. O total fica guardado no navegador e aparece no canto superior direito (no jogo e no menu).
 
@@ -110,6 +111,7 @@ python tools/boss_intros.py
 | `bee_boss_sprites.py` | colmeia (cenário + recorte), animação da Abelha Rainha, mel |
 | `coin_sprite.py` | a moeda |
 | `honey_background.py` / `honey_terrain.py` | fundo infinito, terreno e árvores amarelas da Floresta do Mel |
+| `tall_jungle_background.py` / `moss_terrain.py` | árvores altíssimas do fundo e chão de musgo com neve da Montanha da Selva |
 | `jungle_background.py` | fundo da Selva Gelada |
 | `dragon_sheet.py`, `bear_sheet.py`, `bear_retouch.py` | folhas de animação dos chefões |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |
