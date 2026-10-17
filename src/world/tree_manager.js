@@ -15,8 +15,9 @@ class TreeManager {
    * @param {number[]} positions posições x das árvores
    * @param {LevelMap} levelMap para apoiar cada árvore no chão
    * @param {CombatRegistry} combat
+   * @param {string[]} [textures] [inteira, rachada] (cada tema pode ter as suas)
    */
-  constructor(scene, positions, levelMap, combat) {
+  constructor(scene, positions, levelMap, combat, textures = GameSettings.TREE.TEXTURES) {
     this.#group = scene.add.group();
 
     const chips = scene.add.particles(FxTextureKeys.SPARK)
@@ -33,7 +34,7 @@ class TreeManager {
 
     positions.forEach(x => {
       const groundY = levelMap.surfaceYAt(x) ?? GameSettings.LEVEL.GROUND_TOP;
-      const tree = new BreakableTree(scene, x, groundY, chips, broken => {
+      const tree = new BreakableTree(scene, x, groundY, textures, chips, broken => {
         combat.unregister(broken);
         this.#group.remove(broken.sprite);
       });

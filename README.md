@@ -98,7 +98,7 @@ python tools/boss_intros.py
 | `boss_intros.py` | imagens de abertura dos dragões e da serpente |
 | `bee_boss_sprites.py` | colmeia (cenário + recorte), animação da Abelha Rainha, mel |
 | `coin_sprite.py` | a moeda |
-| `honey_background.py` / `honey_terrain.py` | fundo infinito e terreno da Floresta do Mel |
+| `honey_background.py` / `honey_terrain.py` | fundo infinito, terreno e árvores amarelas da Floresta do Mel |
 | `jungle_background.py` | fundo da Selva Gelada |
 | `dragon_sheet.py`, `bear_sheet.py`, `bear_retouch.py` | folhas de animação dos chefões |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |

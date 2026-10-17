@@ -45,7 +45,8 @@ const ASSET_MANIFEST = Object.freeze([
     chao: 'chao.png', chao_gelo: 'chao_gelo.png', chao_rosa: 'chao_rosa.png',
     terra: 'terra.png', terra_gelo: 'terra_gelo.png', terra_rosa: 'terra_rosa.png',
     // Floresta do mel (tools/honey_background.py e tools/honey_terrain.py)
-    bg_mel: 'fundo_mel.png', chao_mel: 'chao_mel.png', terra_mel: 'terra_mel.png', platform_mel: 'plataforma_mel.png'
+    bg_mel: 'fundo_mel.png', chao_mel: 'chao_mel.png', terra_mel: 'terra_mel.png', platform_mel: 'plataforma_mel.png',
+    arvore_mel_0: 'arvore_mel_0.png', arvore_mel_1: 'arvore_mel_1.png'
   }),
 
   // Guerreiro

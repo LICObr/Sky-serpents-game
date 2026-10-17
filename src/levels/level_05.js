@@ -56,6 +56,7 @@ const LEVEL_05 = {
     FLYERS: { TYPES: [EnemyTypeId.WASP], COUNT: 5 },
     WAVES: { INTERVAL_MS: 7000, TYPES: [EnemyTypeId.WASP], MAX_NEAR: 4 }
   },
+  TREES: [1540, 2090, 2800, 3832],   // árvores amarelas (quebrar para passar)
   POTIONS: [[1900, 205], [2640, 165]],
   CHECKPOINTS: [100, 1450, 2400, 3260],   // o último fica no pico
   ARENA: {

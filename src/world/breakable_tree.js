@@ -13,6 +13,7 @@
  */
 class BreakableTree extends GameEntity {
   #hp;
+  #textures;
   #chips;
   #onBroken;
   #broken = false;
@@ -21,18 +22,20 @@ class BreakableTree extends GameEntity {
    * @param {Phaser.Scene} scene
    * @param {number} x
    * @param {number} groundY altura do chão (a árvore fica apoiada nele)
+   * @param {string[]} textures [inteira, rachada]
    * @param {Phaser.GameObjects.Particles.ParticleEmitter} chips emissor de lascas
    * @param {Function} onBroken chamado quando a árvore quebra
    */
-  constructor(scene, x, groundY, chips, onBroken) {
+  constructor(scene, x, groundY, textures, chips, onBroken) {
     const cfg = GameSettings.TREE;
-    const sprite = scene.physics.add.image(x, groundY, cfg.TEXTURES[0])
+    const sprite = scene.physics.add.image(x, groundY, textures[0])
       .setOrigin(0.5, 1)          // apoiada no chão (e tomba girando pela base)
       .setScale(cfg.SCALE)
       .setDepth(cfg.DEPTH);
 
     super(scene, sprite);
     this.#hp = cfg.HP;
+    this.#textures = textures;
     this.#chips = chips;
     this.#onBroken = onBroken;
 
@@ -75,7 +78,7 @@ class BreakableTree extends GameEntity {
     this.#chips.explode(cfg.CHIPS_PER_HIT, this.x, this.y - sprite.displayHeight * 0.3);
     this.scene.cameras.main.shake(cfg.HIT_SHAKE.DURATION_MS, cfg.HIT_SHAKE.INTENSITY);
 
-    if (this.#hp <= cfg.HP / 2) this.setTextureIfChanged(cfg.TEXTURES[1]); // rachada
+    if (this.#hp <= cfg.HP / 2) this.setTextureIfChanged(this.#textures[1]); // rachada
     if (this.#hp <= 0) this.#break(side);
   }
 

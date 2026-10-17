@@ -5,6 +5,8 @@
  *   - TOP_TEXTURE      bloco de grama/neve (topo do chão e das rampas)
  *   - FILL_TEXTURE     bloco de terra (interior dos morros)
  *   - PLATFORM_TEXTURE ilha flutuante na cor do tema
+ *   - TREE_TEXTURES    (opcional) árvores quebráveis [inteira, rachada];
+ *                      sem ele, usa as de GameSettings.TREE
  *   - WEATHER          lista de efeitos de clima (veja weather_effect.js)
  * -----------------------------------------------------------------------------
  */
@@ -47,6 +49,7 @@ const TERRAIN_THEMES = deepFreeze({
   // Floresta do mel: grama verde-amarelada com mel no lugar da neve
   [TerrainThemeId.HONEY]: {
     TOP_TEXTURE: 'chao_mel', FILL_TEXTURE: 'terra_mel', PLATFORM_TEXTURE: 'platform_mel',
+    TREE_TEXTURES: ['arvore_mel_0', 'arvore_mel_1'],   // árvores amarelas
     WEATHER: [WeatherType.POLLEN]
   }
 });

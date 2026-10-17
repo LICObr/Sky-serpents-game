@@ -85,7 +85,8 @@ class GameScene extends Phaser.Scene {
     this.#potions = new PotionManager(this, level.POTIONS, this.#player.health);
     this.#coins = new CoinManager(this, this.#levelMap, this.#eventBus);
     this.#checkpoints = new CheckpointTracker(level.CHECKPOINTS);
-    this.#trees = new TreeManager(this, level.TREES || [], this.#levelMap, this.#combat);
+    this.#trees = new TreeManager(this, level.TREES || [], this.#levelMap, this.#combat,
+      TERRAIN_THEMES[level.TERRAIN].TREE_TEXTURES);
 
     // Final da fase: arena do chefão OU bandeira de chegada
     const finishX = this.#match.hasBoss ? level.ARENA_START_X : level.ARENA_START_X + GameSettings.GOAL_FLAG.X_IN_END_ZONE;
