@@ -5,8 +5,9 @@
  * desenho da colmeia no cenário da arena (colmeia.json diz onde) e perde vida
  * quando apanha (espada, flechas, especiais).
  *
- * Para se defender, de tempos em tempos (tempo sorteado) solta uma leva de
- * VESPAS pela boca — as mesmas vespas do jogo — até acabarem as guardadas.
+ * Para se defender, solta VESPAS pela boca (as mesmas vespas do jogo) em
+ * levas: uma por segundo até 6, depois descansa 25 s e começa outra leva,
+ * até acabarem as guardadas.
  * Enquanto isso, gotas de MEL caem do teto (CeilingDrops).
  * Quando a vida acaba ela escurece e sai a ABELHA RAINHA (NEXT_BOSS).
  * -----------------------------------------------------------------------------
@@ -15,7 +16,8 @@ class HiveBoss extends Boss {
   #layout;
   #bees = [];            // vespas soltas
   #released = 0;         // quantas já saíram
-  #nextWaveAt;
+  #inWave = 0;           // quantas já saíram na leva atual
+  #nextBeeAt;            // quando sai a próxima vespa
   #honey;                // mel espirrando ao apanhar
   #drops;                // gotas de mel caindo do teto
 
@@ -55,7 +57,7 @@ class HiveBoss extends Boss {
       });
     this.#drops = new CeilingDrops(scene, arena, target, (x, y, n) => this.#honey.explode(n, x, y),
       { texture: 'gota_mel', cfg: GameSettings.HONEY_DROPS });
-    this.#nextWaveAt = scene.time.now + GameSettings.HIVE.FIRST_WAVE_MS;
+    this.#nextBeeAt = scene.time.now + GameSettings.HIVE.FIRST_BEE_MS;
 
     // aparece junto com o cenário da arena (mesmo fade)
     sprite.setAlpha(0);
@@ -85,35 +87,43 @@ class HiveBoss extends Boss {
     return { x: this.arena.toWorldX(x), y };
   }
 
-  /** @override Mel caindo do teto e, de tempos em tempos, uma leva de vespas. */
+  /** @override Mel caindo do teto e as vespas saindo uma de cada vez. */
   behave() {
     const now = this.scene.time.now;
     this.#drops.update();
     this.#drops.autoRain(now, this.target.x);
-    if (now < this.#nextWaveAt) return;
-    const { INTERVAL_MS } = this.stats.SWARM;
-    this.#nextWaveAt = now + Phaser.Math.Between(INTERVAL_MS.MIN, INTERVAL_MS.MAX);
-    this.#releaseWave();
+    if (now >= this.#nextBeeAt) this.#releaseNextBee(now);
   }
 
-  /** Solta de 2 a 4 vespas (sem passar do máximo voando nem das que restam). */
-  #releaseWave() {
+  /**
+   * Solta a próxima vespa da leva. Depois da última da leva (PER_WAVE) a
+   * colmeia descansa (WAVE_PAUSE_MS); se já houver vespas demais voando,
+   * espera um pouco e tenta de novo.
+   */
+  #releaseNextBee(now) {
     const swarm = this.stats.SWARM;
+    if (this.#released >= swarm.TOTAL) return; // acabaram as vespas guardadas
     this.#bees = this.#bees.filter(bee => bee.isAlive);
-    const room = swarm.MAX_ALIVE - this.#bees.length;
-    const left = swarm.TOTAL - this.#released;
-    const count = Math.min(Phaser.Math.Between(swarm.PER_WAVE.MIN, swarm.PER_WAVE.MAX), room, left);
-
-    for (let i = 0; i < count; i++) {
-      this.#released++;
-      this.scene.time.delayedCall(i * GameSettings.HIVE.BEE_STAGGER_MS, () => this.#releaseBee());
+    if (this.#bees.length >= swarm.MAX_ALIVE) {
+      this.#nextBeeAt = now + swarm.BEE_INTERVAL_MS;
+      return;
     }
+
+    this.#releaseBee();
+    this.#released++;
+    this.#inWave++;
+    const waveDone = this.#inWave >= swarm.PER_WAVE;
+    if (waveDone) this.#inWave = 0;
+    this.#nextBeeAt = now + (waveDone ? swarm.WAVE_PAUSE_MS : swarm.BEE_INTERVAL_MS);
   }
 
   #releaseBee() {
-    if (!this.canBeHit) return;
     const { x, y } = this.mouth;
-    const spawn = { TYPE: EnemyTypeId[this.stats.SWARM.BEE_TYPE], X: x + Phaser.Math.Between(-15, 15), Y: y };
+    const spawn = {
+      TYPE: EnemyTypeId[this.stats.SWARM.BEE_TYPE],
+      X: x + Phaser.Math.Between(-15, 15),
+      Y: y + Phaser.Math.Between(-20, 20) // alturas diferentes para não voarem iguais
+    };
     this.#honey.explode(4, x, y);
     this.summon(spawn, bee => this.#bees.push(bee));
   }

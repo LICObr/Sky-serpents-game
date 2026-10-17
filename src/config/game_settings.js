@@ -331,8 +331,7 @@ const GameSettings = deepFreeze({
   HIVE: {
     HITBOX: { LEFT: 0.12, RIGHT: 0.88, TOP: 0.1, BOTTOM: 0.92 }, // parte que apanha (proporção da imagem)
     MELEE_REACH: 70,            // alcance da espada até a BORDA da colmeia
-    FIRST_WAVE_MS: 1500,        // a primeira leva de vespas sai logo depois que a luta começa
-    BEE_STAGGER_MS: 250,        // tempo entre uma vespa e outra da mesma leva
+    FIRST_BEE_MS: 1500,         // a primeira vespa sai logo depois que a luta começa
     HIT_FLASH_MS: 70,
     HIT_SHAKE: { DURATION_MS: 100, INTENSITY: 0.004 },
     DEFEAT_MS: 1200,            // treme e escurece antes da rainha sair

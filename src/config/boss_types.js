@@ -184,9 +184,10 @@ const BOSS_TYPES = deepFreeze({
     SWARM: {
       BEE_TYPE: 'WASP',         // as vespas que já existem no jogo
       TOTAL: 50,                // vespas guardadas na colmeia
-      INTERVAL_MS: { MIN: 3000, MAX: 8000 },  // tempo sorteado entre uma leva e outra
-      PER_WAVE: { MIN: 2, MAX: 4 },
-      MAX_ALIVE: 8              // no máximo 8 voando ao mesmo tempo
+      PER_WAVE: 6,              // cada leva: 6 vespas...
+      BEE_INTERVAL_MS: 1000,    // ...saindo uma por segundo
+      WAVE_PAUSE_MS: 25000,     // depois a colmeia descansa 25 s antes da próxima leva
+      MAX_ALIVE: 12             // segurança: no máximo 12 voando ao mesmo tempo
     }
   },
 
