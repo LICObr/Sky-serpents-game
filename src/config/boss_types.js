@@ -45,7 +45,7 @@ const BOSS_TYPES = deepFreeze({
     POWER: 'Chuva de fogo',
     ATTACK_STYLE: 'RADIAL_BURST',
     SPRITE_SHEET: 'dragon_red',      // folha de animação (dragon_sprite_sheets.js)
-    MAX_HP: 250,              // ~17 golpes de espada ou ~21 flechas
+    MAX_HP: 500,              // ~34 golpes de espada ou ~42 flechas
     SPEED: 200,
     SHOT: {
       CHANCE_PERCENT: 3,        // chance por frame
@@ -73,7 +73,7 @@ const BOSS_TYPES = deepFreeze({
     NAME: 'Serpente Glacial',
     POWER: 'Gelo e investida',
     ATTACK_STYLE: 'DOUBLE_RING',
-    MAX_HP: 250,              // igual ao Dragão Vermelho
+    MAX_HP: 500,              // igual ao Dragão Vermelho
     SPEED: 170,
     SCALE: 0.17,
     SEGMENTS: 14,
@@ -113,7 +113,7 @@ const BOSS_TYPES = deepFreeze({
     POWER: 'Espiral mágica',
     ATTACK_STYLE: 'SPIRAL',
     SPRITE_SHEET: 'dragon_pink',
-    MAX_HP: 200,              // o mais curto: ~14 golpes de espada ou ~17 flechas
+    MAX_HP: 500,              // igual ao Dragão Vermelho
     SPEED: 230,
     SHOT: {
       CHANCE_PERCENT: 3,
@@ -144,7 +144,7 @@ const BOSS_TYPES = deepFreeze({
     NAME: 'Urso Polar',
     POWER: 'Gelo e terremoto',
     ATTACK_STYLE: 'ICE_BALLS',
-    MAX_HP: 250,              // igual ao Dragão Vermelho
+    MAX_HP: 500,              // igual ao Dragão Vermelho
     SPEED: 110,
     SCALE: 1.45,
     CONTACT_DAMAGE: true,
@@ -178,7 +178,7 @@ const BOSS_TYPES = deepFreeze({
     POWER: 'Vespas de defesa',
     TEXTURE: 'hive',
     LAYOUT: 'hive_layout',      // onde ela fica na arena (colmeia.json)
-    MAX_HP: 250,                // ~17 golpes de espada ou ~21 flechas
+    MAX_HP: 500,                // igual ao Dragão Vermelho
     SPEED: 0,
     NEXT_BOSS: BossTypeId.QUEEN_BEE,
     SWARM: {
@@ -198,7 +198,7 @@ const BOSS_TYPES = deepFreeze({
     NAME: 'Abelha Rainha',
     POWER: 'Espirros de mel',
     ATTACK_STYLE: 'RADIAL_BURST',
-    MAX_HP: 200,                // ~14 golpes de espada ou ~17 flechas
+    MAX_HP: 500,                // igual ao Dragão Vermelho
     SPEED: 190,
     SHOT: {
       CHANCE_PERCENT: 2,

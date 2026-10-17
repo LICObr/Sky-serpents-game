@@ -56,6 +56,10 @@ class HiveBoss extends Boss {
     this.#drops = new CeilingDrops(scene, arena, target, (x, y, n) => this.#honey.explode(n, x, y),
       { texture: 'gota_mel', cfg: GameSettings.HONEY_DROPS });
     this.#nextWaveAt = scene.time.now + GameSettings.HIVE.FIRST_WAVE_MS;
+
+    // aparece junto com o cenário da arena (mesmo fade)
+    sprite.setAlpha(0);
+    scene.tweens.add({ targets: sprite, alpha: 1, duration: GameSettings.BACKGROUND.PHASE_FADE_MS });
   }
 
   /** Centro da colmeia (ela é desenhada a partir do canto de cima). */

@@ -28,6 +28,7 @@ class ArrowPool extends ProjectilePool {
   configure(arrow, angleRad) {
     const cfg = GameSettings.BOW_ATTACK;
     arrow.setScale(cfg.ARROW_SCALE);
+    arrow.setDepth(cfg.ARROW_DEPTH);
     arrow.setOrigin(0.5, 0.5);
     arrow.setFlipX(false);
     arrow.setRotation(angleRad); // a arte aponta para a direita

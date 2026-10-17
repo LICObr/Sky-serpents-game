@@ -36,6 +36,7 @@ class GameScene extends Phaser.Scene {
   #specialHud;
   #banner;
   #touch;
+  #arenaBackdrop = null; // cenário próprio da arena (aparece só na luta)
 
   constructor() {
     super({ key: SceneKeys.GAME });
@@ -62,8 +63,11 @@ class GameScene extends Phaser.Scene {
 
     // Mundo (a ordem de criação define o que fica desenhado por cima)
     this.#background = new ParallaxBackground(this, level.BACKGROUND_TINT, level.BACKGROUND_TEXTURE);
-    // Cenário próprio da arena (ex.: a imagem inteira da colmeia na fase 5)
-    if (level.ARENA && level.ARENA.BACKDROP) this.add.image(level.ARENA_START_X, 0, level.ARENA.BACKDROP).setOrigin(0, 0);
+    // Cenário próprio da arena (ex.: a imagem inteira da colmeia na fase 5):
+    // fica escondido no percurso e aparece com fade quando a luta começa
+    this.#arenaBackdrop = level.ARENA && level.ARENA.BACKDROP
+      ? this.add.image(level.ARENA_START_X, 0, level.ARENA.BACKDROP).setOrigin(0, 0).setAlpha(0)
+      : null;
     this.#levelMap = new LevelMap(this, level);
     new WeatherEffect(this, TERRAIN_THEMES[level.TERRAIN].WEATHER); // neve, brasas, brilhos, neblina, pólen
     this.#setupWorldBounds();
@@ -146,6 +150,9 @@ class GameScene extends Phaser.Scene {
     this.#enemies.stopWaves(); // na arena é só o chefão
     this.#checkpoints.set(this.#arena.respawnX);
     this.#potions.startArenaSpawning(this.#levelMap.arenaPlatforms, this.#match.potionDelayMs);
+    if (this.#arenaBackdrop) {
+      this.tweens.add({ targets: this.#arenaBackdrop, alpha: 1, duration: GameSettings.BACKGROUND.PHASE_FADE_MS });
+    }
     this.#spawnBoss(this.#match.boss);
   }
 

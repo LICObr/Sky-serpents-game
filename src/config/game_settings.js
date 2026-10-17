@@ -136,6 +136,7 @@ const GameSettings = deepFreeze({
     ARROW_OFFSET_X: 18,         // sai um pouco à frente da arqueira
     ARROW_OFFSET_Y: -2,
     ARROW_GRAVITY: 520,         // gravidade própria da flecha (arco suave)
+    ARROW_DEPTH: 1.8,           // na frente dos bichos e chefões, atrás do jogador
     // Flecha cravada no chão/ilha/paredão vira uma plataforminha
     STUCK_EMBED: 7,             // quanto a ponta "entra" no terreno (px)
     STUCK_PLATFORM: { WIDTH: 24, HEIGHT: 6 },
