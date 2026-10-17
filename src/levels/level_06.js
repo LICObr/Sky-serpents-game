@@ -61,10 +61,7 @@ const LEVEL_06 = {
     ...walkers(EnemyTypeId.HEDGEHOG, [1950, 6400]),
     ...walkers(EnemyTypeId.PLANT, [1420, 3360]),
     ...walkers(EnemyTypeId.SLIME_ICE, [4250, 5500]),
-    ...flyers(EnemyTypeId.BAT, [
-      [700, 300], [1600, 250], [2500, 60], [3000, -160],
-      [3800, -520], [4600, -520], [5300, -250], [6400, 260]
-    ]),
+    ...flyers(EnemyTypeId.BAT, [[700, 300], [2500, 60], [3800, -520], [5300, -250], [6400, 260]]),
     // as cinco águias diferentes, duas de cada, voando acima do terreno
     ...flyers(EnemyTypeId.EAGLE_SHARP, [[800, 250], [3550, -430]]),
     ...flyers(EnemyTypeId.EAGLE_GOLD, [[1400, 200], [4250, -700]]),
@@ -74,9 +71,9 @@ const LEVEL_06 = {
   ],
   RANDOM_ENEMIES: {
     WALKERS: { TYPES: [EnemyTypeId.SNAKE_FIRE, EnemyTypeId.HEDGEHOG], COUNT: 6 },
-    FLYERS: { TYPES: [EnemyTypeId.BAT], COUNT: 4 },
+    FLYERS: { TYPES: [EnemyTypeId.BAT], COUNT: 2 },
     // ondas: 2 morcegos para cada sapo (sapo demais deixava a fase chata)
-    WAVES: { INTERVAL_MS: 8000, TYPES: [EnemyTypeId.BAT, EnemyTypeId.BAT, EnemyTypeId.FROG], MAX_NEAR: 4 }
+    WAVES: { INTERVAL_MS: 12000, TYPES: [EnemyTypeId.BAT, EnemyTypeId.BAT, EnemyTypeId.FROG], MAX_NEAR: 3 }
   },
   POTIONS: [[1430, 280], [3176, -190], [4264, -670]],
   CHECKPOINTS: [100, 1100, 2150, 3150, 4200, 5450],

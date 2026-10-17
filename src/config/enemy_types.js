@@ -373,7 +373,7 @@ const ENEMY_TYPES = deepFreeze({
     NAME: 'Águia-Negra',
     DIVE_SPEED: 500,
     DIVE_CHANCE_PERCENT: 55,
-    REBOUND: { RISE_SPEED: 260, PAUSE_MS: 900 },
+    REBOUND: { RISE_SPEED: 70, PAUSE_MS: 900 }, // sobe devagarzinho, na velocidade do morcego
     // ao subir de volta solta 3 penas afiadas que caem balançando
     TRICK: { ID: 'FEATHER_DARTS', COUNT: 3, SPREAD_X: 90, SPEED_Y: 60, TEXTURE: 'aguia_pena' }
   }
