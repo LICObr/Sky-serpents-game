@@ -26,7 +26,7 @@ const gameConfig = {
   },
   // até 3 dedos ao mesmo tempo no celular (analógico + botões)
   input: { activePointers: 3 },
-  scene: [BootScene, MenuScene, LevelSelectScene, GameScene, PauseScene]
+  scene: [BootScene, TitleScene, OptionsScene, MenuScene, LevelSelectScene, GameScene, PauseScene]
 };
 
 /** Espera a fonte (no máximo 1,5 s — sem internet usa a fonte padrão). */

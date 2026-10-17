@@ -495,6 +495,26 @@ const GameSettings = deepFreeze({
     X_IN_END_ZONE: 500          // posição dentro da área final da fase
   },
 
+  // Menu principal: fundo de uma fase e os dois personagens grandes, um de cada lado
+  TITLE: {
+    BACKGROUND: 'bg_mel',       // fundo da Floresta do Mel (emenda sozinho)
+    HERO_SCALE: 0.36,           // ~180px de altura
+    HERO_X_MARGIN: 130,         // distância do personagem até a borda
+    HERO_Y: 420,
+    BOB_MS: 1400,               // balançando devagar
+    ATTACK_POSE_MS: 260,
+    ATTACK_EVERY_MS: { MIN: 2500, MAX: 4500 },
+    BUTTONS_Y: 290,
+    BUTTON_GAP: 60
+  },
+
+  // Tela de opções: uma caixinha de teclas para cada jogador
+  OPTIONS: {
+    PANEL: { WIDTH: 340, HEIGHT: 300, TOP: 118 },
+    PANEL_X: [215, 585],
+    ROW_GAP: 36
+  },
+
   // Tela de escolha de fase: caixinhas numeradas (as que não existem ainda
   // aparecem como "em desenvolvimento")
   LEVEL_SELECT: {

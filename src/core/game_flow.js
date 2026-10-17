@@ -100,7 +100,7 @@ class GameFlow {
   }
 
   #toMenu() {
-    this.#scene.scene.start(SceneKeys.MENU);
+    this.#scene.scene.start(SceneKeys.TITLE);
   }
 
   /** Volta para a tela de fases mantendo personagens e dificuldade. */

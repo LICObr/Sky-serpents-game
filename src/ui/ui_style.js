@@ -7,7 +7,9 @@
  */
 const SceneKeys = Object.freeze({
   BOOT: 'BootScene',
-  MENU: 'MenuScene',
+  TITLE: 'TitleScene',     // menu principal: 1 jogador, 2 jogadores, opções
+  OPTIONS: 'OptionsScene', // teclas dos jogadores
+  MENU: 'MenuScene',       // 1 jogador: escolher o personagem
   LEVEL_SELECT: 'LevelSelectScene',
   GAME: 'GameScene',
   PAUSE: 'PauseScene'

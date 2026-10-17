@@ -1,7 +1,8 @@
 /**
  * level_select_scene.js
  * -----------------------------------------------------------------------------
- * Tela de ESCOLHA DE FASE (abre ao clicar em JOGAR no menu): caixinhas
+ * Tela de ESCOLHA DE FASE (1 jogador: depois de escolher o personagem;
+ * 2 jogadores: direto do menu principal): caixinhas
  * numeradas de 1 a 30. As fases que já existem (LEVELS) podem ser jogadas;
  * as outras aparecem como "em desenvolvimento", com um x vermelho.
  *
@@ -87,7 +88,9 @@ class LevelSelectScene extends Phaser.Scene {
     ['UP', 'W'].forEach(key => keyboard.on(`keydown-${key}`, move(-columns)));
     ['DOWN', 'S'].forEach(key => keyboard.on(`keydown-${key}`, move(columns)));
     ['ENTER', 'SPACE'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#play(this.#selected)));
-    keyboard.once('keydown-ESC', () => this.scene.start(SceneKeys.MENU));
+    // volta para a escolha de personagem (1 jogador) ou para o menu principal (2 jogadores)
+    const back = this.#choice.characterIds.length > 1 ? SceneKeys.TITLE : SceneKeys.MENU;
+    keyboard.once('keydown-ESC', () => this.scene.start(back));
   }
 
   #select(index) {

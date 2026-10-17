@@ -1,10 +1,11 @@
 /**
  * menu_scene.js
  * -----------------------------------------------------------------------------
- * Menu inicial: escolher o personagem e JOGAR (abre a tela de escolha de
- * fase). Todo mundo começa com as vidas do padrão (DEFAULT_DIFFICULTY).
+ * Menu do 1 JOGADOR: escolher o personagem e JOGAR (abre a tela de escolha
+ * de fase). Todo mundo começa com as vidas do padrão (DEFAULT_DIFFICULTY).
  *
- * Teclado: ↑ ↓ (W S) escolhem a linha, ← → (A D) trocam a opção, ENTER joga.
+ * Teclado: ↑ ↓ (W S) escolhem a linha, ← → (A D) trocam a opção, ENTER joga,
+ * ESC volta ao menu principal.
  * Mouse: clique nos cartões, nas setas ou em JOGAR.
  * A última escolha fica guardada enquanto o jogo estiver aberto.
  * -----------------------------------------------------------------------------
@@ -42,7 +43,7 @@ class MenuScene extends Phaser.Scene {
     this.#rows = [this.#characterPicker, playButton];
     this.#focus(0);
 
-    this.add.text(WIDTH / 2, HEIGHT - 34, `${KeyBindings.soloHint()}   P pausa`,
+    this.add.text(WIDTH / 2, HEIGHT - 34, `${KeyBindings.soloHint()}   P pausa   ESC voltar`,
       UiStyle.text(7, '#c8c0e0')).setOrigin(0.5);
     this.add.text(WIDTH / 2, HEIGHT - 16, 'Dica: pule em cima dos bichos para esmagá-los!',
       UiStyle.text(7, '#8fd18a')).setOrigin(0.5);
@@ -61,6 +62,7 @@ class MenuScene extends Phaser.Scene {
     ['LEFT', 'A'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#rows[this.#focusIndex].change(-1)));
     ['RIGHT', 'D'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#rows[this.#focusIndex].change(1)));
     ['ENTER', 'SPACE'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#openLevelSelect()));
+    keyboard.once('keydown-ESC', () => this.scene.start(SceneKeys.TITLE));
   }
 
   #focus(index) {

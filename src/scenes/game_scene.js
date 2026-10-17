@@ -237,7 +237,7 @@ class GameScene extends Phaser.Scene {
     onKey('P', () => this.#openPause(PauseMode.PAUSE));
     onKey('R', () => this.#openPause(PauseMode.RESTART));
     // Depois do fim da fase o ESC volta direto para o menu (não há o que perder)
-    onKey('ESC', () => (this.#flow.hasEnded ? this.scene.start(SceneKeys.MENU) : this.#openPause(PauseMode.MENU)));
+    onKey('ESC', () => (this.#flow.hasEnded ? this.scene.start(SceneKeys.TITLE) : this.#openPause(PauseMode.MENU)));
 
     const autoPause = () => this.#openPause(PauseMode.PAUSE);
     this.game.events.on(Phaser.Core.Events.BLUR, autoPause);

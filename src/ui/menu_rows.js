@@ -175,6 +175,12 @@ class MenuButton extends MenuRow {
     this.render();
   }
 
+  /** Passar o mouse por cima foca o botão. */
+  onHover(callback) {
+    this.#text.on('pointerover', callback);
+    return this;
+  }
+
   /** @override */
   activate() {
     this.#action();

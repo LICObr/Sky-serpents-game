@@ -127,7 +127,7 @@ class PauseScene extends Phaser.Scene {
 
   #toMenu() {
     this.scene.stop(SceneKeys.GAME);
-    this.scene.start(SceneKeys.MENU);
+    this.scene.start(SceneKeys.TITLE);
   }
 
   /** Liga uma tecla ignorando a repetição de quem segura a tecla apertada. */

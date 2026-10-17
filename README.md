@@ -3,6 +3,11 @@
 Jogo de plataforma 2D em pixel art, feito com [Phaser 3](https://phaser.io) (JavaScript puro, sem build).
 Escolha o **Guerreiro** (espada) ou a **Arqueira** (arco), atravesse cada fase e derrote o chefão no final.
 
+No menu principal:
+- **1 jogador**: escolha o personagem e a fase.
+- **2 jogadores**: Guerreiro e Arqueira na mesma tela, cada um com as suas teclas. Um não avança sem o outro: ninguém sai da tela. Quem fica sem corações volta 6 s depois ao lado do parceiro, e o game over só vem com os dois fora.
+- **Opções**: troque as teclas do jogador 1 e do jogador 2.
+
 ![Luta contra a Abelha Rainha](docs/screenshots/fase5_rainha.jpg)
 
 ## Como rodar
@@ -33,7 +38,8 @@ Depois abra <http://localhost:8000> no navegador.
 | Voltar ao menu | ESC (pede confirmação) | pela pausa |
 
 Essas são as teclas padrão: jogando sozinho valem as do jogador 1 (WASD, Espaço, G) e as do
-jogador 2 (setas, K, L). Elas ficam em `src/config/controls.js` e a escolha é guardada no navegador.
+jogador 2 (setas, K, L); com 2 jogadores cada um usa só as suas. Dá para trocar em **Opções**, no menu
+principal (a escolha fica guardada no navegador; os padrões estão em `src/config/controls.js`).
 
 O jogo também pausa sozinho quando a janela perde o foco (trocar de aba, minimizar).
 
@@ -66,7 +72,7 @@ src/
   projectiles/      projéteis dos chefões
   ui/               interface (HUD, menus, telas, controles de toque)
   world/            cenário (mapa, fundo, clima, música)
-  scenes/           carregamento, menu, escolha de fase, fase e pausa
+  scenes/           carregamento, menu principal, opções, personagem, escolha de fase, fase e pausa
 assets/             tudo o que o jogo carrega (imagens, sons, folhas de animação)
 source_art/         artes ORIGINAIS usadas pelas ferramentas (o jogo não carrega daqui)
 tools/              scripts Python que geram as imagens de assets/ a partir de source_art/

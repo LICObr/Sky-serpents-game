@@ -2,7 +2,7 @@
  * boot_scene.js
  * -----------------------------------------------------------------------------
  * Primeira cena: carrega todas as imagens e sons mostrando uma barra de
- * progresso e depois abre o menu.
+ * progresso e depois abre o menu principal.
  * -----------------------------------------------------------------------------
  */
 class BootScene extends Phaser.Scene {
@@ -48,6 +48,6 @@ class BootScene extends Phaser.Scene {
     new Set([DEFAULT_TEXTURE, ...PHASES.map(p => p.TEXTURE), ...levelBackgrounds]).forEach(key =>
       SeamlessTexture.makeSeamless(this, key, SEAMLESS_BLEND));
 
-    this.scene.start(SceneKeys.MENU);
+    this.scene.start(SceneKeys.TITLE);
   }
 }
