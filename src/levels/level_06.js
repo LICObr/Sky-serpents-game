@@ -8,7 +8,8 @@
  * 64px (pulando), com neve do meio para cima; depois uma descida longa até
  * a clareira do ninho, que aparece aos poucos no fim do percurso. Grama cor
  * de musgo bem falhada e árvores altíssimas no fundo. No caminho, as cinco
- * águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra).
+ * águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra)
+ * e, da subida da montanha até o chefão, ondas delas cada vez mais seguidas.
  * -----------------------------------------------------------------------------
  */
 const LEVEL_06 = {
@@ -70,12 +71,26 @@ const LEVEL_06 = {
     ...flyers(EnemyTypeId.EAGLE_GOLD, [[1400, 200], [4250, -700]]),
     ...flyers(EnemyTypeId.EAGLE_FAN, [[1750, 250], [5400, -380]]),
     ...flyers(EnemyTypeId.EAGLE_WIDE, [[2500, 0], [6000, -40]]),
-    ...flyers(EnemyTypeId.EAGLE_BLACK, [[3050, -250], [6500, 200]])
+    ...flyers(EnemyTypeId.EAGLE_BLACK, [[3050, -250], [6500, 200]]),
+    // lá no alto, perto do pico
+    ...flyers(EnemyTypeId.EAGLE_GOLD, [[3900, -640]]),
+    ...flyers(EnemyTypeId.EAGLE_SHARP, [[4700, -620]])
   ],
   RANDOM_ENEMIES: {
     WALKERS: { TYPES: [EnemyTypeId.FROG, EnemyTypeId.SNAKE_FIRE, EnemyTypeId.HEDGEHOG], COUNT: 6 },
     FLYERS: { TYPES: [EnemyTypeId.BAT], COUNT: 4 },
-    WAVES: { INTERVAL_MS: 8000, TYPES: [EnemyTypeId.BAT, EnemyTypeId.FROG], MAX_NEAR: 4 }
+    WAVES: [
+      { INTERVAL_MS: 8000, TYPES: [EnemyTypeId.BAT, EnemyTypeId.FROG], MAX_NEAR: 4 },
+      // águias sorteadas desde a subida da montanha: cada vez mais (e mais
+      // seguidas) até chegar no chefão
+      {
+        FROM_X: 2100,
+        TYPES: [EnemyTypeId.EAGLE, EnemyTypeId.EAGLE_SHARP, EnemyTypeId.EAGLE_GOLD,
+          EnemyTypeId.EAGLE_FAN, EnemyTypeId.EAGLE_WIDE, EnemyTypeId.EAGLE_BLACK],
+        INTERVAL_MS: 5000, CLOSEST_INTERVAL_MS: 1500,
+        MAX_NEAR: 3, CLOSEST_MAX_NEAR: 6
+      }
+    ]
   },
   POTIONS: [[1430, 280], [3176, -190], [4264, -670]],
   CHECKPOINTS: [100, 1100, 2150, 3150, 4200, 5450],

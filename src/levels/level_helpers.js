@@ -16,7 +16,10 @@
  *       WALKERS/FLYERS → tipos e quantidade espalhados pelo percurso
  *       SPECIALS       → bichos raros com quantidade própria (ex.: águia)
  *       WAVES          → de tempos em tempos surge um bicho à frente do
- *                        jogador (até um limite de bichos perto da câmera)
+ *                        jogador (até um limite desses bichos perto da
+ *                        câmera). Pode ser uma lista de grupos; cada grupo
+ *                        pode começar em FROM_X e apertar o ritmo até a
+ *                        arena (CLOSEST_INTERVAL_MS, CLOSEST_MAX_NEAR)
  *   - POTIONS:     poções de vida [x, y]
  *   - CHECKPOINTS: pontos de renascimento (x)
  *   - STAR_TIMES:  tempo máximo (segundos) para ganhar 3, 2 e 1 estrela
