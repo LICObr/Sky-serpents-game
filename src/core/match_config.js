@@ -1,8 +1,9 @@
 /**
  * match_config.js
  * -----------------------------------------------------------------------------
- * Configuração de UMA partida: junta personagem + fase + dificuldade e
- * entrega os valores finais já calculados:
+ * Configuração de UMA partida: junta personagem(ns) + fase + dificuldade e
+ * entrega os valores finais já calculados (1 personagem = sozinho,
+ * 2 personagens = modo 2 jogadores):
  *   - dificuldade do MENU  → vidas e frequência de poções
  *   - progressão da FASE   → velocidade/tiros do chefão e velocidade dos bichos
  *     (a VIDA do chefão é a de boss_types.js, sem multiplicador)
@@ -12,20 +13,24 @@
  * -----------------------------------------------------------------------------
  */
 class MatchConfig {
-  #characterId;
+  #characterIds;
   #levelIndex;
   #difficultyId;
   #boss; // estatísticas do chefão já ajustadas (calculadas uma vez)
 
   /**
-   * @param {{characterId?: string, levelIndex?: number, difficultyId?: string}} options
+   * @param {{characterIds?: string[], levelIndex?: number, difficultyId?: string}} options
+   *   characterIds: um personagem por jogador (1 ou 2)
    */
-  constructor({ characterId = CharacterId.KNIGHT, levelIndex = 0, difficultyId = DEFAULT_DIFFICULTY } = {}) {
-    if (!CHARACTERS[characterId]) throw new RangeError(`Personagem inválido: ${characterId}`);
+  constructor({ characterIds = [CharacterId.KNIGHT], levelIndex = 0, difficultyId = DEFAULT_DIFFICULTY } = {}) {
+    const validPlayers = Array.isArray(characterIds) && characterIds.length >= 1 && characterIds.length <= 2;
+    if (!validPlayers || characterIds.some(id => !CHARACTERS[id])) {
+      throw new RangeError(`Personagens inválidos: ${characterIds}`);
+    }
     if (!LEVELS[levelIndex]) throw new RangeError(`Fase inválida: ${levelIndex}`);
     if (!DIFFICULTIES[difficultyId]) throw new RangeError(`Dificuldade inválida: ${difficultyId}`);
 
-    this.#characterId = characterId;
+    this.#characterIds = [...characterIds];
     this.#levelIndex = levelIndex;
     this.#difficultyId = difficultyId;
     this.#boss = this.level.ARENA
@@ -33,7 +38,8 @@ class MatchConfig {
       : null; // fase ainda sem chefão (termina na bandeira de chegada)
   }
 
-  get character()        { return CHARACTERS[this.#characterId]; }
+  get characters()       { return this.#characterIds.map(id => CHARACTERS[id]); } // um por jogador
+  get isCoop()           { return this.#characterIds.length > 1; }              // 2 jogadores?
   get level()            { return LEVELS[this.#levelIndex]; }
   get levelIndex()       { return this.#levelIndex; }
   get difficulty()       { return DIFFICULTIES[this.#difficultyId]; }
@@ -67,13 +73,13 @@ class MatchConfig {
   /** Dados para iniciar a cena (ex.: scene.start('GameScene', data)). */
   toSceneData() {
     return {
-      characterId: this.#characterId,
+      characterIds: [...this.#characterIds],
       levelIndex: this.#levelIndex,
       difficultyId: this.#difficultyId
     };
   }
 
-  /** Mesma personagem e dificuldade, próxima fase. */
+  /** Mesmos personagens e dificuldade, próxima fase. */
   nextLevel() {
     return new MatchConfig({ ...this.toSceneData(), levelIndex: this.#levelIndex + 1 });
   }

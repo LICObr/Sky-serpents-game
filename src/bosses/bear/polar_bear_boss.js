@@ -34,12 +34,12 @@ class PolarBearBoss extends Boss {
    * @param {Phaser.Scene} scene
    * @param {object} stats estatísticas ajustadas (MatchConfig.boss)
    * @param {BossArena} arena
-   * @param {Player} target
+   * @param {PlayerParty} players
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {FireballPool} projectiles
    * @param {Function} AttackClass subclasse de BossAttack (IceBallAttack)
    */
-  constructor(scene, stats, arena, target, eventBus, projectiles, AttackClass) {
+  constructor(scene, stats, arena, players, eventBus, projectiles, AttackClass) {
     const cfg = GameSettings.POLAR_BEAR;
     const groundTop = GameSettings.LEVEL.GROUND_TOP;
     const sprite = scene.physics.add
@@ -47,7 +47,7 @@ class PolarBearBoss extends Boss {
       .setScale(stats.SCALE)
       .setDepth(GameSettings.BOSS.DEPTH + 0.5);
 
-    super(scene, sprite, stats, arena, target, eventBus);
+    super(scene, sprite, stats, arena, players, eventBus);
 
     // Hitbox no corpo, com os pés na base do quadro
     const frame = sprite.frame;
@@ -76,8 +76,8 @@ class PolarBearBoss extends Boss {
     });
 
     this.#attack = new AttackClass(this, projectiles);
-    this.#waves = new IceWaves(scene, arena, target, (x, y, n) => this.snowPuff(x, y, n));
-    this.#icicles = new CeilingDrops(scene, arena, target, (x, y, n) => this.snowPuff(x, y, n),
+    this.#waves = new IceWaves(scene, arena, players, (x, y, n) => this.snowPuff(x, y, n));
+    this.#icicles = new CeilingDrops(scene, arena, players, (x, y, n) => this.snowPuff(x, y, n),
       { texture: FxTextureKeys.ICICLE, cfg: GameSettings.POLAR_BEAR.ICICLES });
     this.#brain = new BearBrain(this);
   }

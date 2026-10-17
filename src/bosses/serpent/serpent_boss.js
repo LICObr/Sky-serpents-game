@@ -20,19 +20,19 @@ class SerpentBoss extends Boss {
    * @param {Phaser.Scene} scene
    * @param {object} stats estatísticas ajustadas (MatchConfig.boss)
    * @param {BossArena} arena
-   * @param {Player} target
+   * @param {PlayerParty} players
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {FireballPool} projectiles
    * @param {Function} AttackClass subclasse de BossAttack
    */
-  constructor(scene, stats, arena, target, eventBus, projectiles, AttackClass) {
+  constructor(scene, stats, arena, players, eventBus, projectiles, AttackClass) {
     const cfg = GameSettings.SERPENT;
     const head = scene.physics.add
       .sprite(arena.toWorldX(cfg.START_X), cfg.START_Y, 'serpent_head')
       .setScale(stats.SCALE)
       .setDepth(GameSettings.BOSS.DEPTH + 0.5);
 
-    super(scene, head, stats, arena, target, eventBus);
+    super(scene, head, stats, arena, players, eventBus);
     SerpentBody.configurePart(head, this, 0.6);
 
     this.#body = new SerpentBody(this, stats);

@@ -107,7 +107,7 @@ class MenuScene extends Phaser.Scene {
   #openLevelSelect() {
     MenuScene.#lastCharacterId = this.#characterPicker.value;
     this.scene.start(SceneKeys.LEVEL_SELECT, {
-      characterId: this.#characterPicker.value,
+      characterIds: [this.#characterPicker.value],
       difficultyId: DEFAULT_DIFFICULTY
     });
   }

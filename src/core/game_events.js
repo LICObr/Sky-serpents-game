@@ -9,8 +9,9 @@
  * -----------------------------------------------------------------------------
  */
 const GameEvents = Object.freeze({
-  PLAYER_HEARTS_CHANGED: 'player:hearts-changed', // (hearts, maxHearts)
-  PLAYER_DIED:           'player:died',
+  PLAYER_HEARTS_CHANGED: 'player:hearts-changed', // (hearts, maxHearts, player)
+  PLAYER_DIED:           'player:died',           // (player)
+  PARTY_DEFEATED:        'party:defeated',        // ninguém mais em jogo → game over
   ENEMY_DEFEATED:        'enemy:defeated',        // (enemy)
   BOSS_FIGHT_STARTED:    'boss:fight-started',    // (boss)
   BOSS_HP_CHANGED:       'boss:hp-changed',       // (currentHp, maxHp)

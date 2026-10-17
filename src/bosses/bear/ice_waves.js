@@ -17,17 +17,17 @@ class IceWaves {
   /**
    * @param {Phaser.Scene} scene
    * @param {BossArena} arena
-   * @param {Player} target jogador (leva dano ao encostar)
+   * @param {PlayerParty} players (quem encostar leva dano)
    * @param {Function} snowPuff (x, y, quantidade) → neve espirrando
    */
-  constructor(scene, arena, target, snowPuff) {
+  constructor(scene, arena, players, snowPuff) {
     this.#scene = scene;
     this.#arena = arena;
     this.#snow = snowPuff;
     this.#group = scene.physics.add.group({ allowGravity: false });
 
-    scene.physics.add.overlap(target.sprite, this.#group, (_player, wave) => {
-      if (wave.active && wave.getData('armed')) target.hitByContact(ProjectileEffect.NONE);
+    scene.physics.add.overlap(players.sprites, this.#group, (playerSprite, wave) => {
+      if (wave.active && wave.getData('armed')) playerSprite.getData('owner').hitByContact(ProjectileEffect.NONE);
     });
   }
 

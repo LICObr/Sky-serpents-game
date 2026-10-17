@@ -97,9 +97,9 @@ class EnemyManager {
   /**
    * Atualiza os bichos perto da câmera.
    * @param {number} time
-   * @param {Player} player
+   * @param {PlayerParty} party cada bicho persegue o jogador mais perto
    */
-  update(time, player) {
+  update(time, party) {
     const margin = GameSettings.ENEMY.ACTIVATION_MARGIN;
     this.#enemies.forEach(enemy => {
       if (!enemy.isAlive) return;
@@ -108,7 +108,7 @@ class EnemyManager {
         enemy.takeHit(enemy, Number.MAX_SAFE_INTEGER);
         return;
       }
-      if (this.#isNearCamera(enemy.x, margin)) enemy.update(time, player);
+      if (this.#isNearCamera(enemy.x, margin)) enemy.update(time, party.nearestTo(enemy.x, enemy.y));
       else enemy.sleep();
     });
     this.projectilePools.forEach(pool => pool.update(time));

@@ -15,6 +15,8 @@
  */
 class Player extends GameEntity {
   #character;
+  #slot;                // 0 = jogador 1, 1 = jogador 2
+  #knockedOut = false;  // sem corações, esperando voltar (modo 2 jogadores)
   #facingRight = true;
   #movement;
   #attack;
@@ -28,22 +30,25 @@ class Player extends GameEntity {
 
   /**
    * @param {Phaser.Scene} scene
+   * @param {object} character entrada de CHARACTERS
+   * @param {number} slot 0 = jogador 1, 1 = jogador 2 (começa um pouco atrás)
    * @param {InputController} input
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {MatchConfig} match
    */
-  constructor(scene, input, eventBus, match) {
+  constructor(scene, character, slot, input, eventBus, match) {
     if (new.target === Player) {
       throw new TypeError('Player é abstrata: use KnightPlayer ou ArcherPlayer (PlayerFactory).');
     }
-    const character = match.character;
     const cfg = GameSettings.PLAYER;
+    const startX = cfg.START_X - slot * GameSettings.PARTY.START_GAP;
     const sprite = scene.physics.add
-      .sprite(cfg.START_X, cfg.START_Y, character.TEXTURES.STAND.RIGHT)
+      .sprite(startX, cfg.START_Y, character.TEXTURES.STAND.RIGHT)
       .setScale(character.SCALE);
 
     super(scene, sprite);
     this.#character = character;
+    this.#slot = slot;
 
     sprite.body.setSize(character.BODY.WIDTH, character.BODY.HEIGHT);
     this.#bodyOffsetY = sprite.body.offset.y;
@@ -81,6 +86,8 @@ class Player extends GameEntity {
   }
 
   get character()   { return this.#character; }
+  get slot()        { return this.#slot; }
+  get isKnockedOut() { return this.#knockedOut; }
   get special()     { return this.#special; }
   get health()      { return this.#health; }
   get status()      { return this.#status; }
@@ -150,6 +157,9 @@ class Player extends GameEntity {
 
   /** Movimentação e efeitos do frame. */
   update() {
+    this.#attack.updateProjectiles(); // flechas no ar seguem mesmo com o jogador fora
+    if (this.#knockedOut) return;
+
     if (this.#status.isFrozen) {
       // Congelado: parado no bloco de gelo (só a gravidade age)
       this.sprite.setVelocityX(0);
@@ -159,7 +169,6 @@ class Player extends GameEntity {
     }
     this.#status.update();
     this.#shield.update();
-    this.#attack.updateProjectiles();
   }
 
   /** Processa o ataque (não ataca enquanto agachado). */
@@ -223,6 +232,28 @@ class Player extends GameEntity {
   /** Caiu em um buraco? */
   hasFallenIntoPit() {
     return this.y > GameSettings.LEVEL.PIT_Y;
+  }
+
+  /** Sem corações no modo 2 jogadores: some até voltar (PlayerParty). */
+  knockOut() {
+    this.#knockedOut = true;
+    this.#shield.hide();
+    this.sprite.setVisible(false);
+    this.sprite.body.enable = false;
+  }
+
+  /**
+   * Volta para a partida ao lado do parceiro, piscando (sem tomar dano por um tempo).
+   * @param {number} x
+   * @param {number} groundY altura do chão naquele ponto
+   * @param {number} hearts corações com que volta
+   */
+  revive(x, groundY, hearts) {
+    this.#knockedOut = false;
+    this.sprite.setVisible(true);
+    this.sprite.body.enable = true;
+    this.respawnAt(x, groundY);
+    this.#health.revive(hearts);
   }
 
   /**

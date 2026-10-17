@@ -1,7 +1,8 @@
 /**
  * player_hud.js
  * -----------------------------------------------------------------------------
- * HUD de UM jogador, no canto da tela:
+ * HUD de UM jogador, no canto dele (jogador 1 à esquerda, jogador 2 à
+ * direita, embaixo das moedas — veja HUD.PLAYERS):
  *   corações
  *   [G] especial      → PRONTO ou o tempo da recarga
  *   [escudo] defesa   → escudinho do agachar: PRONTO ou o tempo da recarga
@@ -17,18 +18,21 @@ class PlayerHUD {
    * @param {Phaser.Events.EventEmitter} eventBus
    */
   constructor(scene, player, eventBus) {
-    const hearts = GameSettings.HUD.HEARTS;
+    const { HEARTS_X, Y, SIDE } = GameSettings.HUD.PLAYERS[player.slot];
     const { ROW_GAP } = GameSettings.HUD.COOLDOWN;
-    const x = hearts.X - 15;
+    const direction = SIDE === 'RIGHT' ? -1 : 1;
+    const boxEdge = HEARTS_X - direction * 15; // caixinhas alinhadas com o primeiro coração
 
-    new HeartsHUD(scene, player.health.maxHearts, eventBus);
-    this.#special = new CooldownHUD(scene, x, hearts.Y + ROW_GAP, {
-      text: KeyBindings.label(KeyBindings.forPlayer(0).SPECIAL),
+    new HeartsHUD(scene, player, eventBus, { x: HEARTS_X, y: Y, direction });
+    this.#special = new CooldownHUD(scene, boxEdge, Y + ROW_GAP, {
+      side: SIDE,
+      text: KeyBindings.label(KeyBindings.forPlayer(player.slot).SPECIAL),
       remainingMs: () => player.special.remainingMs,
       totalMs: GameSettings.SPECIAL.COOLDOWN_MS,
       pulse: true
     });
-    this.#shield = new CooldownHUD(scene, x, hearts.Y + ROW_GAP * 2, {
+    this.#shield = new CooldownHUD(scene, boxEdge, Y + ROW_GAP * 2, {
+      side: SIDE,
       icon: FxTextureKeys.SHIELD,
       remainingMs: () => player.shield.remainingMs,
       totalMs: GameSettings.DUCK_SHIELD.COOLDOWN_MS

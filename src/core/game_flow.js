@@ -25,7 +25,7 @@ class GameFlow {
     this.#scene = scene;
     this.#match = match;
     this.#timer = timer;
-    eventBus.on(GameEvents.PLAYER_DIED, () => this.gameOver());
+    eventBus.on(GameEvents.PARTY_DEFEATED, () => this.gameOver()); // ninguém mais em jogo
     // Luta em etapas (NEXT_BOSS): a vitória só vem no último chefão
     eventBus.on(GameEvents.BOSS_DEFEATED, boss => {
       if (!boss.stats.NEXT_BOSS) this.victory(`Chefão derrotado: ${boss.name}`);
@@ -103,9 +103,9 @@ class GameFlow {
     this.#scene.scene.start(SceneKeys.MENU);
   }
 
-  /** Volta para a tela de fases mantendo personagem e dificuldade. */
+  /** Volta para a tela de fases mantendo personagens e dificuldade. */
   #toLevelSelect() {
-    const { characterId, difficultyId } = this.#match.toSceneData();
-    this.#scene.scene.start(SceneKeys.LEVEL_SELECT, { characterId, difficultyId });
+    const { characterIds, difficultyId } = this.#match.toSceneData();
+    this.#scene.scene.start(SceneKeys.LEVEL_SELECT, { characterIds, difficultyId });
   }
 }

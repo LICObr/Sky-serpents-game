@@ -20,17 +20,20 @@ class CooldownHUD {
 
   /**
    * @param {Phaser.Scene} scene
-   * @param {number} x canto esquerdo da caixinha
+   * @param {number} edgeX borda de fora da caixinha (a esquerda; a direita se side = 'RIGHT')
    * @param {number} y centro da caixinha
    * @param {object} options
+   * @param {string} [options.side] 'LEFT' (texto à direita) ou 'RIGHT' (texto à esquerda)
    * @param {string} [options.text] letra dentro da caixinha (ex.: 'G')
    * @param {string} [options.icon] ou a textura de um ícone
    * @param {Function} options.remainingMs quanto falta para recarregar (0 = pronto)
    * @param {number} options.totalMs tempo total da recarga
    * @param {boolean} [options.pulse] pisca de leve quando está pronto
    */
-  constructor(scene, x, y, { text, icon, remainingMs, totalMs, pulse = false }) {
+  constructor(scene, edgeX, y, { side = 'LEFT', text, icon, remainingMs, totalMs, pulse = false }) {
     const { SIZE } = GameSettings.HUD.COOLDOWN;
+    const onRight = side === 'RIGHT';
+    const x = onRight ? edgeX - SIZE : edgeX; // canto esquerdo da caixinha
     const depth = GameSettings.HUD.DEPTH;
     const fixed = object => object.setScrollFactor(0).setDepth(depth);
     this.#scene = scene;
@@ -47,7 +50,9 @@ class CooldownHUD {
     this.#content = fixed(icon
       ? scene.add.image(x + SIZE / 2, y, icon).setScale(GameSettings.DUCK_SHIELD.SCALE)
       : scene.add.text(x + SIZE / 2, y + 1, text, UiStyle.text(textSize)).setOrigin(0.5));
-    this.#label = fixed(scene.add.text(x + SIZE + 8, y, '', UiStyle.text(8)).setOrigin(0, 0.5));
+    this.#label = fixed(onRight
+      ? scene.add.text(x - 8, y, '', UiStyle.text(8)).setOrigin(1, 0.5)
+      : scene.add.text(x + SIZE + 8, y, '', UiStyle.text(8)).setOrigin(0, 0.5));
   }
 
   /** Atualiza a caixinha (chamar a cada frame). */

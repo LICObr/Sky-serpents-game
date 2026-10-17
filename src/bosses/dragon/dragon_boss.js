@@ -17,19 +17,19 @@ class DragonBoss extends Boss {
    * @param {Phaser.Scene} scene
    * @param {object} stats estatísticas ajustadas (MatchConfig.boss)
    * @param {BossArena} arena
-   * @param {Player} target
+   * @param {PlayerParty} players
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {FireballPool} projectiles
    * @param {Function} AttackClass subclasse de BossAttack
    */
-  constructor(scene, stats, arena, target, eventBus, projectiles, AttackClass) {
+  constructor(scene, stats, arena, players, eventBus, projectiles, AttackClass) {
     const cfg = GameSettings.DRAGON;
     const sprite = scene.physics.add
       .sprite(arena.toWorldX(cfg.START_X), cfg.START_Y, stats.SPRITE_SHEET, 0)
       .setScale(cfg.SCALE)
       .setDepth(GameSettings.BOSS.DEPTH);
 
-    super(scene, sprite, stats, arena, target, eventBus);
+    super(scene, sprite, stats, arena, players, eventBus);
 
     sprite.setCollideWorldBounds(true);
     sprite.body.setAllowGravity(false);

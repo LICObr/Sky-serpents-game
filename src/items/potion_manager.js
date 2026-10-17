@@ -11,18 +11,15 @@
 class PotionManager {
   #scene;
   #group;
-  #playerHealth;
   #arenaStarted = false;
   #arenaPotion = null;   // poção da arena (independente das do percurso)
 
   /**
    * @param {Phaser.Scene} scene
    * @param {number[][]} positions poções fixas [x, y]
-   * @param {PlayerHealth} playerHealth vida do jogador (para checar/curar)
    */
-  constructor(scene, positions, playerHealth) {
+  constructor(scene, positions) {
     this.#scene = scene;
-    this.#playerHealth = playerHealth;
     this.#group = scene.physics.add.group({ allowGravity: false });
     positions.forEach(([x, y]) => this.#create(x, y));
   }
@@ -56,11 +53,11 @@ class PotionManager {
     scheduleNext();
   }
 
-  /** Chamado quando o jogador encosta na poção. */
-  collect(potion) {
+  /** Chamado quando um jogador encosta na poção (ele recupera um coração). */
+  collect(potion, player) {
     if (!potion.active) return;
     potion.destroy();
-    this.#playerHealth.heal();
+    player.health.heal();
   }
 
   /**

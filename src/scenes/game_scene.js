@@ -14,6 +14,9 @@
  *
  * Pausa: P (ou o botão II no celular) e a janela perder o foco abrem a
  * PauseScene; ESC e R pedem confirmação antes de sair ou reiniciar.
+ *
+ * 1 ou 2 jogadores (PlayerParty): bichos e chefões miram no mais perto, e
+ * com dois a câmera (PartyCamera) não deixa ninguém sair da tela.
  * -----------------------------------------------------------------------------
  */
 class GameScene extends Phaser.Scene {
@@ -24,7 +27,8 @@ class GameScene extends Phaser.Scene {
   #background;
   #levelMap;
   #combat;
-  #player;
+  #party;          // os jogadores (1 ou 2)
+  #camera;
   #fireballs;
   #enemies;
   #potions;
@@ -34,7 +38,7 @@ class GameScene extends Phaser.Scene {
   #goal = null;    // bandeira de chegada (fases sem chefão)
   #boss = null;
   #trees;
-  #playerHud;
+  #playerHuds;
   #clock;
   #banner;
   #touch;
@@ -45,7 +49,7 @@ class GameScene extends Phaser.Scene {
     super({ key: SceneKeys.GAME });
   }
 
-  /** Recebe as escolhas do menu (personagem, fase, dificuldade). */
+  /** Recebe as escolhas do menu (personagens, fase, dificuldade). */
   init(data) {
     this.#match = new MatchConfig(data);
     // A Phaser REAPROVEITA a mesma cena ao trocar de fase: o que é "por fase"
@@ -82,11 +86,10 @@ class GameScene extends Phaser.Scene {
       onPause: () => this.#openPause(PauseMode.PAUSE),
       canUse: () => !this.#flow.hasEnded
     });
-    const input = new InputController(this, KeyBindings.soloInputKeys(), this.#touch);
-    this.#player = PlayerFactory.create(this, input, this.#eventBus, this.#match);
+    this.#party = this.#createParty();
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
-    this.#potions = new PotionManager(this, level.POTIONS, this.#player.health);
+    this.#potions = new PotionManager(this, level.POTIONS);
     this.#coins = new CoinManager(this, this.#levelMap, this.#eventBus);
     this.#checkpoints = new CheckpointTracker(level.CHECKPOINTS);
     this.#trees = new TreeManager(this, level.TREES || [], this.#levelMap, this.#combat,
@@ -101,9 +104,10 @@ class GameScene extends Phaser.Scene {
     }
 
     // Interface
-    this.#playerHud = new PlayerHUD(this, this.#player, this.#eventBus); // corações, especial e escudinho
+    // corações, especial e escudinho de cada jogador
+    this.#playerHuds = this.#party.players.map(player => new PlayerHUD(this, player, this.#eventBus));
     new CoinHUD(this, this.#eventBus);
-    this.#progress = new LevelProgressBar(this, finishX, this.#eventBus);
+    this.#progress = new LevelProgressBar(this, finishX, this.#eventBus, this.#party.players);
     this.#clock = new LevelClockHUD(this, this.#timer);
     // Chefão chamando bichos (ex.: morceguinhos do urso, vespas da colmeia)
     this.#eventBus.on(GameEvents.BOSS_SUMMON, (spawn, onSpawned) => onSpawned(this.#enemies.spawnEnemy(spawn)));
@@ -114,14 +118,14 @@ class GameScene extends Phaser.Scene {
     });
     // Cada bicho derrotado adianta a recarga do especial
     this.#eventBus.on(GameEvents.ENEMY_DEFEATED,
-      () => this.#player.special.reduceCooldown(GameSettings.SPECIAL.KILL_REDUCTION_MS));
+      () => this.#party.reduceSpecialCooldowns(GameSettings.SPECIAL.KILL_REDUCTION_MS));
     new BossHPBar(this, this.#eventBus);
     this.#banner = new LevelBanner(this);
     // Abertura com a imagem do chefão antes do título da fase
     if (level.INTRO) LevelIntro.play(this, level.INTRO, () => this.#banner.show(`FASE ${level.NUMBER}`, level.NAME));
     else this.#banner.show(`FASE ${level.NUMBER}`, level.NAME);
 
-    this.#setupCamera();
+    this.#camera = new PartyCamera(this, this.#party, this.#levelMap.worldWidth);
     this.#setupCollisions();
     this.#setupPause();
   }
@@ -132,17 +136,18 @@ class GameScene extends Phaser.Scene {
     this.#timer.tick(delta);
     this.#clock.update();
     this.#background.update();
-    this.#player.update();
-    this.#player.handleAttack(this.#combat);
-    this.#playerHud.update();
-    this.#progress.update(this.#player.x);
-    this.#enemies.update(time, this.#player);
+    this.#party.update();
+    this.#camera.update(); // depois de mover: com 2 jogadores ninguém sai da tela
+    this.#party.handleAttacks(this.#combat);
+    this.#playerHuds.forEach(hud => hud.update());
+    this.#progress.update();
+    this.#enemies.update(time, this.#party);
     this.#coins.update();
-    this.#checkpoints.update(this.#player.x);
+    this.#checkpoints.update(this.#party.frontX);
 
     if (this.#arenaBackdrop && !this.#arena.isStarted) this.#fadeInArenaBackdrop();
-    if (this.#arena && this.#arena.shouldStart(this.#player)) this.#startBossFight();
-    if (this.#goal) this.#goal.update(this.#player);
+    if (this.#arena && this.#arena.shouldStart(this.#party.inGame)) this.#startBossFight();
+    if (this.#goal) this.#goal.update(this.#party.frontX);
     if (this.#boss) {
       this.#boss.update();
       // Fases com fundo próprio (ex.: selva) não trocam para o céu dos dragões
@@ -150,7 +155,7 @@ class GameScene extends Phaser.Scene {
       this.#boss.tickCooldowns();
     }
 
-    if (this.#player.hasFallenIntoPit()) this.#onPlayerFell();
+    this.#party.inGame.filter(player => player.hasFallenIntoPit()).forEach(player => this.#onPlayerFell(player));
 
     this.#fireballs.update(time);
   }
@@ -169,20 +174,20 @@ class GameScene extends Phaser.Scene {
 
   /** Cria um chefão, coloca no combate e mostra o nome dele. */
   #spawnBoss(stats) {
-    this.#boss = BossFactory.create(this, stats, this.#arena, this.#player, this.#eventBus, this.#fireballs);
+    this.#boss = BossFactory.create(this, stats, this.#arena, this.#party, this.#eventBus, this.#fireballs);
     this.#combat.register(this.#boss, this.#boss.hurtsOnContact);
     this.#eventBus.emit(GameEvents.BOSS_FIGHT_STARTED, this.#boss);
     this.#banner.show('CHEFAO!', `${this.#boss.name} — ${stats.POWER}`);
   }
 
   /**
-   * Fim do percurso: o cenário da arena vai aparecendo conforme o jogador se
-   * aproxima (uma imagem sobrescrevendo a outra) e fica inteiro quando a luta começa.
+   * Fim do percurso: o cenário da arena vai aparecendo conforme os jogadores
+   * se aproximam (uma imagem sobrescrevendo a outra) e fica inteiro quando a luta começa.
    */
   #fadeInArenaBackdrop() {
     const { ARENA_BACKDROP_FADE_PX, ARENA_TRIGGER_OFFSET } = GameSettings.LEVEL;
     const fightStartX = this.#arena.left + ARENA_TRIGGER_OFFSET;
-    const progress = 1 - (fightStartX - this.#player.x) / ARENA_BACKDROP_FADE_PX;
+    const progress = 1 - (fightStartX - this.#party.frontX) / ARENA_BACKDROP_FADE_PX;
     this.#arenaBackdrop.setAlpha(Phaser.Math.Clamp(progress, 0, 1));
   }
 
@@ -192,13 +197,32 @@ class GameScene extends Phaser.Scene {
     this.#flow.victory('Você chegou ao fim da fase!');
   }
 
-  /** Caiu no buraco: perde um coração e volta ao último checkpoint. */
-  #onPlayerFell() {
+  /**
+   * Caiu no buraco: perde um coração e volta ao lado do parceiro (2 jogadores)
+   * ou ao último checkpoint.
+   */
+  #onPlayerFell(player) {
     // Buraco sempre tira coração, mesmo durante o cooldown de dano
-    this.#player.health.takeDamage({ force: true });
-    if (this.#player.health.isDead) return;
+    player.health.takeDamage({ force: true });
+    if (player.health.isDead) return; // (com 2 jogadores ele sai um tempo e volta depois)
+    const spot = this.#party.spotNearPartner(player);
+    if (spot) {
+      player.respawnAt(spot.x, spot.groundY);
+      return;
+    }
     const x = this.#checkpoints.respawnX;
-    this.#player.respawnAt(x, this.#levelMap.surfaceYAt(x) ?? GameSettings.LEVEL.GROUND_TOP);
+    player.respawnAt(x, this.#levelMap.surfaceYAt(x) ?? GameSettings.LEVEL.GROUND_TOP);
+  }
+
+  /** Cria os jogadores: sozinho valem as teclas dos dois; com dois, cada um tem as suas. */
+  #createParty() {
+    const coop = this.#match.isCoop;
+    const players = this.#match.characters.map((character, slot) => {
+      const keys = coop ? KeyBindings.inputKeys(slot) : KeyBindings.soloInputKeys();
+      const input = new InputController(this, keys, slot === 0 ? this.#touch : null);
+      return PlayerFactory.create(this, character, slot, input, this.#eventBus, this.#match);
+    });
+    return new PlayerParty(this, players, this.#eventBus, this.#levelMap);
   }
 
   /**
@@ -242,30 +266,26 @@ class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, this.#levelMap.worldWidth, GameSettings.SCREEN.HEIGHT, true, true, false, false);
   }
 
-  #setupCamera() {
-    const camera = this.cameras.main;
-    const { LERP, DEADZONE_WIDTH } = GameSettings.CAMERA;
-    camera.setBounds(0, 0, this.#levelMap.worldWidth, GameSettings.SCREEN.HEIGHT);
-    camera.startFollow(this.#player.sprite, true, LERP, LERP);
-    camera.setDeadzone(DEADZONE_WIDTH, GameSettings.SCREEN.HEIGHT);
-  }
-
-  /** Registra todas as colisões/sobreposições entre objetos. */
+  /**
+   * Registra todas as colisões/sobreposições entre objetos. Valem para todos
+   * os jogadores: cada callback recebe o sprite de quem encostou.
+   */
   #setupCollisions() {
     const physics = this.physics.add;
-    const playerSprite = this.#player.sprite;
+    const playerSprites = this.#party.sprites;
+    const playerOf = sprite => sprite.getData('owner');
 
     // Jogador pisa no chão e nas plataformas; árvores bloqueiam a passagem
-    physics.collider(playerSprite, this.#levelMap.solids);
-    physics.collider(playerSprite, this.#levelMap.platforms);
-    physics.collider(playerSprite, this.#trees.group);
+    physics.collider(playerSprites, this.#levelMap.solids);
+    physics.collider(playerSprites, this.#levelMap.platforms);
+    physics.collider(playerSprites, this.#trees.group);
     this.#enemies.addObstacles(this.#trees.group); // bichos também esbarram nelas
 
     // Projétil do chefão atinge o jogador
-    physics.overlap(playerSprite, this.#fireballs.group, (_player, fireball) => {
+    physics.overlap(playerSprites, this.#fireballs.group, (playerSprite, fireball) => {
       if (!fireball.active) return;
       // No cooldown de dano o projétil atravessa o jogador sem efeito
-      if (this.#player.hitByProjectile(fireball.getData('effect'))) this.#fireballs.recycle(fireball);
+      if (playerOf(playerSprite).hitByProjectile(fireball.getData('effect'))) this.#fireballs.recycle(fireball);
     });
 
     // Projétil do chefão bate nas ilhas flutuantes e no chão e some
@@ -281,9 +301,9 @@ class GameScene extends Phaser.Scene {
     // Projéteis dos bichos (sementes das plantas, ovos das águias):
     // machucam o jogador e somem ao bater no terreno
     this.#enemies.projectilePools.forEach(pool => {
-      physics.overlap(playerSprite, pool.group, (_player, projectile) => {
+      physics.overlap(playerSprites, pool.group, (playerSprite, projectile) => {
         if (!projectile.active) return;
-        if (this.#player.hitByProjectile(projectile.getData('effect'))) pool.recycle(projectile);
+        if (playerOf(playerSprite).hitByProjectile(projectile.getData('effect'))) pool.recycle(projectile);
       });
       const hitsTerrain = (first, second) => {
         const projectile = pool.group.contains(first) ? first : second;
@@ -294,20 +314,21 @@ class GameScene extends Phaser.Scene {
     });
 
     // Encostar em bicho/chefão (pisar em cima esmaga o bicho)
-    physics.overlap(playerSprite, this.#combat.hurtboxes, (_player, part) => {
+    physics.overlap(playerSprites, this.#combat.hurtboxes, (playerSprite, part) => {
       const owner = part.getData('owner');
-      if (owner) owner.onPlayerContact(this.#player);
+      if (owner) owner.onPlayerContact(playerOf(playerSprite));
     });
 
-    // Coletar poção e moeda
-    physics.overlap(playerSprite, this.#potions.group, (_player, potion) => this.#potions.collect(potion));
-    physics.overlap(playerSprite, this.#coins.group, (_player, coin) => this.#coins.collect(coin));
+    // Coletar poção (cura quem pegou) e moeda
+    physics.overlap(playerSprites, this.#potions.group,
+      (playerSprite, potion) => this.#potions.collect(potion, playerOf(playerSprite)));
+    physics.overlap(playerSprites, this.#coins.group, (_player, coin) => this.#coins.collect(coin));
 
-    // Colisões próprias do ataque (ex.: flechas x inimigos e x terreno)
-    this.#player.bindAttackCollisions(this.#combat, this.#levelMap);
-
-    // Flechas cravadas viram plataformas onde o jogador pode subir
-    const attackPlatforms = this.#player.attackPlatforms;
-    if (attackPlatforms) physics.collider(playerSprite, attackPlatforms);
+    this.#party.players.forEach(player => {
+      // Colisões próprias do ataque (ex.: flechas x inimigos e x terreno)
+      player.bindAttackCollisions(this.#combat, this.#levelMap);
+      // Flechas cravadas viram plataformas onde qualquer jogador pode subir
+      if (player.attackPlatforms) physics.collider(playerSprites, player.attackPlatforms);
+    });
   }
 }

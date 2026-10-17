@@ -34,9 +34,14 @@ class BossArena {
     return this.#left + relativeX;
   }
 
-  /** O jogador entrou o bastante para a luta começar? */
-  shouldStart(player) {
-    return !this.#started && player.x > this.#left + GameSettings.LEVEL.ARENA_TRIGGER_OFFSET;
+  /**
+   * Todos os jogadores em jogo entraram o bastante para a luta começar?
+   * (com 2 jogadores a arena só fecha com os dois dentro)
+   * @param {Player[]} players
+   */
+  shouldStart(players) {
+    const trigger = this.#left + GameSettings.LEVEL.ARENA_TRIGGER_OFFSET;
+    return !this.#started && players.length > 0 && players.every(player => player.x > trigger);
   }
 
   /** Fecha a arena (câmera e limites do mundo). */

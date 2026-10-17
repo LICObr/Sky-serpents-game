@@ -24,7 +24,7 @@ class LevelSelectScene extends Phaser.Scene {
     super({ key: SceneKeys.LEVEL_SELECT });
   }
 
-  /** @param {{characterId: string, difficultyId: string}} data */
+  /** @param {{characterIds: string[], difficultyId: string}} data um personagem por jogador */
   init(data) {
     this.#choice = data;
     this.#slots = [];
@@ -40,10 +40,7 @@ class LevelSelectScene extends Phaser.Scene {
 
     new CoinHUD(this); // moedas guardadas, no canto superior direito
     this.add.text(WIDTH / 2, 50, 'ESCOLHA A FASE', UiStyle.text(24, '#ffe066')).setOrigin(0.5);
-    const difficulty = DIFFICULTIES[this.#choice.difficultyId];
-    const character = CHARACTERS[this.#choice.characterId];
-    this.add.text(WIDTH / 2, 82, `${character.NAME}  -  ${difficulty.PLAYER_HEARTS} corações`,
-      UiStyle.text(8, '#c8c0e0')).setOrigin(0.5);
+    this.add.text(WIDTH / 2, 82, this.#playersLine(), UiStyle.text(8, '#c8c0e0')).setOrigin(0.5);
 
     // Grade de caixinhas (6 colunas x 5 linhas = 30 fases)
     const { BOX, GAP, COLUMNS, TOTAL_SLOTS, START_Y } = cfg;
@@ -70,6 +67,15 @@ class LevelSelectScene extends Phaser.Scene {
 
   update() {
     this.#background.tilePositionX += GameSettings.BACKGROUND.SCROLL_SPEED;
+  }
+
+  /** "Guerreiro - 5 corações" ou "2 JOGADORES: Guerreiro + Arqueira - 5 corações cada". */
+  #playersLine() {
+    const hearts = DIFFICULTIES[this.#choice.difficultyId].PLAYER_HEARTS;
+    const names = this.#choice.characterIds.map(id => CHARACTERS[id].NAME);
+    return names.length > 1
+      ? `2 JOGADORES: ${names.join(' + ')}  -  ${hearts} corações cada`
+      : `${names[0]}  -  ${hearts} corações`;
   }
 
   #bindKeys() {

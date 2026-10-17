@@ -31,17 +31,17 @@ class BossFactory {
    * @param {Phaser.Scene} scene
    * @param {object} stats MatchConfig.boss
    * @param {BossArena} arena
-   * @param {Player} target
+   * @param {PlayerParty} players
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {FireballPool} projectiles
    * @returns {Boss}
    */
-  static create(scene, stats, arena, target, eventBus, projectiles) {
+  static create(scene, stats, arena, players, eventBus, projectiles) {
     const BossClass = BossFactory.#bossClasses[stats.KIND];
     const AttackClass = stats.ATTACK_STYLE ? BossFactory.#attackClasses[stats.ATTACK_STYLE] : null;
     if (!BossClass) throw new RangeError(`Tipo de chefão desconhecido: ${stats.KIND}`);
     if (stats.ATTACK_STYLE && !AttackClass) throw new RangeError(`Estilo de ataque desconhecido: ${stats.ATTACK_STYLE}`);
 
-    return new BossClass(scene, stats, arena, target, eventBus, projectiles, AttackClass);
+    return new BossClass(scene, stats, arena, players, eventBus, projectiles, AttackClass);
   }
 }

@@ -31,9 +31,12 @@ class GoalFlag {
     scene.tweens.add({ targets: this.#sprite, scaleX: cfg.SCALE * 0.92, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
-  /** Confere se o jogador chegou (chamar a cada frame). */
-  update(player) {
-    if (this.#reached || player.x < this.#sprite.x - 10) return;
+  /**
+   * Confere se alguém chegou (chamar a cada frame).
+   * @param {number} frontX posição do jogador mais à frente
+   */
+  update(frontX) {
+    if (this.#reached || frontX < this.#sprite.x - 10) return;
     this.#reached = true;
     this.#scene.tweens.add({ targets: this.#sprite, y: this.#sprite.y - 20, duration: 160, yoyo: true });
     this.#onReached();

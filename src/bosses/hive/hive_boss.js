@@ -25,16 +25,16 @@ class HiveBoss extends Boss {
    * @param {Phaser.Scene} scene
    * @param {object} stats estatísticas ajustadas (MatchConfig)
    * @param {BossArena} arena
-   * @param {Player} target
+   * @param {PlayerParty} players
    * @param {Phaser.Events.EventEmitter} eventBus
    */
-  constructor(scene, stats, arena, target, eventBus) {
+  constructor(scene, stats, arena, players, eventBus) {
     const layout = scene.cache.json.get(stats.LAYOUT);
     const sprite = scene.physics.add.image(arena.toWorldX(layout.x), layout.y, stats.TEXTURE)
       .setOrigin(0, 0)
       .setDepth(GameSettings.BOSS.DEPTH);
 
-    super(scene, sprite, stats, arena, target, eventBus);
+    super(scene, sprite, stats, arena, players, eventBus);
     this.#layout = layout;
 
     // Parada: sem gravidade e sem se mexer. A hitbox é só o corpo da colmeia
@@ -55,7 +55,7 @@ class HiveBoss extends Boss {
         lifespan: { min: 400, max: 800 },
         tint: [0xffc21a, 0xffdd66, 0xd98a00]
       });
-    this.#drops = new CeilingDrops(scene, arena, target, (x, y, n) => this.#honey.explode(n, x, y),
+    this.#drops = new CeilingDrops(scene, arena, players, (x, y, n) => this.#honey.explode(n, x, y),
       { texture: 'gota_mel', cfg: GameSettings.HONEY_DROPS });
     this.#nextBeeAt = scene.time.now + GameSettings.HIVE.FIRST_BEE_MS;
 

@@ -24,12 +24,12 @@ class CeilingDrops {
   /**
    * @param {Phaser.Scene} scene
    * @param {BossArena} arena
-   * @param {Player} target
+   * @param {PlayerParty} players (qualquer um leva dano ao ser atingido)
    * @param {Function} splash (x, y, quantidade) → gelo/mel espirrando
    * @param {{texture: string, cfg: object}} options imagem e configuração
    *        (ex.: GameSettings.POLAR_BEAR.ICICLES)
    */
-  constructor(scene, arena, target, splash, { texture, cfg }) {
+  constructor(scene, arena, players, splash, { texture, cfg }) {
     this.#scene = scene;
     this.#arena = arena;
     this.#splash = splash;
@@ -37,9 +37,9 @@ class CeilingDrops {
     this.#cfg = cfg;
     this.#group = scene.physics.add.group({ allowGravity: false });
 
-    this.#overlap = scene.physics.add.overlap(target.sprite, this.#group, (_player, icicle) => {
+    this.#overlap = scene.physics.add.overlap(players.sprites, this.#group, (playerSprite, icicle) => {
       if (!icicle.getData('falling')) return;
-      target.hitByContact(ProjectileEffect.NONE);
+      playerSprite.getData('owner').hitByContact(ProjectileEffect.NONE);
       this.#shatter(icicle);
     });
   }

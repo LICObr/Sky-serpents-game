@@ -20,7 +20,7 @@
 class Boss extends GameEntity {
   #stats;
   #arena;
-  #target;
+  #players;
   #eventBus;
   #health;
   #hitBlink = new FrameCooldown(); // tempo piscando depois de apanhar (não bloqueia dano)
@@ -31,24 +31,26 @@ class Boss extends GameEntity {
    * @param {Phaser.Physics.Arcade.Sprite} sprite sprite principal
    * @param {object} stats estatísticas já ajustadas (MatchConfig.boss)
    * @param {BossArena} arena área da luta
-   * @param {Player} target jogador (para mirar)
+   * @param {PlayerParty} players jogadores (o chefão mira no mais perto)
    * @param {Phaser.Events.EventEmitter} eventBus
    */
-  constructor(scene, sprite, stats, arena, target, eventBus) {
+  constructor(scene, sprite, stats, arena, players, eventBus) {
     if (new.target === Boss) {
       throw new TypeError('Boss é abstrata: use DragonBoss ou SerpentBoss (BossFactory).');
     }
     super(scene, sprite);
     this.#stats = stats;
     this.#arena = arena;
-    this.#target = target;
+    this.#players = players;
     this.#eventBus = eventBus;
     this.#health = new BossHealth(stats.MAX_HP, eventBus);
   }
 
   get stats()  { return this.#stats; }
   get arena()  { return this.#arena; }
-  get target() { return this.#target; }
+  get players() { return this.#players; }
+  /** Jogador mais perto (é nele que o chefão mira). */
+  get target() { return this.#players.nearestTo(this.x, this.y); }
   get health() { return this.#health; }
   get name()   { return this.#stats.NAME; }
 

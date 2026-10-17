@@ -2,22 +2,24 @@
  * level_progress_bar.js
  * -----------------------------------------------------------------------------
  * Barrinha de PROGRESSO da fase, no topo da tela (todas as fases): um
- * pontinho amarelo (o jogador) andando até a bandeirinha de chegada — o
- * começo da arena do chefão, ou a bandeira do fim nas fases sem chefão.
+ * pontinho por jogador (amarelo o 1, azul o 2) andando até a bandeirinha de
+ * chegada — o começo da arena do chefão, ou a bandeira do fim nas fases
+ * sem chefão.
  * Some quando a luta com o chefão começa, para dar lugar à barra de vida dele.
  * -----------------------------------------------------------------------------
  */
 class LevelProgressBar {
   #parts;
-  #dot;
+  #dots;      // { player, dot }
   #finishX;
 
   /**
    * @param {Phaser.Scene} scene
    * @param {number} finishX onde fica a chegada no mundo (x)
    * @param {Phaser.Events.EventEmitter} eventBus
+   * @param {Player[]} players
    */
-  constructor(scene, finishX, eventBus) {
+  constructor(scene, finishX, eventBus, players) {
     const cfg = GameSettings.HUD.PROGRESS;
     const depth = GameSettings.HUD.DEPTH;
     this.#finishX = finishX;
@@ -32,17 +34,23 @@ class LevelProgressBar {
       .setOrigin(0.3, 1).setScrollFactor(0).setDepth(depth);
     flag.setScale(cfg.FLAG_HEIGHT / flag.height);
 
-    this.#dot = scene.add.circle(cfg.X, cfg.Y, cfg.DOT_RADIUS, 0xffe066)
-      .setStrokeStyle(2, 0x1a1020).setScrollFactor(0).setDepth(depth + 0.1);
+    this.#dots = players.map(player => ({
+      player,
+      dot: scene.add.circle(cfg.X, cfg.Y, cfg.DOT_RADIUS, GameSettings.PARTY.COLORS[player.slot])
+        .setStrokeStyle(2, 0x1a1020).setScrollFactor(0).setDepth(depth + 0.1)
+    }));
 
-    this.#parts = [track, flag, this.#dot];
+    this.#parts = [track, flag, ...this.#dots.map(({ dot }) => dot)];
     eventBus.on(GameEvents.BOSS_FIGHT_STARTED, () => this.#parts.forEach(part => part.setVisible(false)));
   }
 
-  /** Coloca o pontinho na posição do jogador (chamar a cada frame). */
-  update(playerX) {
+  /** Coloca cada pontinho na posição do seu jogador (chamar a cada frame). */
+  update() {
     const cfg = GameSettings.HUD.PROGRESS;
-    const progress = Phaser.Math.Clamp(playerX / this.#finishX, 0, 1);
-    this.#dot.x = cfg.X + progress * cfg.WIDTH;
+    this.#dots.forEach(({ player, dot }) => {
+      const progress = Phaser.Math.Clamp(player.x / this.#finishX, 0, 1);
+      dot.x = cfg.X + progress * cfg.WIDTH;
+      dot.setAlpha(player.isKnockedOut ? 0.35 : 1); // fora da partida: apagadinho
+    });
   }
 }

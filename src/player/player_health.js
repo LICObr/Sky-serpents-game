@@ -54,7 +54,7 @@ class PlayerHealth {
     this.#emitHeartsChanged();
 
     if (this.isDead) {
-      this.#eventBus.emit(GameEvents.PLAYER_DIED);
+      this.#eventBus.emit(GameEvents.PLAYER_DIED, this.#player);
       return true;
     }
 
@@ -66,6 +66,13 @@ class PlayerHealth {
   /** Fica invulnerável por um tempo, sem piscar (ex.: durante a investida). */
   grantInvulnerability(ms) {
     this.#invulnerableUntil = Math.max(this.#invulnerableUntil, this.#player.scene.time.now + ms);
+  }
+
+  /** Volta para a partida com alguns corações, piscando como depois de um dano (modo 2 jogadores). */
+  revive(hearts) {
+    this.#hearts = Math.min(hearts, this.#maxHearts);
+    this.#emitHeartsChanged();
+    this.#startDamageCooldown();
   }
 
   /** Recupera um coração (até o máximo). */
@@ -94,6 +101,6 @@ class PlayerHealth {
   }
 
   #emitHeartsChanged() {
-    this.#eventBus.emit(GameEvents.PLAYER_HEARTS_CHANGED, this.#hearts, this.#maxHearts);
+    this.#eventBus.emit(GameEvents.PLAYER_HEARTS_CHANGED, this.#hearts, this.#maxHearts, this.#player);
   }
 }

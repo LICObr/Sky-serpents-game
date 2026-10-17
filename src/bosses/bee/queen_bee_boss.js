@@ -21,19 +21,19 @@ class QueenBeeBoss extends Boss {
    * @param {Phaser.Scene} scene
    * @param {object} stats estatísticas ajustadas (MatchConfig)
    * @param {BossArena} arena
-   * @param {Player} target
+   * @param {PlayerParty} players
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {FireballPool} projectiles
    * @param {Function} AttackClass subclasse de BossAttack
    */
-  constructor(scene, stats, arena, target, eventBus, projectiles, AttackClass) {
+  constructor(scene, stats, arena, players, eventBus, projectiles, AttackClass) {
     const cfg = GameSettings.QUEEN_BEE;
     const sprite = scene.physics.add
       .sprite(arena.toWorldX(cfg.START_X), cfg.START_Y, QueenBeeSpriteSheet.key, 0)
       .setDepth(GameSettings.BOSS.DEPTH + 0.5);
     const scale = cfg.DISPLAY_HEIGHT / sprite.height;
 
-    super(scene, sprite, stats, arena, target, eventBus);
+    super(scene, sprite, stats, arena, players, eventBus);
 
     sprite.setCollideWorldBounds(true);
     sprite.body.setAllowGravity(false);
@@ -52,7 +52,7 @@ class QueenBeeBoss extends Boss {
       });
     this.#movement = new DragonMovement(this);
     this.#attack = new AttackClass(this, projectiles);
-    this.#drops = new CeilingDrops(scene, arena, target, (x, y, n) => this.#honey.explode(n, x, y),
+    this.#drops = new CeilingDrops(scene, arena, players, (x, y, n) => this.#honey.explode(n, x, y),
       { texture: 'gota_mel', cfg: GameSettings.HONEY_DROPS });
 
     // Sai da colmeia crescendo

@@ -107,6 +107,15 @@ const GameSettings = deepFreeze({
     COYOTE_TIME_MS: 110         // ainda dá para pular logo após sair do chão
   },
 
+  // Modo 2 JOGADORES na mesma tela
+  PARTY: {
+    START_GAP: 40,              // o jogador 2 começa um pouco atrás do 1
+    SCREEN_MARGIN: 24,          // ninguém passa disto da borda da tela (um espera o outro)
+    REVIVE_MS: 6000,            // sem corações: volta depois disto ao lado do parceiro...
+    REVIVE_HEARTS_RATIO: 0.5,   // ...com metade dos corações
+    COLORS: [0xffe066, 0x6fd8ff] // pontinho de cada jogador na barra de progresso
+  },
+
   // Escudinho do AGACHAR: segura UM golpe e quebra; depois precisa recarregar
   DUCK_SHIELD: {
     COOLDOWN_MS: 8000,          // depois de quebrar: 8s agachando sem escudo
@@ -508,7 +517,12 @@ const GameSettings = deepFreeze({
   },
 
   HUD: {
-    HEARTS: { TEXTURE: 'heart', X: 30, Y: 30, SPACING: 40, SCALE: 0.09 },
+    HEARTS: { TEXTURE: 'heart', SPACING: 40, SCALE: 0.09 },
+    // HUD de cada jogador: o 1 no canto esquerdo, o 2 no direito (embaixo das moedas)
+    PLAYERS: [
+      { HEARTS_X: 30, Y: 30, SIDE: 'LEFT' },
+      { HEARTS_X: 770, Y: 72, SIDE: 'RIGHT' }
+    ],
     // Caixinhas de recarga embaixo dos corações (especial e escudinho)
     COOLDOWN: { SIZE: 30, ROW_GAP: 38 },
     BOSS_BAR: {
