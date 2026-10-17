@@ -1,17 +1,19 @@
 /**
  * level_06.js — FASE 6: Montanha da Selva
  * -----------------------------------------------------------------------------
- * Sem chefão (termina na bandeira de chegada). O que cada campo significa:
- * veja level_helpers.js.
+ * Chefão: Filhote de Águia (no ninho; chama a mamãe). O que cada campo
+ * significa: veja level_helpers.js.
  * Morrinhos irregulares no começo e depois uma MONTANHA GIGANTE, bem mais
  * alta que a tela: a câmera sobe junto. Sobe-se por rampas e paredões de
  * 64px (pulando), com neve do meio para cima; depois uma descida longa até
- * a chegada. Grama cor de musgo bem falhada e árvores altíssimas no fundo.
+ * a clareira do ninho, que aparece aos poucos no fim do percurso. Grama cor
+ * de musgo bem falhada e árvores altíssimas no fundo.
  * -----------------------------------------------------------------------------
  */
 const LEVEL_06 = {
   NUMBER: 6,
   NAME: 'Montanha da Selva',
+  INTRO: { TEXTURE: 'eaglet_call', TITLE: 'THE EAGLET CALLS MOMMY...' }, // abertura da fase
   BACKGROUND_TEXTURE: 'bg_selva_alta', // árvores altíssimas (tools/tall_jungle_background.py)
   BACKGROUND_SEAMLESS: true,           // já emenda sozinho (fundo infinito)
   BACKGROUND_TINT: 0xffffff,
@@ -20,8 +22,8 @@ const LEVEL_06 = {
     ENEMY_SPEED: 1.2,
     BOSS_SPEED: 1, SHOT_CHANCE: 1, PROJECTILE_SPEED: 1, SPECIAL_INTERVAL: 1
   },
-  ARENA_START_X: 7000,                 // começo da reta da bandeira
-  STAR_TIMES: { THREE: 150, TWO: 210, ONE: 300 }, // segundos para 3, 2 e 1 estrela
+  ARENA_START_X: 7000,
+  STAR_TIMES: { THREE: 210, TWO: 300, ONE: 420 }, // segundos para 3, 2 e 1 estrela
   GROUND: [
     // morrinhos irregulares
     [0, 360], [488, 152, 64], [640, 120, 112], [856, 136, 64],
@@ -69,5 +71,17 @@ const LEVEL_06 = {
     WAVES: { INTERVAL_MS: 8000, TYPES: [EnemyTypeId.BAT, EnemyTypeId.FROG], MAX_NEAR: 4 }
   },
   POTIONS: [[1430, 280], [3176, -190], [4264, -670]],
-  CHECKPOINTS: [100, 1100, 2150, 3150, 4200, 5450]
+  CHECKPOINTS: [100, 1100, 2150, 3150, 4200, 5450],
+  ARENA: {
+    BOSS: BossTypeId.EAGLET,
+    BACKDROP: 'eaglet_scene', // a clareira do ninho (vazio): aparece aos poucos no fim do percurso
+    // Escadinhas dos dois lados até a beirada do ninho (de lá a espada alcança o filhote)
+    PLATFORMS: [
+      [80, 470], [160, 385], [80, 300], [240, 255],
+      [720, 470], [640, 385], [560, 300], [440, 255]
+    ],
+    RANDOM_COUNT: 0,
+    RANDOM_X: { MIN: 0, MAX: 0 },
+    RANDOM_Y: { MIN: 0, MAX: 0 }
+  }
 };

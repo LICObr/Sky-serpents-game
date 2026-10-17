@@ -14,7 +14,8 @@
  *   - chama tremulando: tamanho e ângulo variam um pouco o tempo todo
  *   - rastro de faíscas (partículas) que se apagam ao ficar para trás
  * Cada tipo de projétil tem suas cores (GameSettings.FIREBALL.COLORS) e, se a
- * arte for diferente da bola de fogo, sua escala/núcleo/direção (FIREBALL.ART).
+ * arte for diferente da bola de fogo, sua escala/núcleo/direção (FIREBALL.ART);
+ * lá também dá para fazer o projétil cair em arco (GRAVITY) e se contorcer (WIGGLE).
  * -----------------------------------------------------------------------------
  */
 class FireballPool extends ProjectilePool {
@@ -51,6 +52,11 @@ class FireballPool extends ProjectilePool {
     fireball.body.setSize(art.BODY_SIZE, art.BODY_SIZE, false);
     fireball.body.setOffset(coreX - art.BODY_SIZE / 2, coreY - art.BODY_SIZE / 2);
 
+    // Projétil que cai em arco (ex.: minhoca): usa a sua própria gravidade
+    fireball.body.setAllowGravity(Boolean(art.GRAVITY));
+    fireball.body.setGravityY(art.GRAVITY ? art.GRAVITY - GameSettings.PHYSICS.GRAVITY_Y : 0);
+    fireball.setData('wiggle', Boolean(art.WIGGLE));
+
     this.#attachGlow(fireball, colors.GLOW);
     this.#attachTrail(fireball);
   }
@@ -59,6 +65,13 @@ class FireballPool extends ProjectilePool {
   updateProjectile(fireball, time) {
     const cfg = GameSettings.FIREBALL;
     const seed = fireball.getData('seed');
+
+    if (fireball.getData('wiggle')) {
+      // minhoca: aponta para onde vai e se contorce no ar
+      const velocity = fireball.body.velocity;
+      fireball.setRotation(Math.atan2(velocity.y, velocity.x) + Math.sin(time * 0.03 + seed) * 0.6);
+      return;
+    }
 
     const flicker = Math.sin(time * 0.031 + seed) * 0.6 + (Math.random() - 0.5) * 0.8;
     fireball.setScale(fireball.getData('baseScale') * (1 + flicker * cfg.FLICKER_SCALE));

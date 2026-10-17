@@ -17,7 +17,8 @@ const BossKind = Object.freeze({
   SERPENT: 'SERPENT',
   BEAR: 'BEAR',
   HIVE: 'HIVE',
-  BEE: 'BEE'
+  BEE: 'BEE',
+  EAGLET: 'EAGLET'
 });
 
 const BossTypeId = Object.freeze({
@@ -26,7 +27,8 @@ const BossTypeId = Object.freeze({
   MYSTIC_DRAGON: 'MYSTIC_DRAGON',
   POLAR_BEAR: 'POLAR_BEAR',
   HIVE: 'HIVE',
-  QUEEN_BEE: 'QUEEN_BEE'
+  QUEEN_BEE: 'QUEEN_BEE',
+  EAGLET: 'EAGLET'
 });
 
 /** Efeitos que um projétil/contato pode causar no jogador além do dano. */
@@ -218,5 +220,20 @@ const BOSS_TYPES = deepFreeze({
       TEXTURE: 'espirro_mel',
       EFFECT: ProjectileEffect.SLOW
     }
+  },
+
+  // Filhote de águia (fase 6): fica no ninho balançando, vira o olhar a cada
+  // 4 s, joga minhocas para o lado em que olha e chama a mamãe (águias).
+  [BossTypeId.EAGLET]: {
+    ID: BossTypeId.EAGLET,
+    KIND: BossKind.EAGLET,
+    NAME: 'Filhote de Águia',
+    POWER: 'Chama a mamãe!',
+    TEXTURES: { RIGHT: 'eaglet_right', LEFT: 'eaglet_left', CALL: 'eaglet_call' },
+    NEST_FRONT: 'nest_front',   // beirada do ninho desenhada por cima dele
+    LAYOUT: 'eaglet_layout',    // onde ele fica na arena (filhote.json)
+    MAX_HP: 500,                // igual aos outros chefões
+    SPEED: 0,
+    EAGLE_TYPE: 'EAGLE'         // as águias que já existem no jogo
   }
 });

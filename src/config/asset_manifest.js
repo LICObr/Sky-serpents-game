@@ -8,7 +8,7 @@
  *   personagens/guerreiro | personagens/arqueira
  *   inimigos/slime | inimigos/morcego | inimigos/fantasma
  *   chefoes/dragao_vermelho | chefoes/dragao_rosa | chefoes/serpente_glacial | chefoes/urso_polar
- *   chefoes/colmeia | chefoes/abelha_rainha
+ *   chefoes/colmeia | chefoes/abelha_rainha | chefoes/filhote_aguia
  *   cenario | itens | hud | audio
  *
  * Para adicionar um novo asset basta incluir uma linha na pasta certa.
@@ -125,6 +125,12 @@ const ASSET_MANIFEST = Object.freeze([
   ...imagesIn('chefoes/colmeia', { hive: 'colmeia.png', hive_scene: 'colmeia_cenario_vazio.png' }),
   { type: 'json', key: 'hive_layout', path: 'assets/chefoes/colmeia/colmeia.json' },
   ...imagesIn('chefoes/abelha_rainha', { gota_mel: 'gota_mel.png', espirro_mel: 'espirro_mel.png' }),
+  ...imagesIn('chefoes/filhote_aguia', {
+    eaglet_scene: 'ninho_cenario.png', nest_front: 'ninho_frente.png',
+    eaglet_right: 'filhote_direita.png', eaglet_left: 'filhote_esquerda.png', eaglet_call: 'filhote_chamando.png',
+    minhoca: 'minhoca.png', graveto: 'graveto.png'
+  }),
+  { type: 'json', key: 'eaglet_layout', path: 'assets/chefoes/filhote_aguia/filhote.json' },
 
   // Itens e HUD
   ...imagesIn('itens', { pocao: 'pocao.png', moeda: 'moeda.png' }),

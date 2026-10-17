@@ -364,6 +364,50 @@ const GameSettings = deepFreeze({
     DEFEAT_TINT: 0x4a4a4a
   },
 
+  // Filhote de águia no ninho (chefão da fase 6)
+  EAGLET: {
+    HITBOX: { LEFT: 0.1, RIGHT: 0.9, TOP: 0.05, BOTTOM: 0.85 }, // parte do desenho que apanha
+    MELEE_REACH: 70,
+    BOB: { HEIGHT: 8, MS: 650 }, // sobe e desce sem parar, estilo Cuphead
+    LOOK_MS: 4000,              // vira o olhar (direita ↔ esquerda) a cada 4 s
+    WORM: {                     // minhocas em arco para o lado em que está olhando
+      FIRST_MS: 2000,
+      EVERY_MS: { MIN: 1300, MAX: 2300 },
+      SPEED: { MIN: 280, MAX: 430 },
+      ANGLE_DEG: { MIN: 15, MAX: 50 },
+      ANGRY_COUNT: 3,           // bravo: três de uma vez, em leque
+      SPREAD_DEG: 14
+    },
+    CALL: {                     // chama a mamãe: olha para cima, a tela treme e vêm as águias
+      FIRST_MS: 6000,
+      EVERY_MS: 15000,
+      POSE_MS: 1800,
+      SHAKE: { MS: 1000, INTENSITY: 0.012 },
+      EAGLES: 7,                // águias que chegam pelo alto, uma de cada vez...
+      EAGLE_EVERY_MS: 600,
+      MAX_EAGLES: 7,            // ...sem passar de 7 voando ao mesmo tempo
+      EAGLE_Y: { MIN: 50, MAX: 110 },
+      TWIGS: 3                  // gravetos que caem da árvore com o tremor
+    },
+    ANGRY_BELOW: 0.5,           // com menos da metade da vida fica bravo...
+    ANGRY_BOB_SPEED: 1.7,       // ...e balança mais rápido
+    HIT_FLASH_MS: 70,
+    HIT_SHAKE: { DURATION_MS: 100, INTENSITY: 0.004 },
+    DEFEAT_MS: 1400
+  },
+
+  // Gravetos que caem da árvore quando o filhote chama a mamãe
+  TWIG_DROPS: {
+    FIRST_MS: 0,
+    INTERVAL_MS: { MIN: 0, MAX: 0 },  // só caem quando ele chama (não chovem sozinhos)
+    PER_RAIN: { MIN: 3, MAX: 3 },
+    STAGGER_MS: 180,
+    WARNING_MS: 500,
+    FALL_SPEED: 140,
+    START_Y: 0,
+    SCALE: 0.8
+  },
+
   // Gotas de mel caindo do teto na fase 5 (colmeia e rainha), como o gelo do urso
   HONEY_DROPS: {
     FIRST_MS: 2500,
@@ -422,11 +466,14 @@ const GameSettings = deepFreeze({
       bola_fogo_azul: { GLOW: 0x3aa0ff, SPARKS: [0xe6f6ff, 0x8fd0ff, 0x3a8cff, 0x1f4fd9] },
       bola_gelo:      { GLOW: 0x7fe3ff, SPARKS: [0xffffff, 0xc8f4ff, 0x7fdcff, 0x4fb6e6] },
       bola_rosa:      { GLOW: 0xff4fc3, SPARKS: [0xffe0f5, 0xff9ad9, 0xff4fc3, 0xb02a8c] },
-      espirro_mel:    { GLOW: null, SPARKS: [0xffd84a, 0xf2a40c, 0xd98a00] } // mel não brilha
+      espirro_mel:    { GLOW: null, SPARKS: [0xffd84a, 0xf2a40c, 0xd98a00] }, // mel não brilha
+      minhoca:        { GLOW: null, SPARKS: [0x8a5a3c, 0x6b4423, 0xb07a52] }  // terrinha caindo
     },
     // Projéteis com arte diferente da bola de fogo (o resto usa os valores acima)
     ART: {
-      espirro_mel: { SCALE: 0.45, CORE_ORIGIN: { X: 0.74, Y: 0.5 }, ART_DIRECTION_RAD: 0, BODY_SIZE: 30 }
+      espirro_mel: { SCALE: 0.45, CORE_ORIGIN: { X: 0.74, Y: 0.5 }, ART_DIRECTION_RAD: 0, BODY_SIZE: 30 },
+      // minhoca do filhote de águia: sobe em arco, cai (GRAVITY) e se mexe no ar (WIGGLE)
+      minhoca: { SCALE: 1, CORE_ORIGIN: { X: 0.5, Y: 0.5 }, ART_DIRECTION_RAD: 0, BODY_SIZE: 16, GRAVITY: 650, WIGGLE: true }
     },
     // A arte da bola de fogo tem o núcleo embaixo à esquerda e o rastro
     // subindo para a direita. O sprite gira em torno do núcleo para que o

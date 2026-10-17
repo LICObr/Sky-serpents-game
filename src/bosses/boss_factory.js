@@ -13,7 +13,8 @@ class BossFactory {
     [BossKind.SERPENT]: SerpentBoss,
     [BossKind.BEAR]: PolarBearBoss,
     [BossKind.HIVE]: HiveBoss,
-    [BossKind.BEE]: QueenBeeBoss
+    [BossKind.BEE]: QueenBeeBoss,
+    [BossKind.EAGLET]: EagletBoss
   });
 
   static #attackClasses = Object.freeze({
