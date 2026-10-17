@@ -104,7 +104,9 @@ const GameSettings = deepFreeze({
     BLINK_INTERVAL_MS: 100,     // velocidade do piscar durante o cooldown
     BLINK_ALPHA: 0.15,          // transparência no "apagado" do piscar
     STOMP_BOUNCE_Y: -420,       // pulinho ao pisar em um inimigo
-    COYOTE_TIME_MS: 110         // ainda dá para pular logo após sair do chão
+    COYOTE_TIME_MS: 110,        // ainda dá para pular logo após sair do chão
+    // Sem corações: tomba para a esquerda e fica deitado, meio transparente
+    DEATH: { FALL_MS: 450, ALPHA: 0.45, LYING_HEIGHT: 18, PULSE_MS: 900 }
   },
 
   // Modo 2 JOGADORES na mesma tela

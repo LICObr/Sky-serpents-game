@@ -253,12 +253,32 @@ class Player extends GameEntity {
     return this.y > GameSettings.LEVEL.PIT_Y;
   }
 
-  /** Sem corações no modo 2 jogadores: some até o fim da fase (PlayerParty). */
-  knockOut() {
+  /**
+   * Sem corações: tomba para a esquerda e fica deitado no chão, meio
+   * transparente, até o fim da fase (PlayerParty).
+   * @param {number|null} groundY chão embaixo dele (null = caiu num buraco)
+   */
+  knockOut(groundY) {
+    const cfg = GameSettings.PLAYER.DEATH;
+    const sprite = this.sprite;
     this.#knockedOut = true;
     this.#shield.hide();
-    this.sprite.setVisible(false);
-    this.sprite.body.enable = false;
+    this.#movement.reset();          // se estava agachado, levanta o desenho
+    this.showPose(PlayerPose.STAND);
+    sprite.body.enable = false;
+    this.scene.tweens.killTweensOf(sprite); // para o piscar do dano
+    this.scene.tweens.add({
+      targets: sprite,
+      angle: -90,
+      alpha: cfg.ALPHA,
+      y: groundY === null ? sprite.y : groundY - cfg.LYING_HEIGHT,
+      duration: cfg.FALL_MS,
+      ease: 'Quad.easeIn',
+      // deitado: a transparência vai e volta devagar
+      onComplete: () => this.scene.tweens.add({
+        targets: sprite, alpha: cfg.ALPHA * 0.6, duration: cfg.PULSE_MS, yoyo: true, repeat: -1
+      })
+    });
   }
 
   /**

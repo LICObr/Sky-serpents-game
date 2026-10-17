@@ -97,10 +97,9 @@ class PlayerParty {
     return players.map(player => player.x);
   }
 
-  /** Ficou sem corações: está fora até o fim da fase (ou é o fim, se não sobrou ninguém). */
+  /** Ficou sem corações: deita no chão, como morto, e está fora até o fim da fase. */
   #onPlayerDied(player) {
-    const partnerInGame = this.inGame.some(other => other !== player);
-    if (partnerInGame) player.knockOut();
-    else this.#eventBus.emit(GameEvents.PARTY_DEFEATED);
+    player.knockOut(this.#levelMap.surfaceYAt(player.x));
+    if (this.inGame.length === 0) this.#eventBus.emit(GameEvents.PARTY_DEFEATED); // ninguém sobrou: game over
   }
 }
