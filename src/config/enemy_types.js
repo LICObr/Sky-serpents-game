@@ -616,7 +616,7 @@ const ENEMY_TYPES = deepFreeze({
     HIDE_Y: -5,                 // o olho fica logo acima da água
     LEAP_RANGE_X: 55,
     LEAP_HEIGHT: 170,           // só salta se o jogador estiver até esta altura acima da água
-    LEAP_VELOCITY: -720,
+    LEAP_VELOCITY: -460,        // salto baixo (dá para acertar)
     REST_MS: 1600,
     MELEE_REACH: 75
   },

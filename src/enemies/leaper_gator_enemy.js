@@ -5,7 +5,7 @@
  * d'água, segue o jogador devagarzinho por baixo. Quando o jogador passa
  * POR CIMA dele (pulando a lagoa ou em pé numa vitória-régia), ele SALTA
  * para fora d'água de boca aberta e volta a mergulhar com um respingo.
- * Escondido, nada acerta nele (e encostar nos olhos não machuca).
+ * Escondido, encostar nos olhos não machuca (mas a espada e a flecha acertam).
  *
  *   ESCONDIDO ──(jogador em cima)──▶ SALTO ──(caiu na água)──▶ ESCONDIDO
  * -----------------------------------------------------------------------------
@@ -40,9 +40,9 @@ class LeaperGatorEnemy extends Enemy {
     return false;
   }
 
-  /** @override Escondido (só os olhos) não apanha nem machuca. */
-  get canBeHit() {
-    return super.canBeHit && this.#leaping;
+  /** @override Escondido (só os olhos) não machuca — mas apanha. */
+  get canHurt() {
+    return this.isActive && this.#leaping;
   }
 
   /** @override */
