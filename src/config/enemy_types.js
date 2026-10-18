@@ -603,7 +603,8 @@ const ENEMY_TYPES = deepFreeze({
     LUNGE: { RANGE_X: 190, RANGE_Y: 15, SPEED: 230, MS: 600, COOLDOWN_MS: 1800, FRAME: 'jacare_bote' },
     DRAG: { SPEED: 170, MS: 700 } // mordida: arrasta para o fundo girando
   },
-  // Jacaré-Saltador: só os olhos para fora; salta quando o jogador passa por cima
+  // Jacaré-Saltador: só os olhos para fora; salta (baixo) quando o jogador passa por
+  // cima — e de tempos em tempos mergulha para descansar (hora de passar)
   [EnemyTypeId.GATOR_LEAPER]: {
     NAME: 'Jacaré-Saltador',
     BEHAVIOR: EnemyBehavior.LEAPER,
@@ -612,12 +613,15 @@ const ENEMY_TYPES = deepFreeze({
     FRAME_MS: 1000,
     SCALE: 0.12,
     HP: 35,
-    SPEED: 55,                  // seguindo o jogador por baixo d'água
+    SPEED: 40,                  // seguindo (devagar) quem está sobre a lagoa
     HIDE_Y: -5,                 // o olho fica logo acima da água
-    LEAP_RANGE_X: 55,
-    LEAP_HEIGHT: 170,           // só salta se o jogador estiver até esta altura acima da água
-    LEAP_VELOCITY: -460,        // salto baixo (dá para acertar)
-    REST_MS: 1600,
+    LEAP_RANGE_X: 50,
+    LEAP_HEIGHT: 140,           // só salta se o jogador estiver até esta altura acima da água
+    LEAP_VELOCITY: -400,        // salto baixo (~50px), reto para cima
+    WATCH_MS: 2600,             // de olho, pode saltar (depois de LEAP_DELAY_MS de aviso)...
+    LEAP_DELAY_MS: 500,
+    REST_MS: 2600,              // ...e mergulhado, descansando (não segue nem salta)
+    REST_DEPTH: 18,             // o quanto afunda para descansar
     MELEE_REACH: 75
   },
   // Jacaré-Tronco: parece um tronco (dá para pisar), mas acorda, afunda e morde

@@ -148,13 +148,14 @@ class SwimmerEnemy extends Enemy {
     });
   }
 
-  /** Nunca passa das margens. */
+  /** Nunca passa das margens (o corpo inteiro fica na água). */
   #keepInLake() {
     const margin = this.sprite.displayWidth / 2;
+    const left = this.#lake.left + margin;
+    const right = this.#lake.right - margin;
     const vx = this.sprite.body.velocity.x;
-    if ((this.x <= this.#lake.left + margin && vx < 0) || (this.x >= this.#lake.right - margin && vx > 0)) {
-      this.sprite.setVelocityX(0);
-    }
+    if ((this.x <= left && vx < 0) || (this.x >= right && vx > 0)) this.sprite.setVelocityX(0);
+    if (this.x < left || this.x > right) this.sprite.x = Phaser.Math.Clamp(this.x, left, right);
   }
 
   /**
