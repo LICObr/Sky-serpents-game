@@ -8,6 +8,7 @@
  *   - EMPURRADO (vento do rabo da águia): por um instante o vento manda no
  *     andar (o jogador não consegue frear).
  *   - NADANDO (lagoa do pântano) e NA LAMA: anda mais devagar enquanto durar.
+ *   - AGARRADO (mordida do jacaré): arrastado para o fundo, sem controle.
  * Para criar novos efeitos (veneno, escudo...) basta adicionar aqui.
  * -----------------------------------------------------------------------------
  */
@@ -16,6 +17,7 @@ class PlayerStatus {
   #slowUntil = 0;
   #frozenUntil = 0;
   #pushedUntil = 0;
+  #grabbedUntil = 0;
   #waterDepth = null; // profundidade dos pés na água (null = fora da água)
   #inMud = false;
   #freezeImmuneUntil = 0;
@@ -74,6 +76,16 @@ class PlayerStatus {
   /** O vento manda no andar por um tempo. */
   push(ms) {
     this.#pushedUntil = this.#player.scene.time.now + ms;
+  }
+
+  /** Nas garras do jacaré (sendo arrastado para o fundo)? */
+  get isGrabbed() {
+    return this.#player.scene.time.now < this.#grabbedUntil;
+  }
+
+  /** Agarrado por um tempo (sem controle). */
+  grab(ms) {
+    this.#grabbedUntil = this.#player.scene.time.now + ms;
   }
 
   get isSlowed() {

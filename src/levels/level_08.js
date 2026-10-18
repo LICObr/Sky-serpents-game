@@ -11,9 +11,13 @@
  * Os bichos são todos do pântano:
  *   sapos — língua (puxa o jogador), venenoso (não dá para pisar; solta
  *           veneno ao morrer), boi (grandão; o tombo dele empurra)
- *   jacarés — o que nada e dá bote (pisar nas costas faz quicar), o
- *             saltador (só os olhos para fora; salta em quem passa por cima)
- *             e o tronco (dá para pisar... até ele acordar e afundar)
+ *   jacarés — o que nada e dá bote (a mordida arrasta para o fundo; pisar
+ *             nas costas faz quicar), o saltador (só os olhos para fora;
+ *             salta em quem passa por cima) e o tronco (dá para pisar...
+ *             até ele acordar e afundar)
+ *   tartarugas (pisou, vira casco; chute o casco nos outros bichos!),
+ *   garças (bicada na margem), piranhas (pulam da água), poraquês (choque
+ *   em quem está nadando), sanguessugas (grudam e chupam um coração),
  *   libélulas (rasantes rápidos), nuvens de mosquitos (a picada deixa lento)
  *   e cobras-d'água
  * -----------------------------------------------------------------------------
@@ -49,13 +53,13 @@ const LEVEL_08 = {
   WATER: [
     [560, 320], [1560, 560], [2752, 440], [3732, 600], [5144, 480]
   ],
-  // Vitórias-régias (x de cada folha, sobre uma lagoa)
+  // Vitórias-régias (x de cada folha, sobre uma lagoa): longe uma da outra (pulo comprido)
   LILY_PADS: [
-    650, 790,
-    1650, 1785, 1920, 2055,
+    630, 810,
+    1640, 1820, 2000,
     2975,
-    3830, 3990, 4150,
-    5240, 5530
+    3830, 4010, 4190,
+    5225, 5545
   ],
   // Lama [inícioX, largura]
   MUD: [
@@ -70,14 +74,23 @@ const LEVEL_08 = {
     ...walkers(EnemyTypeId.FROG_TONGUE, [440, 2690, 4560, 5980]),
     ...walkers(EnemyTypeId.FROG_POISON, [1120, 3300, 3480, 5800]),
     ...walkers(EnemyTypeId.BULLFROG, [2250, 4830, 6060]),
+    // tartarugas (chute o casco nos sapos!) e garças na margem
+    ...walkers(EnemyTypeId.TURTLE, [2170, 5680]),
+    ...walkers(EnemyTypeId.HERON, [1535, 4600]),
     // bichos da água (o x precisa estar sobre uma lagoa)
     walker(EnemyTypeId.WATER_SNAKE, 720),
+    walker(EnemyTypeId.PIRANHA, 800),
+    walker(EnemyTypeId.PIRANHA, 1700),
     walker(EnemyTypeId.GATOR_LEAPER, 1850),
+    walker(EnemyTypeId.LEECH, 2000),
     ...walkers(EnemyTypeId.GATOR_LOG, [2840, 3110]),
+    walker(EnemyTypeId.EEL, 2950),
     walker(EnemyTypeId.GATOR, 3000),
     walker(EnemyTypeId.GATOR_LEAPER, 3880),
+    walker(EnemyTypeId.LEECH, 3950),
     walker(EnemyTypeId.GATOR, 4050),
-    walker(EnemyTypeId.WATER_SNAKE, 4200),
+    walker(EnemyTypeId.PIRANHA, 4150),
+    walker(EnemyTypeId.EEL, 5250),
     walker(EnemyTypeId.WATER_SNAKE, 5300),
     walker(EnemyTypeId.GATOR_LOG, 5385),
     walker(EnemyTypeId.GATOR_LEAPER, 5530),
@@ -90,7 +103,7 @@ const LEVEL_08 = {
     ])
   ],
   RANDOM_ENEMIES: {
-    WALKERS: { TYPES: [EnemyTypeId.FROG_POISON, EnemyTypeId.FROG_TONGUE], COUNT: 3 },
+    WALKERS: { TYPES: [EnemyTypeId.FROG_POISON, EnemyTypeId.FROG_TONGUE, EnemyTypeId.TURTLE], COUNT: 3 },
     FLYERS: { TYPES: [EnemyTypeId.MOSQUITO, EnemyTypeId.DRAGONFLY], COUNT: 4 },
     WAVES: { INTERVAL_MS: 12000, TYPES: [EnemyTypeId.MOSQUITO, EnemyTypeId.DRAGONFLY, EnemyTypeId.FROG_TONGUE], MAX_NEAR: 3 }
   },

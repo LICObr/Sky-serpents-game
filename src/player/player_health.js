@@ -75,6 +75,24 @@ class PlayerHealth {
     this.#emitHeartsChanged();
   }
 
+  /**
+   * Doa um coração para o parceiro caído (precisa ficar com pelo menos um).
+   * @returns {boolean} true se doou
+   */
+  giveHeart() {
+    if (this.#hearts < 2) return false;
+    this.#hearts--;
+    this.#emitHeartsChanged();
+    return true;
+  }
+
+  /** Voltou para a partida com um coração (doado pelo parceiro), piscando um tempinho. */
+  revive() {
+    this.#hearts = 1;
+    this.#emitHeartsChanged();
+    this.#startDamageCooldown();
+  }
+
   /** Começa o cooldown: invulnerável e piscando até ele acabar. */
   #startDamageCooldown() {
     const { DAMAGE_COOLDOWN_MS, BLINK_INTERVAL_MS, BLINK_ALPHA } = GameSettings.PLAYER;

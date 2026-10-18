@@ -116,16 +116,16 @@ const GameSettings = deepFreeze({
   // Água das lagoas (pântano): nada mais devagar e boia
   SWIM: {
     SURFACE_ELEVATION: 40,      // altura padrão da superfície das lagoas (como a elevação do chão)
-    SPEED_MULTIPLIER: 0.55,     // anda (nada) mais devagar
-    BUOYANCY: 0.78,             // a água tira quase toda a gravidade...
-    MAX_SINK_SPEED: 110,        // ...e afunda devagarzinho (cair na água freia na hora)
+    SPEED_MULTIPLIER: 0.4,      // nada BEM mais devagar do que anda
+    BUOYANCY: 0.85,             // a água tira quase toda a gravidade...
+    MAX_SINK_SPEED: 70,         // ...e afunda devagarzinho (cair na água freia na hora)
+    SWIM_UP_SPEED: 70,          // segurando pular: nada para cima devagar
     ENTER_DEPTH: 8,             // pés este tanto abaixo da superfície = dentro da água
-    STROKE_VELOCITY: -300,      // segurando pular: braçadas para cima...
-    STROKE_MS: 280,             // ...uma a cada este tempo
-    SURFACE_JUMP_DEPTH: 34,     // perto da superfície, pular é o pulo normal (para sair da água)
+    SURFACE_JUMP_DEPTH: 34,     // perto da superfície, pular é o pulo normal (para sair da água)...
+    SURFACE_JUMP_DELAY_MS: 500, // ...mas só depois de um tempinho na água (nada de "quicar" na superfície)
     COLOR: 0x35566a,            // cinza-azulado, como a água do fundo
-    ALPHA: 0.55,
-    DEEP_ALPHA: 0.3,            // escurece mais perto do fundo
+    ALPHA: 0.38,                // dá para ver quem está nadando lá embaixo
+    DEEP_ALPHA: 0.18,           // escurece mais perto do fundo
     SURFACE_COLOR: 0xa8d8d0,
     BUBBLE_MS: 420,             // bolhas subindo de quem está nadando
     DEPTH: 2.5                  // desenhada NA FRENTE dos jogadores (parecem dentro da água)
@@ -142,7 +142,7 @@ const GameSettings = deepFreeze({
 
   // Vitórias-régias: boiam na lagoa e AFUNDAM se alguém ficar em cima
   LILY_PAD: {
-    TEXTURE: 'vitoria_regia',
+    TEXTURES: ['vitoria_regia', 'vitoria_regia_flor'], // uma sim, outra não com flor
     SCALE: 0.2,
     SINK_AFTER_MS: 1000,        // alguém pisou: balança este tempo e afunda
     SINK_DEPTH: 34,             // o quanto desce ao afundar
@@ -157,7 +157,9 @@ const GameSettings = deepFreeze({
     SCREEN_MARGIN: 24,          // ninguém passa disto da borda da tela (um espera o outro)
     FRIENDLY_FIRE: true,        // espada, flechas e especiais também acertam o parceiro
     FRIENDLY_REACH: 55,         // alcance da espada contra o parceiro
-    COLORS: [0xffe066, 0x6fd8ff] // pontinho de cada jogador na barra de progresso
+    COLORS: [0xffe066, 0x6fd8ff], // pontinho de cada jogador na barra de progresso
+    // Doar coração: agachado em cima do parceiro caído (precisa ter pelo menos 2)
+    REVIVE: { MIN_HEARTS: 2, HOLD_MS: 900, RANGE_X: 40, RANGE_Y: 50, HEART_SCALE: 0.09 }
   },
 
   // Escudinho do AGACHAR: segura UM golpe e quebra; depois precisa recarregar

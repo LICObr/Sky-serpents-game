@@ -17,6 +17,8 @@
  *   (pântano) TONGUE → sapo da língua que puxa | BULLFROG → sapo-boi do tremor
  *             SWIMMER → nada na superfície da lagoa e dá bote (jacaré, cobra-d'água)
  *             LEAPER → jacaré escondido que salta da água | LOG → jacaré-tronco
+ *             TURTLE → tartaruga (casco que desliza) | HERON → garça que bica
+ *             PIRANHA → pula da água | EEL → poraquê (choque) | LEECH → sanguessuga
  *
  * Dá para matar pisando em cima (como no Mario) ou atacando — menos o ouriço.
  * TINT (opcional) pinta o bicho de outra cor (variações de fase).
@@ -41,14 +43,19 @@ const EnemyBehavior = Object.freeze({
   BULLFROG: 'BULLFROG', // sapo-boi: ao cair do pulo, tremor que empurra
   SWIMMER: 'SWIMMER',   // nada na superfície da lagoa e dá bote
   LEAPER: 'LEAPER',     // jacaré escondido (só os olhos) que salta da água
-  LOG: 'LOG'            // jacaré que parece tronco (dá para pisar) e acorda
+  LOG: 'LOG',           // jacaré que parece tronco (dá para pisar) e acorda
+  TURTLE: 'TURTLE',     // tartaruga: pisou, vira casco; chutou, o casco desliza derrubando bichos
+  HERON: 'HERON',       // garça parada na margem que dá bicadas
+  PIRANHA: 'PIRANHA',   // peixe que pula da água num arco na direção do jogador
+  EEL: 'EEL',           // poraquê: dá choque em quem está nadando perto
+  LEECH: 'LEECH'        // sanguessuga: gruda em quem está nadando
 });
 
 /** Bichos que vivem no chão (nascem sobre o terreno e colidem com ele). */
 const GROUND_BEHAVIORS = Object.freeze([
   EnemyBehavior.WALKER, EnemyBehavior.SNAKE, EnemyBehavior.HOPPER,
   EnemyBehavior.SHOOTER, EnemyBehavior.SPIKY, EnemyBehavior.AMBUSH,
-  EnemyBehavior.TONGUE, EnemyBehavior.BULLFROG
+  EnemyBehavior.TONGUE, EnemyBehavior.BULLFROG, EnemyBehavior.TURTLE, EnemyBehavior.HERON
 ]);
 
 const EnemyTypeId = Object.freeze({
@@ -91,7 +98,12 @@ const EnemyTypeId = Object.freeze({
   GATOR_LOG: 'GATOR_LOG',
   DRAGONFLY: 'DRAGONFLY',
   MOSQUITO: 'MOSQUITO',
-  WATER_SNAKE: 'WATER_SNAKE'
+  WATER_SNAKE: 'WATER_SNAKE',
+  TURTLE: 'TURTLE',
+  HERON: 'HERON',
+  PIRANHA: 'PIRANHA',
+  EEL: 'EEL',
+  LEECH: 'LEECH'
 });
 
 /** Quadros de uma variação da águia (tools/eagle_variants.py). */
@@ -571,21 +583,25 @@ const ENEMY_TYPES = deepFreeze({
     MELEE_REACH: 75,
     QUAKE: { RADIUS: 170, FORCE: 380, COLOR: 0x6a5440 }
   },
-  // Jacaré: nada na superfície e dá bote; pisar nas costas faz quicar (trampolim)
+  // Jacaré: comprido e mal-encarado; nada na superfície e dá bote em quem está
+  // nadando — a mordida arrasta para o fundo. Pisar nas costas faz quicar (trampolim)
   [EnemyTypeId.GATOR]: {
     NAME: 'Jacaré',
     BEHAVIOR: EnemyBehavior.SWIMMER,
     FRAMES: ['jacare_0', 'jacare_1'],
     FRAME_MS: 260,
-    SCALE: 0.14,
+    SCALE: 0.12,
     HP: 45,
     SPEED: 45,
-    FLOAT_Y: 2,                 // centro um pouco abaixo da superfície (só as costas para fora)
+    FLOAT_Y: 3,                 // só os olhos e as escamas para fora (passa por baixo das vitórias-régias)
     WAVE_AMPLITUDE: 1.5,
     WAVE_SPEED: 0.003,
-    MELEE_REACH: 80,
+    MELEE_REACH: 90,
+    HITBOX: { TOP: 0.3, HEIGHT: 0.5, WIDTH: 0.9 }, // as escamas de cima e as patas não contam
     BOUNCY_BACK: true,
-    LUNGE: { RANGE_X: 190, RANGE_Y: 60, SPEED: 230, MS: 600, COOLDOWN_MS: 1800, FRAME: 'jacare_bote' }
+    // bote só em quem está NADANDO (RANGE_Y: o jogador abaixo deste tanto acima da água)
+    LUNGE: { RANGE_X: 190, RANGE_Y: 15, SPEED: 230, MS: 600, COOLDOWN_MS: 1800, FRAME: 'jacare_bote' },
+    DRAG: { SPEED: 170, MS: 700 } // mordida: arrasta para o fundo girando
   },
   // Jacaré-Saltador: só os olhos para fora; salta quando o jogador passa por cima
   [EnemyTypeId.GATOR_LEAPER]: {
@@ -594,10 +610,10 @@ const ENEMY_TYPES = deepFreeze({
     FRAMES: ['jacare_bote'],    // saltando de boca aberta
     EYES_FRAME: 'jacare_olhos', // escondido
     FRAME_MS: 1000,
-    SCALE: 0.14,
+    SCALE: 0.12,
     HP: 35,
     SPEED: 55,                  // seguindo o jogador por baixo d'água
-    HIDE_Y: 0,
+    HIDE_Y: -5,                 // o olho fica logo acima da água
     LEAP_RANGE_X: 55,
     LEAP_HEIGHT: 170,           // só salta se o jogador estiver até esta altura acima da água
     LEAP_VELOCITY: -720,
@@ -620,9 +636,10 @@ const ENEMY_TYPES = deepFreeze({
     WAVE_AMPLITUDE: 1.5,
     WAVE_SPEED: 0.0025,
     WAKE_WARNING_MS: 900,       // treme este tempo antes de afundar
-    AWAKE_MS: 3200,
-    HUNT_SPEED: 120,
-    MELEE_REACH: 80
+    AWAKE_MS: 2600,
+    HUNT_SPEED: 75,             // um pouco mais rápido que o jogador nadando
+    MELEE_REACH: 80,
+    STOMP_HURTS: true           // acordado: quem afunda em cima dele leva mordida
   },
   // Libélula: rasantes curtinhos e muito rápidos
   [EnemyTypeId.DRAGONFLY]: {
@@ -671,10 +688,74 @@ const ENEMY_TYPES = deepFreeze({
     SCALE: 0.11,
     HP: 16,
     SPEED: 80,
-    FLOAT_Y: 0,
-    WAVE_AMPLITUDE: 3,
+    FLOAT_Y: 6,
+    WAVE_AMPLITUDE: 2,
     WAVE_SPEED: 0.006,
     MELEE_REACH: 60,
-    LUNGE: { RANGE_X: 160, RANGE_Y: 50, SPEED: 260, MS: 450, COOLDOWN_MS: 1500 }
+    LUNGE: { RANGE_X: 160, RANGE_Y: 15, SPEED: 260, MS: 450, COOLDOWN_MS: 1500 }
+  },
+  // Tartaruga: pisou, vira casco; encostou no casco, ele sai deslizando e derruba os bichos
+  [EnemyTypeId.TURTLE]: {
+    NAME: 'Tartaruga',
+    BEHAVIOR: EnemyBehavior.TURTLE,
+    FRAMES: ['tartaruga_0', 'tartaruga_1'],
+    FRAME_MS: 260,
+    SCALE: 0.1,
+    HP: 30,
+    SPEED: 35,
+    MELEE_REACH: 65,
+    SHELL: { FRAME: 'tartaruga_casco', HIDE_MS: 5000, KICK_SPEED: 340, SLIDE_MS: 4500 }
+  },
+  // Garça: parada na margem numa perna só; bica quem chega perto
+  [EnemyTypeId.HERON]: {
+    NAME: 'Garça',
+    BEHAVIOR: EnemyBehavior.HERON,
+    FRAMES: ['garca_0', 'garca_1'],
+    FRAME_MS: 700,              // sobe e desce a cabeça devagar
+    SCALE: 0.11,
+    HP: 30,
+    SPEED: 0,
+    MELEE_REACH: 70,
+    BODY: { WIDTH: 230, HEIGHT: 360, OFFSET_X: 210, OFFSET_Y: 40 }, // só o corpo, sem o bico (em px da arte)
+    PECK: { RANGE_X: 95, RANGE_Y: 50, SPEED: 300, MS: 150, COOLDOWN_MS: 1300, TILT_DEG: 20 }
+  },
+  // Piranha: nada escondida e pula da água num arco na direção do jogador
+  [EnemyTypeId.PIRANHA]: {
+    NAME: 'Piranha',
+    BEHAVIOR: EnemyBehavior.PIRANHA,
+    FRAMES: ['piranha_0', 'piranha_1'],
+    FRAME_MS: 160,
+    SCALE: 0.08,
+    HP: 8,
+    SPEED: 60,
+    SWIM_DEPTH: 22,             // nada um pouco abaixo da superfície
+    MELEE_REACH: 55,
+    JUMP: { EVERY_MS: 2600, RANGE_X: 220, VELOCITY: -560, MAX_SPEED_X: 220 }
+  },
+  // Poraquê (peixe-elétrico): de tempos em tempos dá CHOQUE em quem está nadando perto
+  [EnemyTypeId.EEL]: {
+    NAME: 'Poraquê',
+    BEHAVIOR: EnemyBehavior.EEL,
+    FRAMES: ['poraque_0', 'poraque_1'],
+    FRAME_MS: 260,
+    SCALE: 0.09,
+    HP: 30,
+    SPEED: 30,
+    SWIM_DEPTH: 50,             // no meio da lagoa
+    MELEE_REACH: 70,
+    SHOCK: { EVERY_MS: 4200, CHARGE_MS: 800, RADIUS: 120, COLOR: 0xfff27a }
+  },
+  // Sanguessuga: gruda em quem está nadando, deixa lento e chupa um coração
+  [EnemyTypeId.LEECH]: {
+    NAME: 'Sanguessuga',
+    BEHAVIOR: EnemyBehavior.LEECH,
+    FRAMES: ['sanguessuga_0', 'sanguessuga_1'],
+    FRAME_MS: 220,
+    SCALE: 0.09,
+    HP: 6,
+    SPEED: 45,
+    SENSE_RANGE: 200,           // nada atrás de quem está na água até esta distância
+    DRAIN_MS: 2200,             // grudada este tempo: chupa um coração e cai
+    MELEE_REACH: 60
   }
 });

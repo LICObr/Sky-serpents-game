@@ -55,7 +55,8 @@ const ASSET_MANIFEST = Object.freeze([
     platform_caverna: 'plataforma_caverna.png', pedra_caverna: 'pedra_caverna.png',
     // Pântano (tools/swamp_background.py, tools/swamp_terrain.py, tools/swamp_creatures.py)
     bg_pantano: 'fundo_pantano.png', chao_pantano: 'chao_pantano.png', terra_pantano: 'terra_pantano.png',
-    platform_pantano: 'plataforma_pantano.png', vitoria_regia: 'vitoria_regia.png', lama: 'lama.png'
+    platform_pantano: 'plataforma_pantano.png', vitoria_regia: 'vitoria_regia.png',
+    vitoria_regia_flor: 'vitoria_regia_flor.png', lama: 'lama.png'
   }),
 
   // Guerreiro
@@ -110,7 +111,12 @@ const ASSET_MANIFEST = Object.freeze([
     jacare_tronco: 'jacare_tronco.png', jacare_acordado: 'jacare_acordado.png',
     libelula_0: 'libelula_0.png', libelula_1: 'libelula_1.png',
     mosquito_0: 'mosquito_0.png', mosquito_1: 'mosquito_1.png',
-    cobra_agua_0: 'cobra_agua_0.png', cobra_agua_1: 'cobra_agua_1.png'
+    cobra_agua_0: 'cobra_agua_0.png', cobra_agua_1: 'cobra_agua_1.png',
+    tartaruga_0: 'tartaruga_0.png', tartaruga_1: 'tartaruga_1.png', tartaruga_casco: 'tartaruga_casco.png',
+    piranha_0: 'piranha_0.png', piranha_1: 'piranha_1.png',
+    poraque_0: 'poraque_0.png', poraque_1: 'poraque_1.png',
+    garca_0: 'garca_0.png', garca_1: 'garca_1.png',
+    sanguessuga_0: 'sanguessuga_0.png', sanguessuga_1: 'sanguessuga_1.png'
   }),
   ...imagesIn('inimigos/morcego', {
     morcego_0: 'morcego_0.png', morcego_1: 'morcego_1.png',

@@ -51,6 +51,15 @@ class LeaperGatorEnemy extends Enemy {
     else this.#lurk(time, player);
   }
 
+  /** @override Subindo (o bote vem de baixo) sempre morde; caindo de volta, dá para pisar nele. */
+  onPlayerContact(player) {
+    if (this.#leaping && this.sprite.body.velocity.y < 0) {
+      if (this.canHurt) player.hitByContact(this.contactEffect);
+      return;
+    }
+    super.onPlayerContact(player);
+  }
+
   /** @override Fora da câmera fica parado (no meio do salto, continua caindo). */
   sleep() {
     if (this.isActive && !this.#leaping) this.sprite.setVelocity(0, 0);

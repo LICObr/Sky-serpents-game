@@ -27,13 +27,13 @@ class LilyPads {
   constructor(scene, xs, levelMap) {
     this.#scene = scene;
     this.#group = scene.physics.add.group({ allowGravity: false, immovable: true });
-    xs.forEach(x => {
+    xs.forEach((x, index) => {
       const lake = levelMap.waterAt(x);
       if (!lake) {
         console.warn(`[LilyPads] Vitória-régia em x=${x} fora de uma lagoa`);
         return;
       }
-      this.#create(x, lake.surfaceY);
+      this.#create(x, lake.surfaceY, index);
     });
   }
 
@@ -61,17 +61,20 @@ class LilyPads {
     });
   }
 
-  #create(x, surfaceY) {
+  #create(x, surfaceY, index) {
     const cfg = GameSettings.LILY_PAD;
-    const pad = this.#group.create(x, surfaceY, cfg.TEXTURE).setScale(cfg.SCALE).setDepth(GameSettings.SWIM.DEPTH + 0.1);
+    const texture = cfg.TEXTURES[index % cfg.TEXTURES.length];
+    // a borda vermelha da folha fica na linha d'água (o meio do desenho é o topo da folha)
+    const baseY = surfaceY - 6;
+    const pad = this.#group.create(x, baseY, texture).setScale(cfg.SCALE).setDepth(GameSettings.SWIM.DEPTH + 0.1);
     // pisável só por cima (dá para nadar por baixo e subir através dela)
     const body = pad.body;
     body.checkCollision.down = false;
     body.checkCollision.left = false;
     body.checkCollision.right = false;
-    // a "borda" levantada da folha não conta: o pé fica em cima da folha
-    body.setSize(pad.width, pad.height * 0.6).setOffset(0, pad.height * 0.25);
-    pad.setData({ state: LilyPadState.FLOAT, baseY: surfaceY, phase: x * 0.01 });
+    // a flor não conta: o pé fica em cima da folha
+    body.setSize(pad.width, pad.height * 0.3, false).setOffset(0, pad.height * 0.5);
+    pad.setData({ state: LilyPadState.FLOAT, baseY, phase: x * 0.01 });
   }
 
   /** Afunda (quem estava em cima cai na água) e volta depois de um tempo. */
@@ -82,7 +85,7 @@ class LilyPads {
     pad.setData('state', LilyPadState.SUNK);
     pad.body.checkCollision.up = false;
     pad.setAngle(0).setDepth(GameSettings.SWIM.DEPTH - 0.1); // por baixo da água
-    WaterSplash.at(this.#scene, pad.x, baseY, 8);
+    WaterSplash.at(this.#scene, pad.x, baseY + 6, 8);
     this.#scene.tweens.add({ targets: pad, y: baseY + cfg.SINK_DEPTH, alpha: 0.7, duration: 350, ease: 'Quad.easeIn' });
     this.#scene.time.delayedCall(cfg.SUNK_MS, () => {
       if (!pad.active) return;

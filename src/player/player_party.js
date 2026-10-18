@@ -8,15 +8,17 @@
  *   - frontX          → o mais à frente (checkpoint, chegada, fim do percurso)
  *   - inGame          → quem está jogando agora
  *
- * Modo 2 jogadores: quem fica sem corações está fora até o fim da fase (o
- * outro continua sozinho). Se os dois ficarem fora, é o fim (PARTY_DEFEATED →
- * game over). Com o fogo amigo ligado, um pode acertar o outro.
+ * Modo 2 jogadores: quem fica sem corações fica deitado, fora da partida (o
+ * outro continua sozinho) — a não ser que o parceiro AGACHE em cima dele e
+ * doe um coração (HeartDonation). Se os dois ficarem fora, é o fim
+ * (PARTY_DEFEATED → game over). Com o fogo amigo ligado, um pode acertar o outro.
  * -----------------------------------------------------------------------------
  */
 class PlayerParty {
   #players;
   #eventBus;
   #levelMap;
+  #donation = null; // doar coração ao parceiro caído (só com 2 jogadores)
 
   /**
    * @param {Player[]} players
@@ -27,6 +29,7 @@ class PlayerParty {
     this.#players = players;
     this.#eventBus = eventBus;
     this.#levelMap = levelMap;
+    if (this.isCoop) this.#donation = new HeartDonation(players[0].scene, this);
     eventBus.on(GameEvents.PLAYER_DIED, player => this.#onPlayerDied(player));
   }
 
@@ -60,6 +63,7 @@ class PlayerParty {
   /** Movimento de todos (chamar a cada frame). */
   update() {
     this.#players.forEach(player => player.update());
+    if (this.#donation) this.#donation.update();
   }
 
   /** Ataques de quem está jogando. */

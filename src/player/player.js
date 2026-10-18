@@ -13,7 +13,8 @@
  *        KnightPlayer → DashSpecial | ArcherPlayer → ArrowStormSpecial
  *
  * Com 2 jogadores, cada um também é um ALVO do combate (fogo amigo): golpe,
- * flecha ou especial do parceiro tira um coração (o escudinho segura).
+ * flecha ou especial do parceiro tira um coração (o escudinho segura). E quem
+ * cai sem corações pode voltar se o parceiro doar um (HeartDonation).
  * -----------------------------------------------------------------------------
  */
 class Player extends GameEntity {
@@ -163,7 +164,7 @@ class Player extends GameEntity {
     this.#attack.updateProjectiles(); // flechas no ar seguem mesmo com o jogador fora
     if (this.#knockedOut) return;
 
-    const windBlown = this.#status.isPushed; // empurrado: o vento manda no andar
+    const windBlown = this.#status.isPushed || this.#status.isGrabbed; // empurrado/agarrado: sem controle
     if (this.#status.isFrozen) {
       // Congelado: parado no bloco de gelo (só a gravidade age)
       this.sprite.setVelocityX(0);
@@ -268,7 +269,19 @@ class Player extends GameEntity {
     const swimming = depth !== null;
     if (swimming !== this.#status.isSwimming) body.setGravityY(swimming ? -GameSettings.PHYSICS.GRAVITY_Y * cfg.BUOYANCY : 0);
     this.#status.setWaterDepth(depth);
-    if (swimming && body.velocity.y > cfg.MAX_SINK_SPEED) body.setVelocityY(cfg.MAX_SINK_SPEED); // afunda devagar
+    const sinkingFast = body.velocity.y > cfg.MAX_SINK_SPEED;
+    if (swimming && sinkingFast && !this.#status.isGrabbed) body.setVelocityY(cfg.MAX_SINK_SPEED); // afunda devagar
+  }
+
+  /**
+   * Mordido pelo jacaré: arrastado para o fundo da lagoa, sem controle.
+   * @param {number} speed velocidade da descida
+   * @param {number} ms tempo agarrado
+   */
+  dragDown(speed, ms) {
+    if (this.#knockedOut) return;
+    this.sprite.setVelocity(0, speed);
+    this.#status.grab(ms);
   }
 
   /** Pulinho depois de pisar em um inimigo. */
@@ -307,6 +320,23 @@ class Player extends GameEntity {
         targets: sprite, alpha: cfg.ALPHA * 0.6, duration: cfg.PULSE_MS, yoyo: true, repeat: -1
       })
     });
+  }
+
+  /**
+   * O parceiro doou um coração: levanta (onde estava deitado) e volta para a
+   * partida com esse coração, piscando um tempinho.
+   */
+  revive() {
+    if (!this.#knockedOut) return;
+    const sprite = this.sprite;
+    this.scene.tweens.killTweensOf(sprite);
+    this.#knockedOut = false;
+    sprite.setAngle(0).setAlpha(1);
+    sprite.body.enable = true;
+    sprite.body.reset(sprite.x, sprite.y - GameSettings.PLAYER.DEATH.LYING_HEIGHT);
+    this.#movement.reset();
+    this.showPose(PlayerPose.STAND);
+    this.#health.revive();
   }
 
   /**

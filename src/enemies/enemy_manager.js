@@ -19,6 +19,10 @@
  *   sapo-língua → TongueFrogEnemy | sapo-boi → BullfrogEnemy
  *   jacaré e cobra-d'água → SwimmerEnemy | jacaré-saltador → LeaperGatorEnemy
  *   jacaré-tronco → LogGatorEnemy (também é chão: dá para pisar — standables)
+ *   tartaruga → TurtleEnemy | piranha → PiranhaEnemy | poraquê → EelEnemy
+ *   garça → HeronEnemy | sanguessuga → LeechEnemy
+ * Bicho de chão que cai na lagoa (ex.: sapo pulando) afunda e some, e o
+ * casco de tartaruga deslizando derruba os bichos que encontrar.
  * E cuida do que alguns bichos deixam ao morrer: o morcego-gigante vira dois
  * morceguinhos (SPLIT) e a traça e o sapo venenoso soltam uma nuvem (DEATH_DUST).
  * -----------------------------------------------------------------------------
@@ -120,12 +124,21 @@ class EnemyManager {
       if (!enemy.isAlive) return;
       // Caiu num buraco (ex.: sapo pulando): some
       if (enemy.y > GameSettings.LEVEL.PIT_Y) {
-        enemy.takeHit(enemy, Number.MAX_SAFE_INTEGER);
+        enemy.vanish();
+        return;
+      }
+      // Bicho de chão que caiu na lagoa: afunda e some
+      const lake = this.#walkers.contains(enemy.sprite) ? this.#levelMap.waterAt(enemy.x) : null;
+      if (lake && enemy.y > lake.surfaceY + 4) {
+        WaterSplash.at(this.#scene, enemy.x, lake.surfaceY, 8);
+        enemy.vanish();
+        this.#scene.tweens.add({ targets: enemy.sprite, y: enemy.y + 40, duration: GameSettings.ENEMY.DEATH_FADE_MS });
         return;
       }
       if (this.#isNearCamera(enemy.x, margin)) enemy.update(time, party.nearestTo(enemy.x, enemy.y));
       else enemy.sleep();
     });
+    this.#knockOverWithShells();
     this.#dustClouds = this.#dustClouds.filter(cloud => {
       if (cloud.isDone) {
         cloud.destroy();
@@ -135,6 +148,18 @@ class EnemyManager {
       return true;
     });
     this.projectilePools.forEach(pool => pool.update(time));
+  }
+
+  /** Casco de tartaruga deslizando derruba (ou chuta, se for outro casco) quem encontrar. */
+  #knockOverWithShells() {
+    this.#enemies.filter(enemy => enemy.isSlidingShell).forEach(shell => {
+      this.#enemies.forEach(other => {
+        if (other === shell || !other.isActive || !other.canBeHit) return;
+        if (Phaser.Geom.Intersects.RectangleToRectangle(shell.sprite.body, other.sprite.body)) {
+          other.takeHit(shell, Number.MAX_SAFE_INTEGER);
+        }
+      });
+    });
   }
 
   /** Cria um bicho e o coloca no jogo. */
@@ -290,6 +315,11 @@ class EnemyManager {
       case EnemyBehavior.SWIMMER:  return new SwimmerEnemy(...args, levelMap);
       case EnemyBehavior.LEAPER:   return new LeaperGatorEnemy(...args, levelMap);
       case EnemyBehavior.LOG:      return new LogGatorEnemy(...args, levelMap);
+      case EnemyBehavior.TURTLE:   return new TurtleEnemy(...groundArgs, levelMap);
+      case EnemyBehavior.HERON:    return new HeronEnemy(...groundArgs);
+      case EnemyBehavior.PIRANHA:  return new PiranhaEnemy(...args, levelMap);
+      case EnemyBehavior.EEL:      return new EelEnemy(...args, levelMap);
+      case EnemyBehavior.LEECH:    return new LeechEnemy(...args, levelMap);
       default:
         throw new RangeError(`Comportamento desconhecido: ${type.BEHAVIOR}`);
     }

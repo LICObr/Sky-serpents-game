@@ -5,7 +5,7 @@ Escolha o **Guerreiro** (espada) ou a **Arqueira** (arco), atravesse cada fase e
 
 No menu principal:
 - **1 jogador**: escolha o personagem e a fase.
-- **2 jogadores**: Guerreiro e Arqueira na mesma tela, cada um com as suas teclas. Um não avança sem o outro: ninguém sai da tela. Cuidado com o parceiro: espada, flechas e especiais acertam ele também (o escudinho segura). Quem fica sem corações está fora até o fim da fase, e o game over só vem com os dois fora.
+- **2 jogadores**: Guerreiro e Arqueira na mesma tela, cada um com as suas teclas. Um não avança sem o outro: ninguém sai da tela. Cuidado com o parceiro: espada, flechas e especiais acertam ele também (o escudinho segura). Quem fica sem corações cai deitado e fica fora — mas o parceiro pode **agachar em cima dele** (com pelo menos 2 corações) para doar um coração e ele volta. O game over só vem com os dois fora.
 - **Opções**: troque as teclas do jogador 1 e do jogador 2.
 
 ![Luta contra a Abelha Rainha](docs/screenshots/fase5_rainha.jpg)
@@ -54,6 +54,7 @@ O jogo também pausa sozinho quando a janela perde o foco (trocar de aba, minimi
 | 5 | Floresta do Mel | Colmeia → Abelha Rainha |
 | 6 | Montanha da Selva | Filhote de Águia (chama a mamãe) |
 | 7 | Caverna Profunda | — (pedras caindo do teto; termina na bandeira) |
+| 8 | Pântano dos Jacarés | — (lagoas para nadar, lama e vitórias-régias; termina na bandeira) |
 
 **Moedas:** cada bicho derrotado tem 30% de chance de deixar uma moeda. O total fica guardado no navegador e aparece no canto superior direito (no jogo e no menu).
 
@@ -116,6 +117,7 @@ python tools/boss_intros.py
 | `eaglet_boss_sprites.py` | filhote de águia (3 poses), ninho vazio da arena, minhoca e graveto |
 | `eagle_variants.py` | as 5 águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra) |
 | `cave_background.py` / `cave_terrain.py` / `cave_creatures.py` | fundo infinito da caverna (arte espelhada), chão de pedra e os bichos da caverna |
+| `swamp_background.py` / `swamp_terrain.py` / `swamp_creatures.py` | fundo infinito do pântano, chão de musgo e lama, os bichos do pântano (sapos, jacarés, tartaruga, piranha, poraquê, garça, sanguessuga...), vitórias-régias e lama |
 | `jungle_background.py` | fundo da Selva Gelada |
 | `dragon_sheet.py`, `bear_sheet.py`, `bear_retouch.py` | folhas de animação dos chefões |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |

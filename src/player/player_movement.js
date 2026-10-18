@@ -11,7 +11,7 @@ class PlayerMovement {
   #input;
   #isDucking = false;
   #lastGroundedAt = 0;
-  #nextStrokeAt = 0; // próxima braçada (nadando)
+  #swimmingSince = null; // quando caiu na água (null = fora da água)
 
   /**
    * @param {Player} player dono deste componente
@@ -98,6 +98,7 @@ class PlayerMovement {
       this.#swim(sprite, now);
       return;
     }
+    this.#swimmingSince = null;
     const grounded = now - this.#lastGroundedAt <= GameSettings.PLAYER.COYOTE_TIME_MS;
     const goingUp = sprite.body.velocity.y < 0;
     if (this.#input.isJumpHeld() && grounded && !goingUp) {
@@ -107,14 +108,21 @@ class PlayerMovement {
   }
 
   /**
-   * Nadando: segurar pular dá braçadas para cima; perto da superfície é o
-   * pulo normal (para sair da água).
+   * Nadando: segurando pular, nada para cima DEVAGAR (solto, afunda devagar).
+   * Perto da superfície o pulo é o normal, para sair da água — mas só depois
+   * de um tempinho dentro dela.
    */
   #swim(sprite, now) {
     const cfg = GameSettings.SWIM;
-    if (!this.#input.isJumpHeld() || now < this.#nextStrokeAt) return;
-    this.#nextStrokeAt = now + cfg.STROKE_MS;
+    if (this.#swimmingSince === null) this.#swimmingSince = now;
+    if (!this.#input.isJumpHeld()) return;
     const nearSurface = this.#player.status.waterDepth < cfg.SURFACE_JUMP_DEPTH;
-    sprite.setVelocityY(nearSurface ? GameSettings.PLAYER.JUMP_VELOCITY : cfg.STROKE_VELOCITY);
+    const settled = now - this.#swimmingSince >= cfg.SURFACE_JUMP_DELAY_MS;
+    if (nearSurface && settled) {
+      sprite.setVelocityY(GameSettings.PLAYER.JUMP_VELOCITY);
+      this.#swimmingSince = null;
+    } else if (!nearSurface || settled) {
+      sprite.setVelocityY(-cfg.SWIM_UP_SPEED);
+    }
   }
 }

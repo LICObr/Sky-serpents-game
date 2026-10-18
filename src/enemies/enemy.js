@@ -11,7 +11,8 @@
  *   HopperEnemy (sapo, pula) → TongueFrogEnemy (língua), BullfrogEnemy (sapo-boi)
  *   ShooterEnemy (planta, cospe sementes)
  *   EagleEnemy (águia: voa alto, mergulha e depois anda no chão)
- *   SwimmerEnemy (jacaré, cobra-d'água), LeaperGatorEnemy, LogGatorEnemy (pântano)
+ *   SwimmerEnemy (jacaré, cobra-d'água), LeaperGatorEnemy, LogGatorEnemy,
+ *   TurtleEnemy, PiranhaEnemy, EelEnemy, HeronEnemy, LeechEnemy (pântano)
  * -----------------------------------------------------------------------------
  */
 class Enemy extends GameEntity {
@@ -105,6 +106,11 @@ class Enemy extends GameEntity {
   /** Parado (fora da câmera, economiza processamento). */
   sleep() {
     if (this.isActive) this.sprite.setVelocityX(0);
+  }
+
+  /** Caiu num buraco ou afundou na lagoa: some na hora (mesmo se não pudesse apanhar). */
+  vanish() {
+    if (this.isActive) this.#die();
   }
 
   /** @override */
