@@ -5,11 +5,16 @@
  * nos bichos da tela (do mais perto ao mais longe; se tiver pouca gente, os
  * mais perto levam mais de um — o chefão sozinho leva até 3) e o MARTELO,
  * onde quer que esteja, volta voando para a mão dele.
+ * Cada raio AVISA antes: um brilho no alto da tela bem em cima do lugar, uma
+ * linha de luz até ele e um círculo marcando onde vai cair. Os lugares são
+ * marcados na hora do especial e, um instante depois, os raios caem ali —
+ * quem sair do círculo escapa (justo no 1v1).
  * -----------------------------------------------------------------------------
  */
 class ThunderSpecial extends PlayerSpecial {
   #hammer;
   #sparks;
+  #thundered = false; // o trovão toca no primeiro raio
 
   /**
    * @param {Player} player
@@ -45,20 +50,60 @@ class ThunderSpecial extends PlayerSpecial {
     });
     this.#hammer.recall();
     this.#flash();
-    SoundFx.play(scene, SoundKeys.THUNDER);
+    this.#thundered = false;
 
     const targets = this.#pickTargets(combat);
     if (targets.length === 0) {
       // ninguém na tela: um raio só, no chão na frente dele
-      const x = player.x + (player.facingRight ? 60 : -60);
-      this.#bolt(x, player.feetY);
+      this.#warnThenStrike(combat, player.x + (player.facingRight ? 60 : -60), player.feetY);
       return;
     }
-    targets.forEach((target, i) => scene.time.delayedCall(i * cfg.EVERY_MS, () => {
-      if (!target.canBeHit) return; // já morreu com o raio anterior
-      this.#bolt(target.x, target.y);
-      target.takeHit(player, cfg.DAMAGE);
-    }));
+    // os lugares ficam marcados na hora do especial: o raio não persegue ninguém
+    // (saiu do círculo, escapou de todos os raios que iam cair ali)
+    const spots = targets.map(target => ({ x: target.x, y: target.y }));
+    spots.forEach((spot, i) => scene.time.delayedCall(i * cfg.EVERY_MS, () => this.#warnThenStrike(combat, spot.x, spot.y)));
+  }
+
+  /**
+   * Aviso e raio: brilho no alto da tela bem em cima do lugar, uma linha de
+   * luz fraquinha até ele e um círculo piscando onde vai cair; WARNING_MS
+   * depois o raio cai ali.
+   */
+  #warnThenStrike(combat, x, y) {
+    const cfg = GameSettings.SPECIAL.THUNDER;
+    const scene = this.player.scene;
+    const top = scene.cameras.main.worldView.top;
+    const depth = GameSettings.PLAYER.DEPTH + 0.3;
+    const glow = scene.add.image(x, top + 12, FxTextureKeys.GLOW).setTint(0xcfe0ff).setScale(0.7).setAlpha(0.3).setDepth(depth);
+    const beam = scene.add.rectangle(x, (top + y) / 2, 4, Math.max(1, y - top), 0xcfe0ff, 0.12).setDepth(depth - 0.1);
+    const ring = scene.add.circle(x, y, cfg.STRIKE_RADIUS, 0xcfe0ff, 0.1).setStrokeStyle(2, 0xcfe0ff, 0.8).setDepth(depth);
+    const pulse = scene.tweens.add({ targets: [glow, ring], alpha: { from: 0.3, to: 1 }, duration: 110, yoyo: true, repeat: -1 });
+    scene.time.delayedCall(cfg.WARNING_MS, () => {
+      pulse.stop();
+      [glow, beam, ring].forEach(part => part.destroy());
+      this.#strike(combat, x, y);
+    });
+  }
+
+  /** O raio cai: acerta quem (do outro time) ainda estiver dentro do círculo. */
+  #strike(combat, x, y) {
+    const cfg = GameSettings.SPECIAL.THUNDER;
+    const player = this.player;
+    this.#bolt(x, y);
+    if (!this.#thundered) {
+      this.#thundered = true;
+      SoundFx.play(player.scene, SoundKeys.THUNDER);
+    }
+    combat.targets
+      .filter(target => player.isFoe(target) && ThunderSpecial.#inside(target, x, y))
+      .forEach(target => target.takeHit(player, cfg.DAMAGE));
+  }
+
+  /** Dentro do círculo do raio? (alvo grande, como o chefão, conta pela borda do corpo) */
+  static #inside(target, x, y) {
+    const body = target.sprite.body;
+    const reach = GameSettings.SPECIAL.THUNDER.STRIKE_RADIUS + (body ? Math.min(body.halfWidth, body.halfHeight) : 0);
+    return Phaser.Math.Distance.Between(target.x, target.y, x, y) <= reach;
   }
 
   /**

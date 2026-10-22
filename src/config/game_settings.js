@@ -671,6 +671,8 @@ const GameSettings = deepFreeze({
       MAX_PER_TARGET: 3,        // sozinho na tela (ex.: o chefão), leva até 3 raios
       DAMAGE: 20,
       EVERY_MS: 130,            // um raio atrás do outro
+      WARNING_MS: 650,          // aviso (brilho no alto e círculo no lugar) antes de cada raio: dá para desviar
+      STRIKE_RADIUS: 34,        // o raio acerta quem estiver neste círculo quando cair
       POSE_MS: 450,
       FLASH_ALPHA: 0.35,
       SHAKE: { MS: 140, INTENSITY: 0.008 }
