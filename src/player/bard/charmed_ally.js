@@ -6,9 +6,11 @@
  *     continua no chão: anda atrás dele, pula obstáculos (o sapo vai pulando);
  *     quem VOA flutua atrás dele, dançando;
  *   - quando aparece um bicho (ou o chefão) perto do bardo, vai até ele e
- *     bate — com dano bem menor que o dos jogadores;
- *   - é MORTAL: tem o dobro da vida, mas encostar em bicho ou chefão machuca
- *     (os jogadores não acertam ele, e ele não machuca ninguém do time);
+ *     bate — com dano bem menor que o dos jogadores. No 1v1 bate também no
+ *     RIVAL (mais devagar: cada golpe tira um coração) e nos aliados dele;
+ *   - é MORTAL: tem o dobro da vida, mas encostar em bicho ou chefão machuca.
+ *     O time do bardo não acerta ele (e ele não machuca ninguém ao encostar);
+ *     no 1v1 o rival pode bater nele;
  *   - ficou longe demais (ou caiu num buraco), reaparece do lado do bardo.
  * Fica até morrer, até o fim da fase ou até o bardo encantar mais um que o
  * limite: aí o mais antigo vai embora feliz, num brilho (dismiss).
@@ -27,6 +29,7 @@ class CharmedAlly {
   #hurtUntil = 0;
   #nextHopAt = 0;
   #leaving = false;
+  #versus;         // 1v1: luta também contra o rival (e o rival pode bater nele)
 
   /**
    * @param {Enemy} enemy o bicho encantado
@@ -43,8 +46,10 @@ class CharmedAlly {
     this.#slot = slot;
     this.#flies = !GROUND_BEHAVIORS.includes(behavior);
     this.#hops = [EnemyBehavior.HOPPER, EnemyBehavior.BULLFROG].includes(behavior);
+    this.#versus = bard.inVersus;
 
-    combat.unregister(enemy); // os jogadores não acertam mais ele (nem se machucam nele)
+    combat.unregister(enemy); // não machuca mais quem encostar
+    if (this.#versus) combat.register(enemy, false); // 1v1: continua sendo alvo (do rival)
     enemy.charm(this);
     const sprite = enemy.sprite;
     sprite.body.enable = true;
@@ -58,6 +63,16 @@ class CharmedAlly {
   /** Ainda está lutando (não morreu nem foi embora)? */
   get isActive() {
     return !this.#leaving && this.#enemy.isActive;
+  }
+
+  /** Dá para acertar ele? Só o rival, no 1v1 (o time do bardo passa direto). */
+  get canBeHit() {
+    return this.#versus && !this.#leaving;
+  }
+
+  /** É do time desse jogador? (no 1v1, só do bardo; senão, de todos) */
+  isFriendOf(player) {
+    return !this.#versus || player === this.#bard;
   }
 
   /** Posição atrás do bardo (0 = mais perto). */
@@ -98,6 +113,7 @@ class CharmedAlly {
     const enemy = this.#enemy;
     const sprite = enemy.sprite;
     this.#marker.destroy();
+    this.#combat.unregister(enemy); // (no 1v1 ele ainda era alvo do rival)
     if (!sprite) return;
     sprite.body.enable = false;
     CharmedAlly.#sparkle(enemy.scene, sprite.x, sprite.y);
@@ -128,9 +144,10 @@ class CharmedAlly {
     return best;
   }
 
-  /** Inimigos do time: bichos e chefões (jogadores e árvores não). */
+  /** Inimigos do bardo: bichos e chefões — e, no 1v1, o rival e os aliados dele (árvores não). */
   #foes() {
-    return this.#combat.targets.filter(target => !(target instanceof Player) && !(target instanceof BreakableTree));
+    return this.#combat.targets.filter(target =>
+      target !== this.#enemy && !(target instanceof BreakableTree) && this.#bard.isFoe(target));
   }
 
   /** Distância para encostar no alvo (os dois corpos se tocando). */
@@ -147,7 +164,7 @@ class CharmedAlly {
     const dy = target.y - sprite.y;
     const distance = Math.hypot(dx, dy) || 1;
     if (distance > this.#reach(target) || time < this.#nextHitAt) return false;
-    this.#nextHitAt = time + cfg.HIT_MS;
+    this.#nextHitAt = time + (target instanceof Player ? cfg.PLAYER_HIT_MS : cfg.HIT_MS); // no rival bate mais devagar
     this.#recoilUntil = time + 160;
     target.takeHit(this.#enemy, cfg.DAMAGE);
     if (this.#flies) sprite.body.setVelocity(-dx / distance * cfg.RECOIL, -dy / distance * cfg.RECOIL);
@@ -233,7 +250,7 @@ class CharmedAlly {
     if (time < this.#hurtUntil) return;
     const body = this.#enemy.sprite.body;
     for (const foe of this.#foes()) {
-      const hurts = foe instanceof Boss ? foe.hurtsOnContact : foe.canHurt;
+      const hurts = foe instanceof Boss ? foe.hurtsOnContact : foe instanceof Enemy && foe.canHurt; // o rival não machuca encostando
       if (!hurts) continue;
       const touching = foe.hitboxSprites.some(part =>
         part.body && Phaser.Geom.Intersects.RectangleToRectangle(part.body, body));

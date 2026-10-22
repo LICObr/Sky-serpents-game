@@ -50,7 +50,7 @@ class HammerAttack extends PlayerAttack {
     SoundFx.play(player.scene, SoundKeys.PUNCH);
     combat.targets.forEach(target => {
       const inFront = Math.sign(target.x - player.x) === direction || Math.abs(target.x - player.x) < 12;
-      if (target !== player && inFront && target.distanceFrom(player) < target.meleeReach * cfg.REACH_RATIO) {
+      if (player.canStrike(target) && inFront && target.distanceFrom(player) < target.meleeReach * cfg.REACH_RATIO) {
         target.takeHit(player, cfg.DAMAGE);
       }
     });

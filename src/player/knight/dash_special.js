@@ -49,7 +49,7 @@ class DashSpecial extends PlayerSpecial {
       this.#nextTickAt = now + cfg.TICK_MS;
       combat.targets.forEach(target => {
         const inFront = Math.sign(target.x - player.x) === this.#direction || Math.abs(target.x - player.x) < 20;
-        if (target !== player && inFront && target.distanceFrom(player) < cfg.REACH) target.takeHit(player, cfg.TICK_DAMAGE);
+        if (player.canStrike(target) && inFront && target.distanceFrom(player) < cfg.REACH) target.takeHit(player, cfg.TICK_DAMAGE);
       });
     }
 

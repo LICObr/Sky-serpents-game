@@ -25,6 +25,7 @@ class TitleScene extends Phaser.Scene {
     const { WIDTH, HEIGHT } = GameSettings.SCREEN;
     const cfg = GameSettings.TITLE;
     MusicPlayer.ensurePlaying(this);
+    new SoundToggles(this); // botõezinhos de música e de todos os sons (canto de baixo)
 
     this.#background = this.add.tileSprite(0, 0, WIDTH, HEIGHT, cfg.BACKGROUND).setOrigin(0);
     this.#background.setTileScale(HEIGHT / this.#background.texture.getSourceImage().height);

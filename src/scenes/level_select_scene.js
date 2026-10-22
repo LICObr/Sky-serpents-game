@@ -35,6 +35,7 @@ class LevelSelectScene extends Phaser.Scene {
     const { WIDTH, HEIGHT } = GameSettings.SCREEN;
     const cfg = GameSettings.LEVEL_SELECT;
     MusicPlayer.ensurePlaying(this);
+    new SoundToggles(this); // botõezinhos de música e de todos os sons (canto de baixo)
 
     this.#background = this.add.tileSprite(0, 0, WIDTH, HEIGHT, GameSettings.BACKGROUND.DEFAULT_TEXTURE).setOrigin(0);
     this.add.rectangle(0, 0, WIDTH, HEIGHT, 0x0a0618, 0.45).setOrigin(0);

@@ -5,7 +5,8 @@
  * sai voando para a frente, dançando. Os bichos que ela tocar ficam
  * ENCANTADOS e viram aliados (CharmedAlly) — até 2 por nota e no máximo 2 ao
  * mesmo tempo (encantar mais um manda o mais antigo embora).
- *   - bicho que não dá para encantar (ex.: peixe, planta, casco): leva dano;
+ *   - bicho que não dá para encantar (ex.: peixe, planta, casco) ou que já é
+ *     aliado do rival (1v1): leva dano;
  *   - o chefão não se encanta: leva dano e a nota estoura (o rival, no 1
  *     contra 1, também: perde um coração).
  * Enquanto a nota voa, o bardo continua atacando com o florete.
@@ -111,7 +112,7 @@ class CharmNoteSpecial extends PlayerSpecial {
         this.#burstNote();
         return;
       }
-      if (!(target instanceof Enemy) || !CharmNoteSpecial.#CHARMABLE.includes(target.type.BEHAVIOR)) {
+      if (!(target instanceof Enemy) || target.isCharmed || !CharmNoteSpecial.#CHARMABLE.includes(target.type.BEHAVIOR)) {
         target.takeHit(this.#note, cfg.DAMAGE);
         continue;
       }

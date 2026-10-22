@@ -10,6 +10,7 @@
  *   - fx_icicle:    pino de gelo pontudo (cai do céu na luta do urso)
  *   - fx_shield:    escudinho azul-claro (defesa do agachar)
  *   - fx_note:      nota musical (a nota encantada do bardo e os aliados)
+ *   - fx_speaker:   alto-falante (botão de ligar/desligar os sons)
  *
  * fx_glow, fx_spark e fx_note são brancas: a cor é aplicada com "tint" na hora de usar.
  * -----------------------------------------------------------------------------
@@ -24,7 +25,8 @@ const FxTextureKeys = Object.freeze({
   SHIELD: 'fx_shield',
   RAIN: 'fx_rain',     // gota de chuva comprida (tempestade)
   LEAF: 'fx_leaf',     // folhinha voando no vento (tempestade)
-  NOTE: 'fx_note'      // nota musical (bardo)
+  NOTE: 'fx_note',     // nota musical (bardo)
+  SPEAKER: 'fx_speaker' // alto-falante (botão dos sons)
 });
 
 class FxTextures {
@@ -44,6 +46,36 @@ class FxTextures {
     FxTextures.#rain(scene, FxTextureKeys.RAIN);
     FxTextures.#leaf(scene, FxTextureKeys.LEAF);
     FxTextures.#note(scene, FxTextureKeys.NOTE);
+    FxTextures.#speaker(scene, FxTextureKeys.SPEAKER);
+  }
+
+  /** Alto-falante com duas ondas de som; branco com contorno escuro. */
+  static #speaker(scene, key) {
+    if (scene.textures.exists(key)) return;
+    const texture = scene.textures.createCanvas(key, 24, 20);
+    const ctx = texture.getContext();
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#2a1a30';
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); // caixinha e cone
+    ctx.moveTo(2, 7);
+    ctx.lineTo(6, 7);
+    ctx.lineTo(11, 2);
+    ctx.lineTo(11, 18);
+    ctx.lineTo(6, 13);
+    ctx.lineTo(2, 13);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    [[4, -0.9, 0.9], [8, -0.95, 0.95]].forEach(([radius, from, to]) => { // ondas
+      ctx.beginPath();
+      ctx.arc(12, 10, radius + 2, from, to);
+      ctx.stroke();
+    });
+    texture.refresh();
   }
 
   /** Colcheia (♪): cabeça inclinada, haste e bandeirinha; branca com contorno escuro. */

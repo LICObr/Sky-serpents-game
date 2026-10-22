@@ -7,7 +7,8 @@
  *
  * Encantado pelo Bardo (charm), o bicho vira ALIADO: quem manda nele passa a
  * ser o CharmedAlly (segue o bardo e ataca os outros), com o DOBRO da vida.
- * Os jogadores não acertam aliado; bicho e chefão machucam (hurtAlly).
+ * Os jogadores do time não acertam aliado (no 1v1, o rival acerta); bicho e
+ * chefão machucam (hurtAlly).
  *
  * Cada subclasse implementa apenas behave() — o jeito de se mover:
  *   WalkerEnemy (anda) → SnakeEnemy (cobrinha), SpikyEnemy (ouriço)
@@ -63,8 +64,11 @@ class Enemy extends GameEntity {
   /** Vivo e não está morrendo (ainda se mexe). */
   get isActive() { return this.isAlive && !this.#dying; }
 
-  /** @override Morrendo (ou aliado do bardo) não apanha mais. */
-  get canBeHit() { return this.isActive && !this.#ally; }
+  /** @override Morrendo não apanha; aliado do bardo só apanha do rival, no 1v1. */
+  get canBeHit() { return this.isActive && (!this.#ally || this.#ally.canBeHit); }
+
+  /** @override Aliado do bardo é do time dele (no 1v1, só dele). */
+  isFriendOf(player) { return this.#ally !== null && this.#ally.isFriendOf(player); }
 
   /** Encantado pelo bardo (virou aliado)? */
   get isCharmed() { return this.#ally !== null; }

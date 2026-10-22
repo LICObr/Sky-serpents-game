@@ -33,6 +33,7 @@ class VersusSetupScene extends Phaser.Scene {
     const { WIDTH, HEIGHT } = GameSettings.SCREEN;
     const last = VersusSetupScene.#last;
     MusicPlayer.ensurePlaying(this);
+    new SoundToggles(this); // botõezinhos de música e de todos os sons (canto de baixo)
     this.#focusIndex = 0;
 
     // fundo da arena (a costa na tempestade), escurecido

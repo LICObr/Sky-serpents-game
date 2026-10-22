@@ -63,6 +63,7 @@ class OptionsScene extends Phaser.Scene {
 
     this.input.keyboard.on('keydown', event => (this.#waiting ? this.#capture(event) : this.#navigate(event)));
     this.#render();
+    new SoundToggles(this); // botõezinhos de música e de todos os sons (canto de baixo)
   }
 
   update() {

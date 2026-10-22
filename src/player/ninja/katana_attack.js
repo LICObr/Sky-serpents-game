@@ -36,7 +36,7 @@ class KatanaAttack extends PlayerAttack {
     SoundFx.play(player.scene, SoundKeys.KATANA, { volume: 0.8 });
     combat.targets.forEach(target => {
       const inFront = Math.sign(target.x - player.x) === direction || Math.abs(target.x - player.x) < 14;
-      if (target === player || !inFront || target.distanceFrom(player) >= target.meleeReach) return;
+      if (!player.canStrike(target) || !inFront || target.distanceFrom(player) >= target.meleeReach) return;
       const sneaky = hidden || !this.#struck.has(target);
       this.#struck.add(target);
       target.takeHit(player, sneaky ? cfg.DAMAGE * cfg.SNEAK_MULTIPLIER : cfg.DAMAGE);

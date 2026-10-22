@@ -68,6 +68,7 @@ class PauseScene extends Phaser.Scene {
     PauseScene.#onKey(this, 'UP', () => this.#setFocus(this.#focus - 1));
     PauseScene.#onKey(this, 'DOWN', () => this.#setFocus(this.#focus + 1));
     PauseScene.#onKey(this, 'ENTER', () => this.#options[this.#focus].action());
+    new SoundToggles(this); // botõezinhos de música e de todos os sons (canto de baixo)
   }
 
   /** Título, texto e opções de cada caixinha. */

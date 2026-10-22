@@ -55,6 +55,16 @@ class GameEntity {
     return this.isAlive ? [this.#sprite] : [];
   }
 
+  /**
+   * É do time desse jogador? (ex.: bicho encantado pelo bardo) — golpe de
+   * jogador passa direto em quem é do time dele.
+   * @param {Player} player
+   */
+  // eslint-disable-next-line no-unused-vars
+  isFriendOf(player) {
+    return false;
+  }
+
   /** Distância em pixels entre o centro desta entidade e de outra. */
   distanceFrom(other) {
     return Phaser.Math.Distance.Between(this.x, this.y, other.x, other.y);

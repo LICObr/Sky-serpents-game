@@ -45,7 +45,8 @@ const GameSettings = deepFreeze({
 
   AUDIO: {
     MUSIC_KEY: 'backgroundMusic',
-    MUSIC_VOLUME: 0.2,
+    MUSIC_VOLUME: 0.13,         // música de fundo baixinha (os efeitos aparecem por cima)
+    STORAGE_KEY: 'skySerpents.audio', // música/sons ligados ou desligados (AudioSettings)
     SFX_VOLUME: 0.35,           // efeitos sonoros (SoundFx)
     SFX_MIN_GAP_MS: 45,         // o mesmo som não toca de novo antes disso
     SFX_RANDOM_DETUNE: 40       // variação de tom de cada vez (cents)
@@ -276,6 +277,7 @@ const GameSettings = deepFreeze({
   ALLY: {
     DAMAGE: 4,                  // bem menos que os jogadores
     HIT_MS: 700,
+    PLAYER_HIT_MS: 1800,        // no 1v1 bate também no rival, mais devagar (cada golpe tira um coração)
     HP_MULTIPLIER: 2,           // aguenta o dobro de golpes
     HURT: { CONTACT: 6, BOSS: 10, COOLDOWN_MS: 1000 }, // encostar em bicho/chefão machuca o aliado
     SPEED: 170,                 // voando
@@ -774,6 +776,8 @@ const GameSettings = deepFreeze({
     // Relógio da fase embaixo da bandeirinha (as moedas crescem para a esquerda e não chegam nele)
     CLOCK: { X: 650, Y: 52, SIZE: 8 },
     BANNER_DURATION_MS: 2200,
+    // Botõezinhos de música e de todos os sons, no canto de baixo à direita (SoundToggles)
+    SOUND_TOGGLES: { X: 778, Y: 580, GAP: 30, SIZE: 24 },
     DEPTH: 10
   },
 

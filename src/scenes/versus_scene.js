@@ -51,6 +51,7 @@ class VersusScene extends Phaser.Scene {
     this.#eventBus = new Phaser.Events.EventEmitter();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.#eventBus.removeAllListeners());
     MusicPlayer.ensurePlaying(this);
+    new SoundToggles(this); // botõezinhos de música e de todos os sons (canto de baixo)
 
     // A arena na tempestade, inteira na tela (câmera afastada)
     this.#background = new ParallaxBackground(this, arena.BACKGROUND_TINT, arena.BACKGROUND_TEXTURE);

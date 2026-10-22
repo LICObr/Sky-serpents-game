@@ -76,6 +76,7 @@ class GameScene extends Phaser.Scene {
     this.#timer = new LevelTimer();
     this.#flow = new GameFlow(this, this.#match, this.#eventBus, this.#timer);
     MusicPlayer.ensurePlaying(this);
+    new SoundToggles(this); // botõezinhos de música e de todos os sons (canto de baixo)
 
     // Mundo (a ordem de criação define o que fica desenhado por cima)
     this.#background = new ParallaxBackground(this, level.BACKGROUND_TINT, level.BACKGROUND_TEXTURE);

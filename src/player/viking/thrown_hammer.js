@@ -137,10 +137,10 @@ class ThrownHammer {
     if (sprite.y > GameSettings.LEVEL.PIT_Y) this.recall(); // caiu num buraco
   }
 
-  /** Acertou alguém no caminho (cada um só uma vez por arremesso; não acerta o próprio viking). */
+  /** Acertou alguém no caminho (cada um só uma vez por arremesso; não acerta o próprio viking nem o time dele). */
   #strike(target) {
     const cfg = GameSettings.HAMMER_ATTACK;
-    if (!target || target === this.#player || !target.canBeHit || this.#hit.has(target)) return;
+    if (!target || !this.#player.canStrike(target) || !target.canBeHit || this.#hit.has(target)) return;
     this.#hit.add(target);
     target.takeHit(this.#sprite, cfg.HIT_DAMAGE);
     // árvore: bate e volta um pouquinho (cai do lado do viking)

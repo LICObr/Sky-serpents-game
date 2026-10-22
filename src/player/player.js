@@ -105,13 +105,28 @@ class Player extends GameEntity {
   get facingRight() { return this.#facingRight; }
   get isDucking()   { return this.#movement.isDucking; }
 
+  /** 1v1? (o outro jogador é rival — e os aliados do bardo lutam contra ele) */
+  get inVersus() {
+    return this.#versus;
+  }
+
+  /**
+   * Golpe deste jogador acerta esse alvo? Não acerta ele mesmo nem quem é do
+   * time dele (aliado encantado pelo bardo); o parceiro, com 2 jogadores, sim
+   * (fogo amigo).
+   */
+  canStrike(target) {
+    return target !== this && !target.isFriendOf(this);
+  }
+
   /**
    * Alvo dos especiais que miram (raio, tremor, nota encantada): bichos e
-   * chefões — e o outro jogador só no 1v1 (no modo 2 jogadores o
-   * parceiro é do time).
+   * chefões (menos os aliados dele) — e o outro jogador só no 1v1 (no modo
+   * 2 jogadores o parceiro é do time).
    */
   isFoe(target) {
-    return target instanceof Player ? this.#versus && target !== this : true;
+    if (target instanceof Player) return this.#versus && target !== this;
+    return !target.isFriendOf(this);
   }
 
   /** Altura dos pés (base da hitbox). */
