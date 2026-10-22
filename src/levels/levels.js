@@ -20,5 +20,6 @@ const LEVELS = deepFreeze([
   LEVEL_05,
   LEVEL_06,
   LEVEL_07,
-  LEVEL_08
+  LEVEL_08,
+  LEVEL_09
 ]);

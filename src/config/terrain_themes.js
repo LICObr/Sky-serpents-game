@@ -21,7 +21,8 @@ const TerrainThemeId = Object.freeze({
   MOSS: 'MOSS',
   CAVE: 'CAVE',
   SWAMP: 'SWAMP',
-  SNOW: 'SNOW'
+  SNOW: 'SNOW',
+  STORM: 'STORM'
 });
 
 /** Tipos de clima. */
@@ -75,6 +76,12 @@ const TERRAIN_THEMES = deepFreeze({
   [TerrainThemeId.SNOW]: {
     TOP_TEXTURE: 'chao_branco', FILL_TEXTURE: 'terra_branca', PLATFORM_TEXTURE: 'platform_branca',
     WEATHER: [WeatherType.SNOW, WeatherType.FOG]
+  },
+  // Tempestade de noite: grama verde bem escura, quase preta (a chuva e os
+  // relâmpagos ficam por conta do STORM da fase — world/thunderstorm.js)
+  [TerrainThemeId.STORM]: {
+    TOP_TEXTURE: 'chao_tempestade', FILL_TEXTURE: 'terra_tempestade', PLATFORM_TEXTURE: 'platform_tempestade',
+    WEATHER: [WeatherType.FOG]
   },
   // Pântano: musgo encharcado sobre lama, neblina e vaga-lumes verde-água
   [TerrainThemeId.SWAMP]: {

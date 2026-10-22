@@ -14,10 +14,13 @@
  * -----------------------------------------------------------------------------
  */
 class ParallaxBackground {
+  static DEPTH = -2; // atrás de tudo (o céu dos relâmpagos fica entre ele e o chão)
+
   #scene;
   #base;      // camada de baixo (fundo atual)
   #overlay;   // camada de cima (fundo novo aparecendo durante o fade)
   #targetTexture;
+  #lightLayers = []; // camadas extras por cima (ex.: o fundo iluminado do relâmpago)
   #fadeTween = null;
   #scrolledPixels = 0; // quanto o fundo já andou, em pixels de TELA
 
@@ -40,9 +43,21 @@ class ParallaxBackground {
     const screenOffset = this.#scrolledPixels + this.#scene.cameras.main.scrollX * PARALLAX;
 
     // tilePosition é medido em pixels da IMAGEM: converte da tela para a imagem
-    [this.#base, this.#overlay].forEach(layer => {
+    [this.#base, this.#overlay, ...this.#lightLayers].forEach(layer => {
       layer.tilePositionX = screenOffset / layer.tileScaleX;
     });
+  }
+
+  /**
+   * Camada por cima do fundo, transparente, que rola junto com ele (ex.: o
+   * mesmo cenário iluminado pelo relâmpago). Quem chamou controla a opacidade.
+   * @param {string} texture
+   * @returns {Phaser.GameObjects.TileSprite}
+   */
+  addLightLayer(texture) {
+    const layer = this.#createLayer(texture, 0xffffff).setAlpha(0).setDepth(ParallaxBackground.DEPTH + 0.1);
+    this.#lightLayers.push(layer);
+    return layer;
   }
 
   /**
@@ -90,6 +105,7 @@ class ParallaxBackground {
       .tileSprite(0, 0, WIDTH, HEIGHT, texture)
       .setOrigin(0, 0)
       .setScrollFactor(0)
+      .setDepth(ParallaxBackground.DEPTH)
       .setTint(tint);
     ParallaxBackground.#applyTexture(layer, texture);
     return layer;

@@ -20,7 +20,9 @@ const FxTextureKeys = Object.freeze({
   SNOWBALL: 'fx_snowball',
   ICE_BLOCK: 'fx_ice_block',
   ICICLE: 'fx_icicle',
-  SHIELD: 'fx_shield'
+  SHIELD: 'fx_shield',
+  RAIN: 'fx_rain',     // gota de chuva comprida (tempestade)
+  LEAF: 'fx_leaf'      // folhinha voando no vento (tempestade)
 });
 
 class FxTextures {
@@ -37,6 +39,33 @@ class FxTextures {
     FxTextures.#iceBlock(scene, FxTextureKeys.ICE_BLOCK);
     FxTextures.#icicle(scene, FxTextureKeys.ICICLE);
     FxTextures.#shield(scene, FxTextureKeys.SHIELD);
+    FxTextures.#rain(scene, FxTextureKeys.RAIN);
+    FxTextures.#leaf(scene, FxTextureKeys.LEAF);
+  }
+
+  /** Gota de chuva: risquinho vertical, transparente em cima e claro embaixo. */
+  static #rain(scene, key) {
+    if (scene.textures.exists(key)) return;
+    const texture = scene.textures.createCanvas(key, 3, 24);
+    const ctx = texture.getContext();
+    const gradient = ctx.createLinearGradient(0, 0, 0, 24);
+    gradient.addColorStop(0, 'rgba(200,220,255,0)');
+    gradient.addColorStop(1, 'rgba(225,238,255,0.9)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(1, 0, 1, 24);
+    ctx.fillStyle = 'rgba(200,220,255,0.35)';
+    ctx.fillRect(0, 12, 3, 12);
+    texture.refresh();
+  }
+
+  /** Folhinha escura (voa nas rajadas de vento). */
+  static #leaf(scene, key) {
+    if (scene.textures.exists(key)) return;
+    const g = scene.make.graphics({ add: false });
+    g.fillStyle(0x2e5a30, 1).fillEllipse(5, 3, 10, 5);
+    g.fillStyle(0x4a7a3a, 1).fillEllipse(4, 2, 5, 2);
+    g.generateTexture(key, 10, 6);
+    g.destroy();
   }
 
   /** Escudinho de cavaleiro (borda reta em cima e ponta embaixo) com uma cruz. */

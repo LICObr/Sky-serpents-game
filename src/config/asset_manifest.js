@@ -40,6 +40,10 @@ const ASSET_MANIFEST = Object.freeze([
     platform_selva: 'plataforma_selva.png',
     // fundos dos castelos (tools/castle_background.py): pôr do sol (Serpente) e neve (Urso)
     bg_por_do_sol: 'fundo_por_do_sol.png', bg_neve: 'fundo_neve.png',
+    // tempestade (tools/castle_background.py e tools/storm_terrain.py)
+    bg_tempestade: 'fundo_tempestade.png', bg_tempestade_raio: 'fundo_tempestade_raio.png',
+    chao_tempestade: 'chao_tempestade.png', terra_tempestade: 'terra_tempestade.png',
+    platform_tempestade: 'plataforma_tempestade.png',
     // terreno todo de neve da fase do Urso (tools/snow_terrain.py)
     chao_branco: 'chao_branco.png', terra_branca: 'terra_branca.png', platform_branca: 'plataforma_branca.png',
     chao_selva: 'chao_selva.png', terra_selva: 'terra_selva.png',

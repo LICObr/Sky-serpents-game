@@ -31,6 +31,8 @@
  *   - MUD:         (opcional) faixas de LAMA [inícioX, largura]: andar lento
  *                  e pulo mais baixo
  *   - bichos de água (jacarés, cobra-d'água): o X precisa estar sobre uma lagoa
+ *   - STORM:       (opcional) tempestade: chuva, escuridão, relâmpagos e vento
+ *                  (veja world/thunderstorm.js e a fase 10, level_09.js)
  *   - TUTORIAL:    (opcional) dicas com as teclas e cartões dos bichos (veja
  *                  ui/tutorial_guide.js e level_tutorial.js)
  *   - STAR_TIMES:  tempo máximo (segundos) para ganhar 3, 2 e 1 estrela

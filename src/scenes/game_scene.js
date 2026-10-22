@@ -19,7 +19,7 @@
  * com dois a câmera (PartyCamera) não deixa ninguém sair da tela.
  *
  * Extras de algumas fases: pedras caindo (caverna), lagoas para nadar, lama
- * e vitórias-régias (pântano).
+ * e vitórias-régias (pântano), tempestade com relâmpagos e vento.
  * -----------------------------------------------------------------------------
  */
 class GameScene extends Phaser.Scene {
@@ -50,6 +50,7 @@ class GameScene extends Phaser.Scene {
   #fallingRocks = null;  // pedras caindo do teto (caverna)
   #swamp = null;         // água das lagoas e lama (pântano)
   #tutorial = null;      // dicas das teclas e cartões dos bichos (tutorial)
+  #storm = null;         // chuva, vento e relâmpagos (tempestade)
   #lilyPads = null;      // vitórias-régias (pântano)
 
   constructor() {
@@ -100,6 +101,7 @@ class GameScene extends Phaser.Scene {
       : null;
     this.#swamp = level.WATER || level.MUD ? new SwampZones(this, level, this.#levelMap, this.#party) : null;
     this.#lilyPads = level.LILY_PADS ? new LilyPads(this, level.LILY_PADS, this.#levelMap) : null;
+    this.#storm = level.STORM ? new Thunderstorm(this, level.STORM, this.#background, this.#levelMap, this.#party) : null;
     this.#fireballs = new FireballPool(this);
     this.#enemies = new EnemyManager(this, level, this.#levelMap, this.#match, this.#combat, this.#eventBus);
     this.#potions = new PotionManager(this, level.POTIONS);
@@ -158,6 +160,7 @@ class GameScene extends Phaser.Scene {
     this.#background.update();
     if (this.#swamp) this.#swamp.update(time); // antes de mover: água e lama mudam o andar
     this.#party.update();
+    if (this.#storm) this.#storm.update(time); // depois de mover: o vento soma no andar
     this.#camera.update(); // depois de mover: com 2 jogadores ninguém sai da tela
     this.#party.handleAttacks(this.#combat);
     this.#playerHuds.forEach(hud => hud.update());

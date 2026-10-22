@@ -530,7 +530,7 @@ const GameSettings = deepFreeze({
 
   POTION: {
     TEXTURE: 'pocao',
-    SCALE: 0.08,
+    SCALE: 0.05,                // ~17px na tela (proporcional ao personagem)
     ARENA_OFFSET_Y: -50,        // aparece acima da plataforma
     FLOAT_AMPLITUDE: 4,
     FLOAT_DURATION_MS: 900

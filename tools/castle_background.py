@@ -12,6 +12,9 @@ Gera os FUNDOS DOS CASTELOS a partir das artes originais (source_art/cenario/):
   fundo_chefao_40.png    céu de fim de tarde avermelhado (chefão com 40% de vida)
   fundo_por_do_sol.png   reino de castelos com neve ao pôr do sol (fase da Serpente)
   fundo_neve.png         castelos congelados no meio da neve (fase do Urso)
+  fundo_tempestade.png   costa dos castelos de noite, na tempestade, com o tornado
+  fundo_tempestade_raio.png  a mesma costa ILUMINADA pelo relâmpago: tudo clareia
+                         e o tornado fica brilhando (o jogo pisca para ela)
 
 Nos fundos do chefão só o CÉU muda de cor (e um pouquinho as montanhas lá no
 fundo): o resto da imagem fica igual, então a troca no meio da luta é suave.
@@ -30,7 +33,11 @@ VALLEY = ("castelos_original.png", "fundo.png", 640)
 OTHER_BACKGROUNDS = [
     ("por_do_sol_original.png", "fundo_por_do_sol.png", 630),
     ("neve_original.png", "fundo_neve.png", 616),
+    ("tempestade_original.png", "fundo_tempestade.png", 630),
 ]
+STORM = ("tempestade_original.png", "fundo_tempestade_raio.png", 630)
+TORNADO = (1266, 285)      # meio do tornado na arte original (x, y)
+LIGHTNING_LIGHT = (214, 228, 255)  # luz fria do relâmpago
 HORIZON = 0.62             # o céu vai até esta fração da altura (mais forte lá em cima)
 
 # (cor do céu, quanto ela pesa, onde pesa mais) — pouquinho, só para mudar o clima
@@ -42,16 +49,40 @@ SKIES = {
 }
 
 
+def scaled_art(source, ground_strip_y):
+    """A arte sem a faixa de chão, na altura da tela."""
+    original = Image.open(ART / source).convert("RGB")
+    art = original.crop((0, 0, original.width, ground_strip_y))
+    width = round(art.width * HEIGHT / art.height)
+    return art.resize((width, HEIGHT), Image.LANCZOS)
+
+
+def mirrored(art):
+    """A imagem com o espelho dela ao lado: emenda perfeita (fundo infinito)."""
+    seamless = Image.new("RGB", (art.width * 2, art.height))
+    seamless.paste(art, (0, 0))
+    seamless.paste(ImageOps.mirror(art), (art.width, 0))
+    return seamless
+
+
 def seamless_valley(source, ground_strip_y):
     """A arte sem a faixa de chão, na altura da tela, com o espelho ao lado."""
-    original = Image.open(ART / source).convert("RGB")
-    valley = original.crop((0, 0, original.width, ground_strip_y))
-    width = round(valley.width * HEIGHT / valley.height)
-    valley = valley.resize((width, HEIGHT), Image.LANCZOS)
-    seamless = Image.new("RGB", (width * 2, HEIGHT))
-    seamless.paste(valley, (0, 0))
-    seamless.paste(ImageOps.mirror(valley), (width, 0))
-    return seamless
+    return mirrored(scaled_art(source, ground_strip_y))
+
+
+def lightning_lit(art, tornado, ground_strip_y):
+    """A arte clareada pela luz fria do relâmpago, com um brilho forte em volta do tornado."""
+    pixels = np.asarray(art).astype(np.float32) / 255
+    height, width = pixels.shape[:2]
+    scale = height / ground_strip_y
+    cx, cy = tornado[0] * scale, tornado[1] * scale
+    ys, xs = np.mgrid[0:height, 0:width].astype(np.float32)
+    glow = np.exp(-(((xs - cx) / 170) ** 2 + ((ys - cy) / 240) ** 2))[..., None]  # oval em pé (o funil)
+    # tudo clareia (mais nas sombras); no tornado clareia muito mais, sem apagar os redemoinhos dele
+    lit = pixels ** (0.58 - 0.3 * glow)
+    lit = lit * 0.82 + np.array(LIGHTNING_LIGHT, dtype=np.float32) / 255 * 0.18
+    lit = lit + glow * 0.1
+    return Image.fromarray((np.clip(lit, 0, 1) * 255).round().astype(np.uint8))
 
 
 def tint_sky(image, color, strength, where):
@@ -86,3 +117,7 @@ if __name__ == "__main__":
         background = seamless_valley(source, ground_y)
         background.save(FOLDER / out, optimize=True)
         print("gerado:", FOLDER / out, background.size)
+    source, out, ground_y = STORM
+    lit = mirrored(lightning_lit(scaled_art(source, ground_y), TORNADO, ground_y))
+    lit.save(FOLDER / out, optimize=True)
+    print("gerado:", FOLDER / out, lit.size)
