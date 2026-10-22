@@ -46,6 +46,7 @@ class SmokeBombSpecial extends PlayerSpecial {
     const player = this.player;
     const sprite = player.sprite;
     this.#smoke.explode(cfg.PUFF, player.x, player.y);
+    SoundFx.play(player.scene, SoundKeys.SMOKE);
     player.health.grantInvulnerability(cfg.DURATION_MS);
     this.#katana.ambushFor(cfg.DURATION_MS);
     sprite.setAlpha(cfg.ALPHA).setTint(cfg.TINT);
@@ -53,7 +54,9 @@ class SmokeBombSpecial extends PlayerSpecial {
     player.scene.time.delayedCall(cfg.DURATION_MS, () => {
       if (!sprite.active) return;
       sprite.setAlpha(1).clearTint();
-      if (!player.isKnockedOut) this.#smoke.explode(cfg.PUFF / 2, player.x, player.y); // reaparece
+      if (player.isKnockedOut) return;
+      this.#smoke.explode(cfg.PUFF / 2, player.x, player.y); // reaparece
+      SoundFx.play(player.scene, SoundKeys.SMOKE, { volume: 0.5, detune: 300 });
     });
   }
 

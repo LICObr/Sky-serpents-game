@@ -6,7 +6,8 @@
  * e a regra de "pisar em cima mata".
  *
  * Encantado pelo Bardo (charm), o bicho vira ALIADO: quem manda nele passa a
- * ser o CharmedAlly (segue o bardo e ataca os outros) e ninguém acerta ele.
+ * ser o CharmedAlly (segue o bardo e ataca os outros), com o DOBRO da vida.
+ * Os jogadores não acertam aliado; bicho e chefão machucam (hurtAlly).
  *
  * Cada subclasse implementa apenas behave() — o jeito de se mover:
  *   WalkerEnemy (anda) → SnakeEnemy (cobrinha), SpikyEnemy (ouriço)
@@ -82,9 +83,10 @@ class Enemy extends GameEntity {
   /** Troca os quadros sozinho no ritmo de FRAME_MS? (o sapo controla os dele) */
   get cyclesFrames() { return true; }
 
-  /** Volta para a cor própria do bicho (TINT) ou a cor original. */
+  /** Volta para a cor própria do bicho (TINT), a do aliado (rosinha) ou a cor original. */
   restoreTint() {
-    if (this.#type.TINT) this.sprite.setTint(this.#type.TINT);
+    const tint = this.#ally ? GameSettings.ALLY.TINT : this.#type.TINT;
+    if (tint) this.sprite.setTint(tint);
     else this.sprite.clearTint();
   }
 
@@ -111,6 +113,17 @@ class Enemy extends GameEntity {
    */
   charm(ally) {
     this.#ally = ally;
+    this.#hp *= GameSettings.ALLY.HP_MULTIPLIER; // aliado aguenta o dobro
+    this.restoreTint();
+  }
+
+  /**
+   * Aliado do bardo apanhando de bicho ou chefão (os jogadores não acertam aliado).
+   * @param {{x: number}} source quem bateu
+   * @param {number} damage
+   */
+  hurtAlly(source, damage) {
+    if (this.#ally && this.isActive) this.#applyDamage(source, damage);
   }
 
   /** Movimento próprio de cada tipo. Subclasses DEVEM sobrescrever. */
@@ -131,11 +144,17 @@ class Enemy extends GameEntity {
 
   /** @override */
   takeHit(source, damage) {
-    if (!this.canBeHit) return;
+    if (this.canBeHit) this.#applyDamage(source, damage);
+  }
 
+  /** Perde vida, pisca, é empurrado para trás e, sem vida, morre. */
+  #applyDamage(source, damage) {
     this.#hp -= damage;
     this.#flash();
-    if (source !== this) this.#shakeScreen(); // (cair no buraco não treme)
+    if (source !== this) { // (cair no buraco não treme nem faz barulho)
+      this.#shakeScreen();
+      SoundFx.play(this.scene, this.#hp <= 0 ? SoundKeys.ENEMY_DEFEATED : SoundKeys.HIT);
+    }
 
     const direction = Math.sign(this.x - source.x) || 1;
     this.sprite.setVelocityX(direction * GameSettings.ENEMY.KNOCKBACK_X);
@@ -151,6 +170,7 @@ class Enemy extends GameEntity {
       player.feetY <= this.sprite.body.top + GameSettings.ENEMY.STOMP_TOLERANCE;
 
     if (fromAbove && this.stompable) {
+      SoundFx.play(this.scene, SoundKeys.STOMP);
       this.takeHit(player, Number.MAX_SAFE_INTEGER);
       player.bounce();
     } else {
@@ -186,6 +206,7 @@ class Enemy extends GameEntity {
   #die() {
     this.#dying = true;
     this.sprite.body.enable = false;
+    if (this.#ally) this.#ally.onDeath();
     this.#eventBus.emit(GameEvents.ENEMY_DEFEATED, this);
 
     this.scene.tweens.add({

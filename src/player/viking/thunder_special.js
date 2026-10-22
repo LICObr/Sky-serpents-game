@@ -45,6 +45,7 @@ class ThunderSpecial extends PlayerSpecial {
     });
     this.#hammer.recall();
     this.#flash();
+    SoundFx.play(scene, SoundKeys.THUNDER);
 
     const targets = this.#pickTargets(combat);
     if (targets.length === 0) {

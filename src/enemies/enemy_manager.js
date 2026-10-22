@@ -71,7 +71,7 @@ class EnemyManager {
     eventBus.on(GameEvents.ENEMY_DEFEATED, enemy => {
       combat.unregister(enemy);
       this.#enemies = this.#enemies.filter(e => e !== enemy);
-      this.#leaveBehind(enemy);
+      if (!enemy.isCharmed) this.#leaveBehind(enemy); // aliado do bardo não vira filhotes nem solta pó
     });
 
     level.ENEMIES.forEach(spawn => this.#spawn(spawn));

@@ -45,7 +45,10 @@ const GameSettings = deepFreeze({
 
   AUDIO: {
     MUSIC_KEY: 'backgroundMusic',
-    MUSIC_VOLUME: 0.2
+    MUSIC_VOLUME: 0.2,
+    SFX_VOLUME: 0.35,           // efeitos sonoros (SoundFx)
+    SFX_MIN_GAP_MS: 45,         // o mesmo som não toca de novo antes disso
+    SFX_RANDOM_DETUNE: 40       // variação de tom de cada vez (cents)
   },
 
   CAMERA: {
@@ -268,11 +271,17 @@ const GameSettings = deepFreeze({
     POSE_DURATION_MS: 180
   },
 
-  // Bicho ENCANTADO pelo bardo (CharmedAlly): segue o bardo e ataca os outros
+  // Bicho ENCANTADO pelo bardo (CharmedAlly): segue o bardo e ataca os outros.
+  // Quem é de chão continua no chão (anda e pula); quem voa, voa.
   ALLY: {
     DAMAGE: 4,                  // bem menos que os jogadores
     HIT_MS: 700,
-    SPEED: 170,
+    HP_MULTIPLIER: 2,           // aguenta o dobro de golpes
+    HURT: { CONTACT: 6, BOSS: 10, COOLDOWN_MS: 1000 }, // encostar em bicho/chefão machuca o aliado
+    SPEED: 170,                 // voando
+    WALK_SPEED: 125,            // andando (bichos de chão)
+    JUMP_VELOCITY: -430,        // pula obstáculo, ou para alcançar o bardo e bicho voando baixo
+    HOP: { VELOCITY: -240, EVERY_MS: 420 }, // sapos andam pulando
     SIGHT: 300,                 // ataca bichos (e o chefão) até esta distância do bardo
     LEASH: 420,                 // mais longe que isso do bardo: reaparece do lado dele
     FOLLOW: { X: 34, GAP: 28, Y: -30, BOB: 5 }, // atrás do bardo, um do lado do outro, dançando

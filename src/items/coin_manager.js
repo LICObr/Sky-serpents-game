@@ -27,6 +27,7 @@ class CoinManager {
     scene.physics.add.collider(this.#group, levelMap.platforms);
 
     eventBus.on(GameEvents.ENEMY_DEFEATED, enemy => {
+      if (enemy.isCharmed) return; // aliado do bardo que morre não deixa moeda
       if (RandomUtils.chance(GameSettings.COIN.DROP_CHANCE_PERCENT)) this.#drop(enemy.x, enemy.y);
     });
   }
@@ -49,6 +50,7 @@ class CoinManager {
     coin.setData('collected', true);
     coin.body.enable = false;
     this.#eventBus.emit(GameEvents.COINS_CHANGED, CoinWallet.add(1));
+    SoundFx.play(coin.scene, SoundKeys.COIN, { volume: 0.7 });
 
     // sobe brilhando e some
     this.#scene.tweens.killTweensOf(coin);

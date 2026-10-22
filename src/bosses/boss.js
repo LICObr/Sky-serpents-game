@@ -122,6 +122,7 @@ class Boss extends GameEntity {
     if (!this.canBeHit) return;
 
     this.onHit(source);
+    SoundFx.play(this.scene, SoundKeys.BOSS_HIT);
     this.#health.damage(damage);
     this.#hitBlink.start(GameSettings.BOSS.HIT_BLINK_FRAMES);
 
@@ -140,6 +141,7 @@ class Boss extends GameEntity {
 
   #defeat() {
     this.#defeated = true;
+    SoundFx.play(this.scene, SoundKeys.BOSS_DEFEATED);
     this.playDefeat(() => {
       this.destroyParts();
       this.#eventBus.emit(GameEvents.BOSS_DEFEATED, this);

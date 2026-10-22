@@ -56,6 +56,7 @@ class PotionManager {
   /** Chamado quando um jogador encosta na poção (ele recupera um coração). */
   collect(potion, player) {
     if (!potion.active) return;
+    SoundFx.play(potion.scene, SoundKeys.POTION);
     potion.destroy();
     player.health.heal();
   }

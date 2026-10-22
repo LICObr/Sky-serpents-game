@@ -18,6 +18,7 @@ class WaterSplash {
    */
   static at(scene, x, y, amount = 12) {
     WaterSplash.#emitterOf(scene).explode(amount, x, y);
+    SoundFx.play(scene, SoundKeys.SPLASH, { volume: Phaser.Math.Clamp(amount / 14, 0.3, 1) });
   }
 
   static #emitterOf(scene) {

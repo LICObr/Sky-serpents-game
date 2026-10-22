@@ -250,6 +250,7 @@ class PolarBearBoss extends Boss {
   /** Caiu do pulo: terra treme; bravo, solta ondinhas pequenas. */
   landImpact(angry) {
     this.scene.cameras.main.shake(180, 0.008);
+    SoundFx.play(this.scene, SoundKeys.QUAKE, { volume: 0.7, detune: 200 });
     this.snowPuff(this.x, GameSettings.LEVEL.GROUND_TOP - 4, 22);
     if (angry) {
       const speed = GameSettings.POLAR_BEAR.WAVE.SPEED * 0.8;
@@ -263,6 +264,7 @@ class PolarBearBoss extends Boss {
     const cfg = GameSettings.POLAR_BEAR.QUAKE;
     const ground = GameSettings.LEVEL.GROUND_TOP;
     this.scene.cameras.main.shake(cfg.SHAKE_MS, cfg.SHAKE_INTENSITY);
+    SoundFx.play(this.scene, SoundKeys.QUAKE);
     this.snowPuff(this.x - 30, ground - 4, 18);
     this.snowPuff(this.x + 30, ground - 4, 18);
     this.#waves.spawn(this.x - 50, -1, waveSpeed);

@@ -52,6 +52,7 @@ class PlayerHealth {
 
     this.#hearts--;
     this.#emitHeartsChanged();
+    SoundFx.play(this.#player.scene, this.isDead ? SoundKeys.PLAYER_DOWN : SoundKeys.PLAYER_HURT);
 
     if (this.isDead) {
       this.#eventBus.emit(GameEvents.PLAYER_DIED, this.#player);

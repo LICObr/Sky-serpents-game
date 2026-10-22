@@ -40,6 +40,7 @@ class GameFlow {
   /** Derrota. */
   gameOver() {
     if (!this.#end()) return;
+    SoundFx.play(this.#scene, SoundKeys.GAME_OVER);
     new EndScreen(this.#scene, {
       title: 'GAME OVER',
       color: '#ff5555',
@@ -57,6 +58,7 @@ class GameFlow {
    */
   victory(subtitle) {
     if (!this.#end()) return;
+    SoundFx.play(this.#scene, SoundKeys.VICTORY);
 
     const level = this.#match.level;
     const elapsedMs = this.#timer.elapsedMs;

@@ -372,6 +372,7 @@ class Player extends GameEntity {
     this.#movement.reset();
     this.showPose(PlayerPose.STAND);
     this.#health.revive();
+    SoundFx.play(this.scene, SoundKeys.REVIVE);
   }
 
   /**

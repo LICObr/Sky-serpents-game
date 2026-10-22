@@ -108,6 +108,7 @@ class ThrownHammer {
     sprite.body.setGravityY(cfg.GRAVITY - GameSettings.PHYSICS.GRAVITY_Y);
     sprite.setVelocity(direction * cfg.THROW_SPEED_X, cfg.THROW_SPEED_Y);
     player.useTextures('UNARMED');
+    SoundFx.play(player.scene, SoundKeys.HAMMER);
   }
 
   /** Chama o martelo de volta: vem voando para a mão, atravessando tudo. */
@@ -178,6 +179,7 @@ class ThrownHammer {
     const cfg = GameSettings.HAMMER_ATTACK.QUAKE;
     const scene = this.#player.scene;
     scene.cameras.main.shake(cfg.SHAKE_MS, cfg.SHAKE_INTENSITY);
+    SoundFx.play(scene, SoundKeys.QUAKE);
     this.#dust.explode(cfg.DUST, x, groundY - 2);
     [-1, 1].forEach(side => {
       const wave = scene.add.ellipse(x, groundY - 3, 16, 7, cfg.COLOR, 0.85).setDepth(GameSettings.ENEMY.DEPTH + 0.2);
@@ -248,6 +250,7 @@ class ThrownHammer {
     this.#trail.stop();
     this.#sprite.disableBody(false, true);
     player.useTextures(null);
+    SoundFx.play(scene, SoundKeys.SHIELD, { volume: 0.4, detune: 700 }); // "plim" do metal na mão
     // brilhinho na mão
     const x = player.x + (player.facingRight ? 1 : -1) * cfg.HAND.X;
     const glint = scene.add.image(x, player.y + cfg.HAND.Y, FxTextureKeys.GLOW)

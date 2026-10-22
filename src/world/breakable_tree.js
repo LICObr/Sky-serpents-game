@@ -68,6 +68,8 @@ class BreakableTree extends GameEntity {
     if (!this.canBeHit) return;
     const cfg = GameSettings.TREE;
     this.#hp -= damage;
+    // quebrando: a pancada fica mais grave e forte
+    SoundFx.play(this.scene, SoundKeys.WOOD, this.#hp <= 0 ? { volume: 1.4, detune: -700 } : {});
 
     // Pisca, balança, solta lascas e a tela treme
     const sprite = this.sprite;

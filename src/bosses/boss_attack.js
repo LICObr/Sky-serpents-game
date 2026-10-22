@@ -78,6 +78,7 @@ class BossAttack {
   fireFrom(x, y, angleRad, speed, texture, effect = ProjectileEffect.NONE) {
     if (!this.#boss.canBeHit) return;
     this.#projectiles.spawn(x, y, texture, angleRad, speed, { effect });
+    SoundFx.play(this.#boss.scene, SoundKeys.FIRE, { volume: 0.45 });
   }
 
   /** Dispara um anel de projéteis igualmente espaçados. */

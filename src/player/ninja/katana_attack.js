@@ -33,6 +33,7 @@ class KatanaAttack extends PlayerAttack {
     const player = this.player;
     const direction = player.facingRight ? 1 : -1;
     const hidden = player.scene.time.now < this.#ambushUntil;
+    SoundFx.play(player.scene, SoundKeys.KATANA, { volume: 0.8 });
     combat.targets.forEach(target => {
       const inFront = Math.sign(target.x - player.x) === direction || Math.abs(target.x - player.x) < 14;
       if (target === player || !inFront || target.distanceFrom(player) >= target.meleeReach) return;

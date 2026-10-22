@@ -76,6 +76,7 @@ class CharmNoteSpecial extends PlayerSpecial {
     this.#trail.startFollow(this.#note);
     this.#trail.start();
     this.#strum(player.x, player.y - 12);
+    SoundFx.play(scene, SoundKeys.LUTE);
   }
 
   /** @override A nota voa dançando e encanta (ou machuca) quem tocar. */
@@ -130,6 +131,7 @@ class CharmNoteSpecial extends PlayerSpecial {
     this.#allies.push(new CharmedAlly(enemy, this.player, combat, this.#allies.length));
     this.#allies.forEach((ally, slot) => { ally.slot = slot; });
     this.#strum(enemy.x, enemy.y - 10);
+    SoundFx.play(this.player.scene, SoundKeys.CHARM);
   }
 
   /** Notinhas coloridas subindo (o som do alaúde). */

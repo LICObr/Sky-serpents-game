@@ -35,6 +35,7 @@ class ArrowStormSpecial extends PlayerSpecial {
     for (let wave = 0; wave < cfg.WAVES; wave++) {
       player.scene.time.delayedCall(wave * cfg.WAVE_DELAY_MS, () => {
         if (!player.isAlive) return;
+        SoundFx.play(player.scene, SoundKeys.ARROW_STORM);
         for (let i = 0; i < cfg.ARROWS; i++) {
           // negativo = para cima; as ondas se alternam: 1ª, 2ª, 1ª, 2ª...
           const degrees = -cfg.FAN_DEG / 2 + (wave + i * cfg.WAVES + 0.5) * step;

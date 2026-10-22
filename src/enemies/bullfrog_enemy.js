@@ -34,6 +34,7 @@ class BullfrogEnemy extends HopperEnemy {
       });
     });
     scene.cameras.main.shake(160, 0.006);
+    SoundFx.play(scene, SoundKeys.QUAKE, { volume: 0.5, detune: 200 });
 
     const onGroundNear = player.sprite.body.blocked.down &&
       Math.abs(player.x - this.x) < cfg.RADIUS && Math.abs(player.feetY - groundY) < 30;

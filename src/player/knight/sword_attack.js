@@ -19,6 +19,7 @@ class SwordAttack extends PlayerAttack {
   /** @override */
   perform(combat) {
     const player = this.player;
+    SoundFx.play(player.scene, SoundKeys.SWORD);
     combat.targets.forEach(target => {
       if (target !== player && target.distanceFrom(player) < target.meleeReach) {
         target.takeHit(player, GameSettings.SWORD_ATTACK.DAMAGE);

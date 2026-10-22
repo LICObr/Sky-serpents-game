@@ -57,11 +57,16 @@ class TitleScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     ['UP', 'W'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#focus(this.#focusIndex - 1)));
     ['DOWN', 'S'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#focus(this.#focusIndex + 1)));
-    ['ENTER', 'SPACE'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#rows[this.#focusIndex].activate()));
+    ['ENTER', 'SPACE'].forEach(key => keyboard.on(`keydown-${key}`, () => {
+      SoundFx.play(this, SoundKeys.MENU_OK);
+      this.#rows[this.#focusIndex].activate();
+    }));
   }
 
   #focus(index) {
-    this.#focusIndex = Phaser.Math.Wrap(index, 0, this.#rows.length);
+    const next = Phaser.Math.Wrap(index, 0, this.#rows.length);
+    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE);
+    this.#focusIndex = next;
     this.#rows.forEach((row, i) => row.setFocused(i === this.#focusIndex));
   }
 

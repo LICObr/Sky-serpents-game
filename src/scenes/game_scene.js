@@ -131,9 +131,10 @@ class GameScene extends Phaser.Scene {
       if (!boss.stats.NEXT_BOSS) return;
       this.time.delayedCall(GameSettings.BOSS.NEXT_BOSS_DELAY_MS, () => this.#spawnBoss(this.#match.bossStats(boss.stats.NEXT_BOSS)));
     });
-    // Cada bicho derrotado adianta a recarga do especial
-    this.#eventBus.on(GameEvents.ENEMY_DEFEATED,
-      () => this.#party.reduceSpecialCooldowns(GameSettings.SPECIAL.KILL_REDUCTION_MS));
+    // Cada bicho derrotado adianta a recarga do especial (aliado do bardo que morre não conta)
+    this.#eventBus.on(GameEvents.ENEMY_DEFEATED, enemy => {
+      if (!enemy.isCharmed) this.#party.reduceSpecialCooldowns(GameSettings.SPECIAL.KILL_REDUCTION_MS);
+    });
     new BossHPBar(this, this.#eventBus);
     this.#banner = new LevelBanner(this);
     // Abertura com a imagem do chefão antes do título da fase

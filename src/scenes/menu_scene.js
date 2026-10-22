@@ -59,14 +59,20 @@ class MenuScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     ['UP', 'W'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#focus(this.#focusIndex - 1)));
     ['DOWN', 'S'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#focus(this.#focusIndex + 1)));
-    ['LEFT', 'A'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#rows[this.#focusIndex].change(-1)));
-    ['RIGHT', 'D'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#rows[this.#focusIndex].change(1)));
+    const change = delta => () => {
+      SoundFx.play(this, SoundKeys.MENU_MOVE);
+      this.#rows[this.#focusIndex].change(delta);
+    };
+    ['LEFT', 'A'].forEach(key => keyboard.on(`keydown-${key}`, change(-1)));
+    ['RIGHT', 'D'].forEach(key => keyboard.on(`keydown-${key}`, change(1)));
     ['ENTER', 'SPACE'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#openLevelSelect()));
     keyboard.once('keydown-ESC', () => this.scene.start(SceneKeys.TITLE));
   }
 
   #focus(index) {
-    this.#focusIndex = Phaser.Math.Wrap(index, 0, this.#rows.length);
+    const next = Phaser.Math.Wrap(index, 0, this.#rows.length);
+    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE);
+    this.#focusIndex = next;
     this.#rows.forEach((row, i) => row.setFocused(i === this.#focusIndex));
   }
 
@@ -107,6 +113,7 @@ class MenuScene extends Phaser.Scene {
   }
 
   #openLevelSelect() {
+    SoundFx.play(this, SoundKeys.MENU_OK);
     MenuScene.#lastCharacterId = this.#characterPicker.value;
     this.scene.start(SceneKeys.LEVEL_SELECT, {
       characterIds: [this.#characterPicker.value],

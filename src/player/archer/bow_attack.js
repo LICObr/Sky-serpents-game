@@ -28,6 +28,7 @@ class BowAttack extends PlayerAttack {
   /** @override Uma flecha para frente. */
   perform() {
     this.fireArrow(this.player.facingRight ? 0 : Math.PI);
+    SoundFx.play(this.player.scene, SoundKeys.BOW);
   }
 
   /**

@@ -6,7 +6,9 @@ Escolha o personagem, atravesse cada fase e derrote o chefão no final:
 - **Arqueira**: arco e flechas; especial Tempestade de Flechas.
 - **Viking**: arremessa o martelo, que cai fazendo um tremor — passe por cima dele para pegar de volta (sem ele, soquinho); especial Trovão.
 - **Ninja**: katana rápida e furtiva (o primeiro golpe em cada bicho vale o dobro) e pulo duplo; especial Bomba de Fumaça (some, fica invencível e todo golpe vale o dobro).
-- **Bardo**: estocada de florete; especial Nota Encantada (até 2 bichos viram aliados e lutam do seu lado, com dano menor).
+- **Bardo**: estocada de florete; especial Nota Encantada (até 2 bichos viram aliados e lutam do seu lado: com dano menor, mas o dobro da vida — e podem morrer; quem é de chão anda, quem voa voa).
+
+Efeitos sonoros no estilo 16-bit (SNES/Mega Drive) para golpes, dano, pulos, moedas, poções, chefões, vitória e game over.
 
 No menu principal:
 - **1 jogador**: escolha o personagem e a fase.
@@ -139,6 +141,8 @@ python tools/boss_intros.py
 | `snow_terrain.py` | chão, terra e ilhas todos brancos (neve) da fase do Urso |
 | `bear_polish.py` | acerto final do Urso Polar: todos os quadros do mesmo tamanho, com os pés na mesma linha e o corpo centralizado |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |
+| `viking_from_image.py`, `ninja_from_image.py`, `bard_from_image.py` (+ `pixel_character.py`) | Viking, Ninja e Bardo a partir do print de cada um: refaz a pixel art na grade original, tira o fundo e monta as poses |
+| `sound_effects.py` | os efeitos sonoros 16-bit (síntese FM, ruído filtrado, cordas dedilhadas e o eco do SNES) em `assets/sons/` — precisa de numpy e do `lame` |
 
 ## Licença
 

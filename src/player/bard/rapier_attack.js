@@ -22,6 +22,7 @@ class RapierAttack extends PlayerAttack {
     const cfg = GameSettings.RAPIER_ATTACK;
     const player = this.player;
     const direction = player.facingRight ? 1 : -1;
+    SoundFx.play(player.scene, SoundKeys.RAPIER, { volume: 0.8 });
     combat.targets.forEach(target => {
       const inFront = Math.sign(target.x - player.x) === direction || Math.abs(target.x - player.x) < 12;
       if (target !== player && inFront && target.distanceFrom(player) < target.meleeReach * cfg.REACH_RATIO) {

@@ -30,6 +30,7 @@ class DashSpecial extends PlayerSpecial {
     player.showPose(PlayerPose.ATTACK);
     player.health.grantInvulnerability(this.durationMs);
     player.scene.cameras.main.shake(this.durationMs, 0.004);
+    SoundFx.play(player.scene, SoundKeys.DASH);
     player.scene.time.delayedCall(this.durationMs, () => {
       if (player.isAlive) player.showPose(PlayerPose.STAND); // fim da investida
     });

@@ -9,7 +9,7 @@
  *   inimigos/slime | inimigos/morcego | inimigos/fantasma
  *   chefoes/dragao_vermelho | chefoes/dragao_rosa | chefoes/serpente_glacial | chefoes/urso_polar
  *   chefoes/colmeia | chefoes/abelha_rainha | chefoes/filhote_aguia
- *   cenario | itens | hud | audio
+ *   cenario | itens | hud | audio | sons (efeitos sonoros: veja sound_keys.js)
  *
  * Para adicionar um novo asset basta incluir uma linha na pasta certa.
  * Imagens geradas por código: veja tools/ (creature_sprites.py,
@@ -218,7 +218,9 @@ const ASSET_MANIFEST = Object.freeze([
   ...imagesIn('hud', { heart: 'heart.png' }),
 
   // Áudio
-  { type: 'audio', key: 'backgroundMusic', path: 'assets/audio/music.mp3' }
+  { type: 'audio', key: 'backgroundMusic', path: 'assets/audio/music.mp3' },
+  // Efeitos sonoros 16-bit (tools/sound_effects.py)
+  ...Object.values(SoundKeys).map(name => ({ type: 'audio', key: name, path: `assets/sons/${name}.mp3` }))
 ]);
 
 /**

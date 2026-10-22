@@ -82,7 +82,10 @@ class LevelSelectScene extends Phaser.Scene {
   #bindKeys() {
     const keyboard = this.input.keyboard;
     const columns = GameSettings.LEVEL_SELECT.COLUMNS;
-    const move = delta => () => this.#select(this.#selected + delta);
+    const move = delta => () => {
+      SoundFx.play(this, SoundKeys.MENU_MOVE);
+      this.#select(this.#selected + delta);
+    };
     ['LEFT', 'A'].forEach(key => keyboard.on(`keydown-${key}`, move(-1)));
     ['RIGHT', 'D'].forEach(key => keyboard.on(`keydown-${key}`, move(1)));
     ['UP', 'W'].forEach(key => keyboard.on(`keydown-${key}`, move(-columns)));
@@ -120,6 +123,7 @@ class LevelSelectScene extends Phaser.Scene {
       return;
     }
     LevelSelectScene.#lastIndex = index;
+    SoundFx.play(this, SoundKeys.MENU_OK);
     this.scene.start(SceneKeys.GAME, { ...this.#choice, levelIndex: index });
   }
 }

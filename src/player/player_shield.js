@@ -71,6 +71,7 @@ class PlayerShield {
     this.#player.health.grantInvulnerability(cfg.BLOCK_GRACE_MS);
     this.#playBreak();
     this.#icon.setVisible(false);
+    SoundFx.play(this.#player.scene, SoundKeys.SHIELD);
     return true;
   }
 

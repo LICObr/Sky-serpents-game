@@ -188,6 +188,7 @@ class Thunderstorm {
   /** Trovão: a tela treme. */
   #thunder(intensity) {
     this.#scene.cameras.main.shake(380, intensity);
+    SoundFx.play(this.#scene, SoundKeys.THUNDER, { volume: Phaser.Math.Clamp(intensity / 0.012, 0.4, 1) });
   }
 
   // ------------------------------------------------------------- vento e chuva
