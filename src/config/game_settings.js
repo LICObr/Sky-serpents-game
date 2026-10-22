@@ -657,6 +657,44 @@ const GameSettings = deepFreeze({
     DEPTH: 10
   },
 
+  // Tela de CARREGAMENTO: um fundo e um bicho sorteados a cada vez que o jogo
+  // abre; o bicho anda (ou voa) em cima da barrinha, acompanhando a ponta dela
+  LOADING: {
+    BAR: { WIDTH: 420, HEIGHT: 16, Y: 420 },
+    SHADE_ALPHA: 0.4,           // escurece o fundo para a barra aparecer
+    MIN_MS: 1200,               // fica pelo menos este tempo na tela (dá para ver o bicho)
+    CREATURE_SPEED: 260,        // px/s correndo atrás da ponta da barra
+    BACKGROUNDS: ['bg', 'bg_mel', 'bg_selva_alta', 'bg_caverna', 'bg_pantano', 'bg_neve', 'bg_por_do_sol', 'bg_tempestade'],
+    // FRAMES = quadros (a arte olha para a esquerda) | SHEET + CLIP = folha de animação
+    // FLY = voa acima da barra | HOP = vai pulando | HEIGHT = altura na tela (px)
+    CREATURES: [
+      { FRAMES: ['morcego_0', 'morcego_1'], FPS: 8, FLY: true, HEIGHT: 40 },
+      { FRAMES: ['morcego_vampiro_0', 'morcego_vampiro_1'], FPS: 9, FLY: true, HEIGHT: 40 },
+      { FRAMES: ['morcego_gigante_0', 'morcego_gigante_1'], FPS: 5, FLY: true, HEIGHT: 64 },
+      { FRAMES: ['fantasma_0', 'fantasma_1'], FPS: 3, FLY: true, HEIGHT: 44 },
+      { FRAMES: ['vespa_0', 'vespa_1'], FPS: 14, FLY: true, HEIGHT: 36 },
+      { FRAMES: ['aguia_0', 'aguia_1'], FPS: 6, FLY: true, HEIGHT: 50 },
+      { FRAMES: ['libelula_0', 'libelula_1'], FPS: 16, FLY: true, HEIGHT: 28 },
+      { FRAMES: ['traca_0', 'traca_1'], FPS: 12, FLY: true, HEIGHT: 30 },
+      { FRAMES: ['slime_0', 'slime_1'], FPS: 4, HEIGHT: 34 },
+      { FRAMES: ['sapo_0', 'sapo_1'], HOP: true, HEIGHT: 34 },
+      { FRAMES: ['sapo_lingua_0', 'sapo_lingua_1'], HOP: true, HEIGHT: 34 },
+      { FRAMES: ['sapo_boi_0', 'sapo_boi_1'], HOP: true, HEIGHT: 50 },
+      { FRAMES: ['jacare_0', 'jacare_1'], FPS: 4, HEIGHT: 36 },
+      { FRAMES: ['tartaruga_0', 'tartaruga_1'], FPS: 4, HEIGHT: 36 },
+      { FRAMES: ['ourico_0', 'ourico_1'], FPS: 5, HEIGHT: 34 },
+      { FRAMES: ['centopeia_0', 'centopeia_1'], FPS: 10, HEIGHT: 26 },
+      { FRAMES: ['aranha_0', 'aranha_1'], FPS: 8, HEIGHT: 30 },
+      { FRAMES: ['garca_0', 'garca_1'], FPS: 2, HEIGHT: 64 },
+      { FRAMES: ['piranha_0', 'piranha_1'], HOP: true, HEIGHT: 30 },
+      { FRAMES: ['poraque_0', 'poraque_1'], FPS: 4, HEIGHT: 20 },
+      { SHEET: 'bear', CLIP: 'bear:andando', FACES_RIGHT: true, HEIGHT: 120 },
+      { SHEET: 'dragon_red', CLIP: 'dragon_red:voando', FLY: true, HEIGHT: 130 },
+      { SHEET: 'dragon_pink', CLIP: 'dragon_pink:voando', FLY: true, HEIGHT: 130 },
+      { SHEET: 'queen_bee', CLIP: 'queen_bee:voando', FLY: true, HEIGHT: 110 }
+    ]
+  },
+
   // Tutorial (fase 1): dicas com as teclas e o cartão de cada bicho novo
   TUTORIAL: {
     HINT_Y: 150,                // dica no alto da tela (abaixo do HUD)

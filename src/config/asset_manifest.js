@@ -207,13 +207,25 @@ class AssetLoader {
    * @param {object[]} [extraEntries] entradas adicionais (ex.: folhas dos dragões)
    */
   static load(scene, extraEntries = []) {
-    [...ASSET_MANIFEST, ...extraEntries].forEach(({ type, key, path }) => {
-      switch (type) {
-        case 'image': scene.load.image(key, path); break;
-        case 'json':  scene.load.json(key, path); break;
-        case 'audio': scene.load.audio(key, path); break;
-        default: console.warn(`[AssetLoader] Tipo de asset desconhecido: ${type}`);
-      }
-    });
+    [...ASSET_MANIFEST, ...extraEntries].forEach(entry => AssetLoader.#queue(scene, entry));
+  }
+
+  /**
+   * Carrega só algumas imagens do manifesto (ex.: o fundo e o bicho da tela
+   * de carregamento) e, se quiser, entradas extras.
+   * @param {string[]} keys chaves do manifesto
+   */
+  static loadKeys(scene, keys, extraEntries = []) {
+    [...ASSET_MANIFEST.filter(entry => keys.includes(entry.key)), ...extraEntries]
+      .forEach(entry => AssetLoader.#queue(scene, entry));
+  }
+
+  static #queue(scene, { type, key, path }) {
+    switch (type) {
+      case 'image': scene.load.image(key, path); break;
+      case 'json':  scene.load.json(key, path); break;
+      case 'audio': scene.load.audio(key, path); break;
+      default: console.warn(`[AssetLoader] Tipo de asset desconhecido: ${type}`);
+    }
   }
 }

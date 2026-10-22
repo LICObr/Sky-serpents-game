@@ -1,34 +1,49 @@
 /**
  * boot_scene.js
  * -----------------------------------------------------------------------------
- * Primeira cena: carrega todas as imagens e sons mostrando uma barra de
- * progresso e depois abre o menu principal.
+ * Primeira cena: carrega todas as imagens e sons e depois abre o menu.
+ * Primeiro carrega só um fundo e um bicho sorteados (rapidinho) e monta a
+ * tela de carregamento com eles (LoadingShowcase); depois carrega o resto,
+ * com o bicho andando em cima da barrinha.
  * -----------------------------------------------------------------------------
  */
 class BootScene extends Phaser.Scene {
+  #choice;
+  #showcase = null;
+  #waitText;
+
   constructor() {
     super({ key: SceneKeys.BOOT });
   }
 
+  /** 1º: só o fundo e o bicho sorteados para a tela de carregamento. */
   preload() {
     const { WIDTH, HEIGHT } = GameSettings.SCREEN;
-    const barWidth = 360;
-    const x = (WIDTH - barWidth) / 2;
-    const y = HEIGHT / 2;
+    this.#waitText = this.add.text(WIDTH / 2, HEIGHT / 2, 'CARREGANDO...', UiStyle.text(14)).setOrigin(0.5);
+    this.#choice = LoadingShowcase.pick();
+    LoadingShowcase.preload(this, this.#choice);
+  }
 
-    this.add.text(WIDTH / 2, y - 40, 'CARREGANDO...', UiStyle.text(14)).setOrigin(0.5);
-    this.add.rectangle(x, y, barWidth, 16, 0x2a1d3a).setOrigin(0, 0.5);
-    const bar = this.add.rectangle(x, y, 0, 16, 0xffe066).setOrigin(0, 0.5);
-
-    this.load.on('progress', progress => { bar.width = barWidth * progress; });
+  /** 2º: monta a tela de carregamento e carrega o resto do jogo. */
+  create() {
+    this.#waitText.destroy();
+    this.#showcase = new LoadingShowcase(this, this.#choice);
+    this.load.on('progress', progress => this.#showcase.setProgress(progress));
+    this.load.once('complete', () => this.#showcase.finish(() => this.#ready()));
     AssetLoader.load(this, [
       ...DragonSpriteSheets.manifestEntries(),
       ...BearSpriteSheet.manifestEntries(),
       ...QueenBeeSpriteSheet.manifestEntries()
     ]);
+    this.load.start();
   }
 
-  create() {
+  update(time, delta) {
+    if (this.#showcase) this.#showcase.update(time, delta);
+  }
+
+  /** Tudo carregado: prepara texturas e animações e abre o menu. */
+  #ready() {
     // Texturas de efeitos (brilho e faíscas das bolas de fogo)
     FxTextures.createAll(this);
 
@@ -48,6 +63,7 @@ class BootScene extends Phaser.Scene {
     new Set(levelBackgrounds).forEach(key =>
       SeamlessTexture.makeSeamless(this, key, GameSettings.BACKGROUND.SEAMLESS_BLEND));
 
+    this.#showcase = null;
     this.scene.start(SceneKeys.TITLE);
   }
 }

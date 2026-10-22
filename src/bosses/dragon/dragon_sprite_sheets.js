@@ -42,10 +42,11 @@ class DragonSpriteSheets {
 
   /** Cria as spritesheets e os clipes (chamar uma vez, ao carregar o jogo). */
   static registerAll(scene) {
-    DRAGON_SHEETS.forEach(({ KEY }) => DragonSpriteSheets.#register(scene, KEY));
+    DRAGON_SHEETS.forEach(({ KEY }) => DragonSpriteSheets.register(scene, KEY));
   }
 
-  static #register(scene, key) {
+  /** Cria a spritesheet e os clipes de UM dragão (ex.: só o da tela de carregamento). */
+  static register(scene, key) {
     if (scene.textures.exists(key)) return;
     const meta = scene.cache.json.get(`${key}__meta`);
     const source = scene.textures.get(`${key}__src`).getSourceImage();

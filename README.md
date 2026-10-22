@@ -8,6 +8,8 @@ No menu principal:
 - **2 jogadores**: Guerreiro e Arqueira na mesma tela, cada um com as suas teclas. Um não avança sem o outro: ninguém sai da tela. Cuidado com o parceiro: espada, flechas e especiais acertam ele também (o escudinho segura). Quem fica sem corações cai deitado e fica fora — mas o parceiro pode **agachar em cima dele** (com pelo menos 2 corações) para doar um coração e ele volta. O game over só vem com os dois fora.
 - **Opções**: troque as teclas do jogador 1 e do jogador 2.
 
+Ao abrir o jogo, a tela de carregamento sorteia um fundo (de qualquer fase) e um bicho (do morcego ao dragão), que anda ou voa em cima da barrinha enquanto o jogo carrega.
+
 ![Luta contra a Abelha Rainha](docs/screenshots/fase5_rainha.jpg)
 
 ## Como rodar
