@@ -14,6 +14,7 @@ const SceneKeys = Object.freeze({
   GAME: 'GameScene',
   VERSUS_SETUP: 'VersusSetupScene', // 1v1: personagens e opções
   VERSUS: 'VersusScene',            // 1v1: a luta
+  ONLINE: 'OnlineScene',            // online: criar partida (código) ou entrar com o código
   PAUSE: 'PauseScene'
 });
 

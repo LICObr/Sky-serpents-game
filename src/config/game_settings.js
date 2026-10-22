@@ -709,8 +709,17 @@ const GameSettings = deepFreeze({
     BOB_MS: 1400,               // balançando devagar
     ATTACK_POSE_MS: 260,
     ATTACK_EVERY_MS: { MIN: 2500, MAX: 4500 },
-    BUTTONS_Y: 272,
-    BUTTON_GAP: 54
+    BUTTONS_Y: 262,
+    BUTTON_GAP: 50
+  },
+
+  // ONLINE (OnlineSession): o jogo roda no computador de quem cria a partida e
+  // vai como vídeo para o outro, que manda as teclas do jogador 2
+  ONLINE: {
+    PEERJS_URL: 'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js', // carregado só no modo online
+    ID_PREFIX: 'skyserpents-',  // o código de 4 números vira "skyserpents-1234" no servidor do PeerJS
+    VIDEO_FPS: 30,
+    KEY_HEARTBEAT_MS: 500       // o convidado reenvia as teclas de tempos em tempos (nada fica "preso")
   },
 
   // 1v1 (VersusScene): a arena inteira na tela, com a câmera afastada

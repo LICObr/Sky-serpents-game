@@ -247,7 +247,8 @@ class GameScene extends Phaser.Scene {
     const coop = this.#match.isCoop;
     const players = this.#match.characters.map((character, slot) => {
       const keys = coop ? KeyBindings.inputKeys(slot) : KeyBindings.soloInputKeys();
-      const input = new InputController(this, keys, slot === 0 ? this.#touch : null);
+      // jogador 2 também pode vir do outro computador (modo online)
+      const input = new InputController(this, keys, slot === 0 ? this.#touch : OnlineSession.remoteInput);
       return PlayerFactory.create(this, character, slot, input, this.#eventBus, this.#match);
     });
     return new PlayerParty(players, this.#eventBus, this.#levelMap);

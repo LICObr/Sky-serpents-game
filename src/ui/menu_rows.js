@@ -244,6 +244,11 @@ class MenuButton extends MenuRow {
     this.#action();
   }
 
+  /** Tira o botão da tela (telas que trocam de etapa, como a do online). */
+  destroy() {
+    this.#text.destroy();
+  }
+
   /** @override */
   render() {
     this.#text.setColor(this.isFocused ? '#ffe066' : '#ffffff');

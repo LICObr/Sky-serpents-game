@@ -111,7 +111,8 @@ class VersusScene extends Phaser.Scene {
   /** Cada um com as suas teclas, num canto do chão, virados um para o outro. */
   #createParty(arena) {
     const players = this.#match.characters.map((character, slot) => {
-      const input = new InputController(this, KeyBindings.inputKeys(slot));
+      // jogador 2 também pode vir do outro computador (modo online)
+      const input = new InputController(this, KeyBindings.inputKeys(slot), slot === 1 ? OnlineSession.remoteInput : null);
       const player = PlayerFactory.create(this, character, slot, input, this.#eventBus, this.#match);
       player.respawnAt(arena.SPAWN_X[slot], GameSettings.LEVEL.GROUND_TOP);
       player.face(slot === 0);

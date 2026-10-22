@@ -4,7 +4,8 @@
  * MENU PRINCIPAL (a primeira tela depois de carregar):
  *   1 JOGADOR   → escolher o personagem (MenuScene) e depois a fase
  *   2 JOGADORES → escolher a fase direto (Guerreiro + Arqueira)
- *   1v1  → os dois lutam entre si (VersusSetupScene → VersusScene)
+ *   1v1         → os dois lutam entre si (VersusSetupScene → VersusScene)
+ *   ONLINE      → cada um no seu computador, com um código (OnlineScene)
  *   OPÇÕES      → teclas do jogador 1 e do jogador 2 (OptionsScene)
  *
  * Fundo de uma das fases rolando devagar e os dois personagens grandes,
@@ -42,7 +43,8 @@ class TitleScene extends Phaser.Scene {
       new MenuButton(this, cfg.BUTTONS_Y, '1 JOGADOR', () => this.scene.start(SceneKeys.MENU)),
       new MenuButton(this, cfg.BUTTONS_Y + cfg.BUTTON_GAP, '2 JOGADORES', () => this.#startTwoPlayers()),
       new MenuButton(this, cfg.BUTTONS_Y + cfg.BUTTON_GAP * 2, '1v1', () => this.scene.start(SceneKeys.VERSUS_SETUP)),
-      new MenuButton(this, cfg.BUTTONS_Y + cfg.BUTTON_GAP * 3, 'OPÇÕES', () => this.scene.start(SceneKeys.OPTIONS))
+      new MenuButton(this, cfg.BUTTONS_Y + cfg.BUTTON_GAP * 3, 'ONLINE', () => this.scene.start(SceneKeys.ONLINE)),
+      new MenuButton(this, cfg.BUTTONS_Y + cfg.BUTTON_GAP * 4, 'OPÇÕES', () => this.scene.start(SceneKeys.OPTIONS))
     ];
     this.#rows.forEach(row => row.onHover(() => this.#focus(this.#rows.indexOf(row))));
     this.#focus(0);
