@@ -119,12 +119,14 @@ python tools/boss_intros.py
 | `eaglet_boss_sprites.py` | filhote de águia (3 poses), ninho vazio da arena, minhoca e graveto |
 | `eagle_variants.py` | as 5 águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra) |
 | `cave_background.py` / `cave_terrain.py` / `cave_creatures.py` | fundo infinito da caverna (arte espelhada), chão de pedra e os bichos da caverna |
-| `castle_background.py` | fundo padrão (vale dos castelos, espelhado) e as versões com o céu dourado e de entardecer da luta com os dragões |
+| `castle_background.py` | fundos dos castelos (espelhados): o vale padrão e as versões com o céu dourado e de entardecer da luta com os dragões, o pôr do sol com neve (Serpente) e os castelos congelados (Urso) |
 | `walk_frames.py` | caminhada (um passo de cada vez) e as poses de pulo e queda dos personagens |
 | `meadow_trees.py` | árvores do campo (sem neve) do tutorial |
 | `swamp_background.py` / `swamp_terrain.py` / `swamp_creatures.py` | fundo infinito do pântano, chão de musgo e lama, os bichos do pântano (sapos, jacarés, tartaruga, piranha, poraquê, garça, sanguessuga...), vitórias-régias e lama |
-| `jungle_background.py` | fundo da Selva Gelada |
+| `jungle_background.py` | antigo fundo da Selva Gelada (não é mais usado: agora ela usa os castelos na neve) |
 | `dragon_sheet.py`, `bear_sheet.py`, `bear_retouch.py` | folhas de animação dos chefões |
+| `snow_terrain.py` | chão, terra e ilhas todos brancos (neve) da fase do Urso |
+| `bear_polish.py` | acerto final do Urso Polar: todos os quadros do mesmo tamanho, com os pés na mesma linha e o corpo centralizado |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |
 
 ## Licença

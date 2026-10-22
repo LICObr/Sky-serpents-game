@@ -20,7 +20,8 @@ const TerrainThemeId = Object.freeze({
   HONEY: 'HONEY',
   MOSS: 'MOSS',
   CAVE: 'CAVE',
-  SWAMP: 'SWAMP'
+  SWAMP: 'SWAMP',
+  SNOW: 'SNOW'
 });
 
 /** Tipos de clima. */
@@ -69,6 +70,11 @@ const TERRAIN_THEMES = deepFreeze({
   [TerrainThemeId.CAVE]: {
     TOP_TEXTURE: 'chao_caverna', FILL_TEXTURE: 'terra_caverna', PLATFORM_TEXTURE: 'platform_caverna',
     WEATHER: [WeatherType.SPARKLES, WeatherType.FOG]
+  },
+  // Neve por todo lado (fase do Urso): chão, terra e ilhas brancos, nevando forte
+  [TerrainThemeId.SNOW]: {
+    TOP_TEXTURE: 'chao_branco', FILL_TEXTURE: 'terra_branca', PLATFORM_TEXTURE: 'platform_branca',
+    WEATHER: [WeatherType.SNOW, WeatherType.FOG]
   },
   // Pântano: musgo encharcado sobre lama, neblina e vaga-lumes verde-água
   [TerrainThemeId.SWAMP]: {

@@ -211,12 +211,11 @@ class BearBrain {
     this.#fired = {};
 
     const clips = {
-      INTRO: 'rugindo', ROAR: 'rugindo', IDLE: 'parado', WALK: 'andando', CROUCH: 'agachado',
+      INTRO: 'rugindo', ROAR: 'rugindo', IDLE: 'parado', WALK: 'andando', TURN: 'parado', CROUCH: 'agachado',
       DASH: 'correndo', DASH_PAUSE: 'parado', SKID: 'derrapando', LAND: 'pouso', REAR: 'levantando',
       STOMP: 'impacto', SLAM: 'batendo', THROW: 'atacando'
     };
-    if (state === BearState.TURN) bear.play(bear.facingRight ? 'virando_dir' : 'virando_esq');
-    else if (state === BearState.JUMP) bear.leapAtTarget(cfg.JUMP.VELOCITY_Y, cfg.JUMP.MAX_SPEED_X * this.#speedScale());
+    if (state === BearState.JUMP) bear.leapAtTarget(cfg.JUMP.VELOCITY_Y, cfg.JUMP.MAX_SPEED_X * this.#speedScale());
     else if (clips[state]) bear.play(clips[state]);
 
     if (state === BearState.WALK && this.#nextActionAt < this.#stateStart) {

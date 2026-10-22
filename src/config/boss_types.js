@@ -147,7 +147,7 @@ const BOSS_TYPES = deepFreeze({
     POWER: 'Gelo e terremoto',
     ATTACK_STYLE: 'ICE_BALLS',
     MAX_HP: 500,              // igual ao Dragão Vermelho
-    SPEED: 110,
+    SPEED: 85,                // anda mais devagar (era 110)
     SCALE: 1.45,
     CONTACT_DAMAGE: true,
     SHOT: {                     // os arremessos são decididos pelo BearBrain

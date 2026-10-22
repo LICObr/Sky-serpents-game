@@ -8,7 +8,9 @@ const LEVEL_02 = {
   NUMBER: 2,
   NAME: 'Pico Congelado',
   INTRO: { TEXTURE: 'serpent_intro', TITLE: 'THE ICE SERPENT ATTACKS...' }, // abertura da fase
-  BACKGROUND_TINT: 0xc8dcff,  // tom gelado
+  BACKGROUND_TEXTURE: 'bg_por_do_sol', // reino de castelos com neve ao pôr do sol (tools/castle_background.py)
+  BACKGROUND_SEAMLESS: true,           // já emenda sozinho (fundo infinito)
+  BACKGROUND_TINT: 0xffffff,
   CHALLENGE: {
     ENEMY_SPEED: 1,
     BOSS_SPEED: 1,

@@ -1,7 +1,8 @@
 /**
  * polar_bear_boss.js
  * -----------------------------------------------------------------------------
- * Chefão URSO POLAR (fase 4). Diferente dos dragões, ele luta NO CHÃO.
+ * Chefão URSO POLAR (Selva Gelada). Diferente dos dragões, ele luta NO CHÃO,
+ * com uma sombra embaixo (ela encolhe quando ele pula).
  * Herda de Boss e é composto por:
  *   - BearBrain     → máquina de estados (o que fazer e qual animação mostrar)
  *   - IceBallAttack → bolas de gelo que CONGELAM (não tiram coração)
@@ -29,6 +30,7 @@ class PolarBearBoss extends Boss {
   #warningTween = null;
   #minions = [];
   #nextSummonAt = 0;
+  #shadow;
 
   /**
    * @param {Phaser.Scene} scene
@@ -75,6 +77,11 @@ class PolarBearBoss extends Boss {
       tint: [0xffffff, 0xe6f8ff, 0xbfe9ff]
     });
 
+    // Sombra no chão: deixa o urso "pisando" na neve (e mostra onde ele vai cair no pulo)
+    const shadow = cfg.SHADOW;
+    this.#shadow = scene.add.ellipse(sprite.x, groundTop, shadow.WIDTH, shadow.HEIGHT, 0x0a1830, shadow.ALPHA)
+      .setDepth(GameSettings.BOSS.DEPTH + 0.4);
+
     this.#attack = new AttackClass(this, projectiles);
     this.#waves = new IceWaves(scene, arena, players, (x, y, n) => this.snowPuff(x, y, n));
     this.#icicles = new CeilingDrops(scene, arena, players, (x, y, n) => this.snowPuff(x, y, n),
@@ -105,11 +112,22 @@ class PolarBearBoss extends Boss {
   /** @override */
   behave() {
     const now = this.scene.time.now;
+    this.#updateShadow();
     this.#brain.update(now);
     this.#waves.update(now);
     this.#icicles.update();
     this.#updateIcicleRain(now);
     this.#updateMinions(now);
+  }
+
+  /** A sombra acompanha o urso no chão e fica menor e mais clara quando ele pula. */
+  #updateShadow() {
+    const cfg = GameSettings.POLAR_BEAR.SHADOW;
+    const height = Math.max(0, GameSettings.LEVEL.GROUND_TOP - this.sprite.body.bottom);
+    const near = 1 - Math.min(1, height / cfg.FADE_HEIGHT);
+    this.#shadow.setPosition(this.x, GameSettings.LEVEL.GROUND_TOP - 2)
+      .setScale(0.5 + 0.5 * near)
+      .setAlpha(near);
   }
 
   /** Bravo (abaixo de 50%): pinos de gelo caem do céu de tempos em tempos. */
@@ -297,6 +315,7 @@ class PolarBearBoss extends Boss {
     const sprite = this.sprite;
     const ground = GameSettings.LEVEL.GROUND_TOP;
     this.setWarning(false);
+    scene.tweens.add({ targets: this.#shadow, alpha: 0, duration: 600, onComplete: () => this.#shadow.destroy() });
     this.#waves.clear();
     this.#icicles.clear();
     sprite.clearTint();

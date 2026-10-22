@@ -1,18 +1,20 @@
 """
 castle_background.py
 -----------------------------------------------------------------------------
-Gera o FUNDO PADRÃO (o vale dos castelos) a partir da arte original
-(source_art/cenario/castelos_original.png):
-  - corta a faixa de grama e terra de baixo da arte (ali fica o chão do jogo);
+Gera os FUNDOS DOS CASTELOS a partir das artes originais (source_art/cenario/):
+  - corta a faixa de chão de baixo da arte (ali fica o chão do jogo);
   - escala para a altura da tela e põe a mesma imagem ESPELHADA ao lado:
     a ponta direita encosta na esquerda sem corte e o fundo fica infinito.
 
-  fundo.png              céu azul (fases sem fundo próprio, menu, escolha de fase)
+  fundo.png              vale dos castelos, céu azul (fases sem fundo próprio,
+                         menu, escolha de fase)
   fundo_chefao_80.png    o mesmo vale com o céu levemente dourado (chefão com 80% de vida)
   fundo_chefao_40.png    céu de fim de tarde avermelhado (chefão com 40% de vida)
+  fundo_por_do_sol.png   reino de castelos com neve ao pôr do sol (fase da Serpente)
+  fundo_neve.png         castelos congelados no meio da neve (fase do Urso)
 
-Só o CÉU muda de cor (e um pouquinho as montanhas lá no fundo): o resto
-da imagem fica igual, então a troca no meio da luta é suave.
+Nos fundos do chefão só o CÉU muda de cor (e um pouquinho as montanhas lá no
+fundo): o resto da imagem fica igual, então a troca no meio da luta é suave.
 
     py tools/castle_background.py
 -----------------------------------------------------------------------------
@@ -21,9 +23,14 @@ import numpy as np
 from PIL import Image, ImageOps
 from cave_background import HEIGHT, ROOT
 
-SOURCE = ROOT / "source_art" / "cenario" / "castelos_original.png"
+ART = ROOT / "source_art" / "cenario"
 FOLDER = ROOT / "assets" / "cenario"
-GROUND_STRIP_Y = 640       # daqui para baixo a arte tem a própria grama/terra (cortada)
+# arte original → (fundo gerado, linha onde começa o chão da própria arte — cortado)
+VALLEY = ("castelos_original.png", "fundo.png", 640)
+OTHER_BACKGROUNDS = [
+    ("por_do_sol_original.png", "fundo_por_do_sol.png", 630),
+    ("neve_original.png", "fundo_neve.png", 616),
+]
 HORIZON = 0.62             # o céu vai até esta fração da altura (mais forte lá em cima)
 
 # (cor do céu, quanto ela pesa, onde pesa mais) — pouquinho, só para mudar o clima
@@ -35,10 +42,10 @@ SKIES = {
 }
 
 
-def seamless_valley():
+def seamless_valley(source, ground_strip_y):
     """A arte sem a faixa de chão, na altura da tela, com o espelho ao lado."""
-    original = Image.open(SOURCE).convert("RGB")
-    valley = original.crop((0, 0, original.width, GROUND_STRIP_Y))
+    original = Image.open(ART / source).convert("RGB")
+    valley = original.crop((0, 0, original.width, ground_strip_y))
     width = round(valley.width * HEIGHT / valley.height)
     valley = valley.resize((width, HEIGHT), Image.LANCZOS)
     seamless = Image.new("RGB", (width * 2, HEIGHT))
@@ -68,9 +75,14 @@ def tint_sky(image, color, strength, where):
 
 
 if __name__ == "__main__":
-    valley = seamless_valley()
-    valley.save(FOLDER / "fundo.png", optimize=True)
-    print("gerado:", FOLDER / "fundo.png", valley.size)
+    source, out, ground_y = VALLEY
+    valley = seamless_valley(source, ground_y)
+    valley.save(FOLDER / out, optimize=True)
+    print("gerado:", FOLDER / out, valley.size)
     for name, (color, strength, where) in SKIES.items():
         tint_sky(valley, color, strength, where).save(FOLDER / name, optimize=True)
         print("gerado:", FOLDER / name)
+    for source, out, ground_y in OTHER_BACKGROUNDS:
+        background = seamless_valley(source, ground_y)
+        background.save(FOLDER / out, optimize=True)
+        print("gerado:", FOLDER / out, background.size)

@@ -329,16 +329,17 @@ const GameSettings = deepFreeze({
     HIT_SHAKE: { DURATION_MS: 120, INTENSITY: 0.005 },
     ROAR_MS: 1400,
     IDLE_MS: 350,
-    TURN_MS: 170,
+    TURN_MS: 170,               // paradinho antes de virar (vira de uma vez, sem o desenho de frente)
     CROUCH_MS: 380,             // agachado (aviso) antes de investir/pular
-    ACTION_DELAY_MS: { MIN: 900, MAX: 1800 }, // tempo andando entre um golpe e outro
+    ACTION_DELAY_MS: { MIN: 1100, MAX: 2100 }, // tempo andando entre um golpe e outro
     ANGRY_HP_RATIO: 0.5,        // abaixo disso ele ruge e fica bravo
-    ANGRY_SPEED: 1.25,
+    ANGRY_SPEED: 1.15,
     ANGRY_DELAY: 0.65,
     // Chance de cada golpe (ajustada pela distância/altura do jogador)
     ACTION_WEIGHTS: { DASH: 30, JUMP: 22, QUAKE: 24, SLAM: 12, THROW: 22 },
-    DASH: { SPEED_MULTIPLIER: 3.4, DURATION_MS: 300, PAUSE_MS: 220, COUNT: 2, ANGRY_COUNT: 3, SKID_MS: 420 },
-    JUMP: { VELOCITY_Y: -760, MAX_SPEED_X: 380, LAND_MS: 420 },
+    DASH: { SPEED_MULTIPLIER: 2.9, DURATION_MS: 320, PAUSE_MS: 260, COUNT: 2, ANGRY_COUNT: 3, SKID_MS: 420 },
+    JUMP: { VELOCITY_Y: -760, MAX_SPEED_X: 320, LAND_MS: 420 },
+    SHADOW: { WIDTH: 120, HEIGHT: 14, ALPHA: 0.28, FADE_HEIGHT: 260 }, // sombra no chão (some quando ele pula alto)
     QUAKE: {
       REAR_MS: 640,             // levantando nas patas traseiras
       WAVE_AT_MS: 300,          // momento da pisada dentro da animação de impacto
@@ -373,12 +374,12 @@ const GameSettings = deepFreeze({
     },
     SNOWBALL_SCALE: 1.6,
     DEFEAT_PAUSE_MS: 1200,      // tempo olhando a bola de neve antes da vitória
-    // Clipes da folha (tools/bear_sheet.py): quadros/s, repetição e, se
-    // quiser, SOURCE (animação de onde tirar os quadros) e FRAMES
+    // Clipes da folha (tools/bear_sheet.py + tools/bear_polish.py): quadros/s,
+    // repetição e, se quiser, SOURCE (animação de onde tirar os quadros) e FRAMES
     CLIPS: {
-      parado:       { FPS: 7,  REPEAT: -1 },
-      andando:      { FPS: 9,  REPEAT: -1 },
-      correndo:     { FPS: 18, REPEAT: -1 },
+      parado:       { FPS: 7,  REPEAT: -1, FRAMES: [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1] }, // respirando (vai e volta)
+      andando:      { FPS: 7,  REPEAT: -1, FRAMES: [0, 1, 2, 3] },  // só os passos de quatro patas
+      correndo:     { FPS: 14, REPEAT: -1 },
       batendo:      { FPS: 14, REPEAT: 0 },
       pulando_sobe: { FPS: 14, REPEAT: 0, SOURCE: 'pulando', FRAMES: [0, 1, 2, 3] },
       pulando_desce:{ FPS: 10, REPEAT: 0, SOURCE: 'pulando', FRAMES: [4, 5, 6] },

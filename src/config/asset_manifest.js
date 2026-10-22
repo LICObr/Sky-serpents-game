@@ -38,7 +38,10 @@ const ASSET_MANIFEST = Object.freeze([
     platform_gelo: 'plataforma_gelo.png',  // ilhas na cor de cada fase (tools/terrain_variants.py)
     platform_rosa: 'plataforma_rosa.png',
     platform_selva: 'plataforma_selva.png',
-    bg_selva: 'fundo_selva.png',
+    // fundos dos castelos (tools/castle_background.py): pôr do sol (Serpente) e neve (Urso)
+    bg_por_do_sol: 'fundo_por_do_sol.png', bg_neve: 'fundo_neve.png',
+    // terreno todo de neve da fase do Urso (tools/snow_terrain.py)
+    chao_branco: 'chao_branco.png', terra_branca: 'terra_branca.png', platform_branca: 'plataforma_branca.png',
     chao_selva: 'chao_selva.png', terra_selva: 'terra_selva.png',
     arvore_0: 'arvore_0.png', arvore_1: 'arvore_1.png',
     arvore_campo_0: 'arvore_campo_0.png', arvore_campo_1: 'arvore_campo_1.png', // tutorial (tools/meadow_trees.py)

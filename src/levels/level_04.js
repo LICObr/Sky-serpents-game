@@ -8,13 +8,13 @@ const LEVEL_04 = {
   NUMBER: 4,
   NAME: 'Selva Gelada',
   INTRO: { TEXTURE: 'bear_intro', TITLE: 'THE BEAR ATTACKS...' }, // abertura da fase
-  BACKGROUND_TEXTURE: 'bg_selva',     // fundo próprio (selva com neblina)
-  BACKGROUND_SEAMLESS: true,          // já emenda sozinho (desenhado em loop por tools/jungle_background.py)
+  BACKGROUND_TEXTURE: 'bg_neve',      // castelos congelados no meio da neve (tools/castle_background.py)
+  BACKGROUND_SEAMLESS: true,          // já emenda sozinho (fundo infinito)
   BACKGROUND_TINT: 0xffffff,
-  TERRAIN: TerrainThemeId.JUNGLE_ICE,
+  TERRAIN: TerrainThemeId.SNOW,       // tudo coberto de neve
   CHALLENGE: {
     ENEMY_SPEED: 1.1,
-    BOSS_SPEED: 1.1,
+    BOSS_SPEED: 1,
     SHOT_CHANCE: 1.15, PROJECTILE_SPEED: 1.1, SPECIAL_INTERVAL: 0.85
   },
   ARENA_START_X: 4000,
