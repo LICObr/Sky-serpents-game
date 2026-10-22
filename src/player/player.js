@@ -145,7 +145,15 @@ class Player extends GameEntity {
     this.setTextureIfChanged(frames[this.#walkFrame]);
   }
 
-  /** Parou ou está no ar: volta para a pose parada (sem cortar a pose de ataque). */
+  /** No ar (ou nadando): pernas encolhidas subindo, prontas para pousar descendo. */
+  showAirPose() {
+    this.#walkFrame = -1; // ao pousar, a caminhada começa pelo primeiro passo
+    this.#nextWalkFrameAt = 0;
+    if (this.#isShowing(PlayerPose.ATTACK)) return;
+    this.showPose(this.sprite.body.velocity.y < 0 ? PlayerPose.JUMP : PlayerPose.FALL);
+  }
+
+  /** Parou: volta para a pose parada (sem cortar a pose de ataque). */
   stopWalking() {
     this.#walkFrame = -1; // ao voltar a andar, começa pelo primeiro passo
     this.#nextWalkFrameAt = 0;

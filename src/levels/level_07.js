@@ -1,5 +1,5 @@
 /**
- * level_07.js — FASE 7: Caverna Profunda
+ * level_07.js — FASE 8 (no jogo): Caverna Profunda
  * -----------------------------------------------------------------------------
  * Sem chefão (termina na bandeira de chegada). O que cada campo significa:
  * veja level_helpers.js.

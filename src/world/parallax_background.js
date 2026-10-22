@@ -9,8 +9,8 @@
  * antiga, ficando opaca aos poucos; quando termina, vira a camada de baixo.
  *
  * Cada imagem é ESCALADA para ocupar a altura inteira da tela, assim ela
- * só se repete na horizontal — e todas passam pelo SeamlessTexture ao
- * carregar o jogo, para não aparecer corte na emenda.
+ * só se repete na horizontal — sem corte na emenda (as ferramentas já geram
+ * os fundos espelhados; os que não vêm assim passam pelo SeamlessTexture).
  * -----------------------------------------------------------------------------
  */
 class ParallaxBackground {
@@ -24,7 +24,7 @@ class ParallaxBackground {
   /**
    * @param {Phaser.Scene} scene
    * @param {number} tint cor aplicada ao fundo (0xffffff = sem tom)
-   * @param {string} [texture] fundo próprio da fase (padrão: céu de nuvens)
+   * @param {string} [texture] fundo próprio da fase (padrão: vale dos castelos)
    */
   constructor(scene, tint, texture = GameSettings.BACKGROUND.DEFAULT_TEXTURE) {
     this.#scene = scene;

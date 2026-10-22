@@ -1,5 +1,5 @@
 /**
- * level_08.js — FASE 8: Pântano dos Jacarés
+ * level_08.js — FASE 9 (no jogo): Pântano dos Jacarés
  * -----------------------------------------------------------------------------
  * Sem chefão (termina na bandeira de chegada). O que cada campo significa:
  * veja level_helpers.js.

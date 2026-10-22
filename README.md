@@ -47,14 +47,17 @@ O jogo também pausa sozinho quando a janela perde o foco (trocar de aba, minimi
 
 | Fase | Nome | Chefão |
 | --- | --- | --- |
-| 1 | Campos de Fogo | Dragão Vermelho |
-| 2 | Pico Congelado | Serpente Glacial |
-| 3 | Santuário Místico | Dragão Rosa Místico |
-| 4 | Selva Gelada | Urso Polar |
-| 5 | Floresta do Mel | Colmeia → Abelha Rainha |
-| 6 | Montanha da Selva | Filhote de Águia (chama a mamãe) |
-| 7 | Caverna Profunda | — (pedras caindo do teto; termina na bandeira) |
-| 8 | Pântano dos Jacarés | — (lagoas para nadar, lama e vitórias-régias; termina na bandeira) |
+| 1 | Tutorial | — (as teclas aparecem na tela e cada bicho novo é apresentado; termina na bandeira) |
+| 2 | Campos de Fogo | Dragão Vermelho |
+| 3 | Pico Congelado | Serpente Glacial |
+| 4 | Santuário Místico | Dragão Rosa Místico |
+| 5 | Selva Gelada | Urso Polar |
+| 6 | Floresta do Mel | Colmeia → Abelha Rainha |
+| 7 | Montanha da Selva | Filhote de Águia (chama a mamãe) |
+| 8 | Caverna Profunda | — (pedras caindo do teto; termina na bandeira) |
+| 9 | Pântano dos Jacarés | — (lagoas para nadar, lama e vitórias-régias; termina na bandeira) |
+
+O número da fase no jogo é a posição dela em `src/levels/levels.js` (o arquivo `level_01.js` aparece como Fase 2). O `NUMBER` de cada fase só identifica o progresso guardado.
 
 **Moedas:** cada bicho derrotado tem 30% de chance de deixar uma moeda. O total fica guardado no navegador e aparece no canto superior direito (no jogo e no menu).
 
@@ -107,7 +110,6 @@ python tools/boss_intros.py
 
 | Script | O que gera |
 | --- | --- |
-| `walk_frames.py` | quadros de caminhada dos personagens (mexe só pernas e mão) |
 | `favicon.py` | ícones da aba do navegador e do atalho no celular |
 | `boss_intros.py` | imagens de abertura dos dragões e da serpente |
 | `bee_boss_sprites.py` | colmeia (cenário + recorte), animação da Abelha Rainha, mel |
@@ -117,6 +119,9 @@ python tools/boss_intros.py
 | `eaglet_boss_sprites.py` | filhote de águia (3 poses), ninho vazio da arena, minhoca e graveto |
 | `eagle_variants.py` | as 5 águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra) |
 | `cave_background.py` / `cave_terrain.py` / `cave_creatures.py` | fundo infinito da caverna (arte espelhada), chão de pedra e os bichos da caverna |
+| `castle_background.py` | fundo padrão (vale dos castelos, espelhado) e as versões com o céu dourado e de entardecer da luta com os dragões |
+| `walk_frames.py` | caminhada (um passo de cada vez) e as poses de pulo e queda dos personagens |
+| `meadow_trees.py` | árvores do campo (sem neve) do tutorial |
 | `swamp_background.py` / `swamp_terrain.py` / `swamp_creatures.py` | fundo infinito do pântano, chão de musgo e lama, os bichos do pântano (sapos, jacarés, tartaruga, piranha, poraquê, garça, sanguessuga...), vitórias-régias e lama |
 | `jungle_background.py` | fundo da Selva Gelada |
 | `dragon_sheet.py`, `bear_sheet.py`, `bear_retouch.py` | folhas de animação dos chefões |

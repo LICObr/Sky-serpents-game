@@ -8,5 +8,7 @@
 const PlayerPose = Object.freeze({
   STAND: 'STAND',
   ATTACK: 'ATTACK',
-  DUCK: 'DUCK'
+  DUCK: 'DUCK',
+  JUMP: 'JUMP',   // no ar, subindo
+  FALL: 'FALL'    // no ar, descendo
 });

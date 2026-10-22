@@ -1,5 +1,5 @@
 /**
- * level_05.js — FASE 5: Floresta do Mel
+ * level_05.js — FASE 6 (no jogo): Floresta do Mel
  * -----------------------------------------------------------------------------
  * Chefão: Colmeia → Abelha Rainha. O que cada campo significa: veja level_helpers.js.
  * Percurso cheio de morros e ilhas (dá para ir por cima ou por baixo), uma

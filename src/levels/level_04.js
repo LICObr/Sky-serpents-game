@@ -1,5 +1,5 @@
 /**
- * level_04.js — FASE 4: Selva Gelada
+ * level_04.js — FASE 5 (no jogo): Selva Gelada
  * -----------------------------------------------------------------------------
  * Chefão: Urso Polar. O que cada campo significa: veja level_helpers.js.
  * -----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /**
- * level_06.js — FASE 6: Montanha da Selva
+ * level_06.js — FASE 7 (no jogo): Montanha da Selva
  * -----------------------------------------------------------------------------
  * Chefão: Filhote de Águia (no ninho; chama a mamãe). O que cada campo
  * significa: veja level_helpers.js.

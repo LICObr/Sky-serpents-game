@@ -40,13 +40,13 @@ class BootScene extends Phaser.Scene {
     QueenBeeSpriteSheet.registerAll(this);
 
     // Fundos que rolam: gera versões sem corte na emenda (loop infinito)
-    const { DEFAULT_TEXTURE, PHASES, SEAMLESS_BLEND } = GameSettings.BACKGROUND;
-    // (fundos marcados como BACKGROUND_SEAMLESS já emendam sozinhos)
+    // (o fundo padrão, os do chefão e os marcados como BACKGROUND_SEAMLESS já
+    // vêm espelhados das ferramentas e emendam sozinhos)
     const levelBackgrounds = LEVELS
       .filter(level => level.BACKGROUND_TEXTURE && !level.BACKGROUND_SEAMLESS)
       .map(level => level.BACKGROUND_TEXTURE);
-    new Set([DEFAULT_TEXTURE, ...PHASES.map(p => p.TEXTURE), ...levelBackgrounds]).forEach(key =>
-      SeamlessTexture.makeSeamless(this, key, SEAMLESS_BLEND));
+    new Set(levelBackgrounds).forEach(key =>
+      SeamlessTexture.makeSeamless(this, key, GameSettings.BACKGROUND.SEAMLESS_BLEND));
 
     this.scene.start(SceneKeys.TITLE);
   }

@@ -1,5 +1,5 @@
 /**
- * level_03.js — FASE 3: Santuário Místico
+ * level_03.js — FASE 4 (no jogo): Santuário Místico
  * -----------------------------------------------------------------------------
  * Chefão: Dragão Rosa Místico. O que cada campo significa: veja level_helpers.js.
  * -----------------------------------------------------------------------------

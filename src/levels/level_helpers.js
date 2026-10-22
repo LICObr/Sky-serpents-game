@@ -31,6 +31,8 @@
  *   - MUD:         (opcional) faixas de LAMA [inícioX, largura]: andar lento
  *                  e pulo mais baixo
  *   - bichos de água (jacarés, cobra-d'água): o X precisa estar sobre uma lagoa
+ *   - TUTORIAL:    (opcional) dicas com as teclas e cartões dos bichos (veja
+ *                  ui/tutorial_guide.js e level_tutorial.js)
  *   - STAR_TIMES:  tempo máximo (segundos) para ganhar 3, 2 e 1 estrela
  *                  { THREE, TWO, ONE }; mais lento que ONE → nenhuma
  *   - ARENA:       tela final com o CHEFÃO (plataformas em coordenadas
@@ -50,6 +52,8 @@
  *
  * Para criar uma fase nova:
  *   1. copie um level_XX.js, troque o nome da constante (LEVEL_08...) e o NUMBER
+ *      (NUMBER só identifica o progresso guardado; o número que aparece no
+ *      jogo é a posição na lista de levels.js)
  *   2. adicione a constante na lista de levels.js
  *   3. adicione o <script> do arquivo no index.html (antes de levels.js)
  * -----------------------------------------------------------------------------

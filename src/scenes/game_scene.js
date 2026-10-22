@@ -49,6 +49,7 @@ class GameScene extends Phaser.Scene {
   #arenaBackdrop = null; // cenário próprio da arena (aparece no fim do percurso)
   #fallingRocks = null;  // pedras caindo do teto (caverna)
   #swamp = null;         // água das lagoas e lama (pântano)
+  #tutorial = null;      // dicas das teclas e cartões dos bichos (tutorial)
   #lilyPads = null;      // vitórias-régias (pântano)
 
   constructor() {
@@ -134,8 +135,11 @@ class GameScene extends Phaser.Scene {
     new BossHPBar(this, this.#eventBus);
     this.#banner = new LevelBanner(this);
     // Abertura com a imagem do chefão antes do título da fase
-    if (level.INTRO) LevelIntro.play(this, level.INTRO, () => this.#banner.show(`FASE ${level.NUMBER}`, level.NAME));
-    else this.#banner.show(`FASE ${level.NUMBER}`, level.NAME);
+    // (o número que aparece é a posição na lista: o tutorial é a Fase 1)
+    const title = `FASE ${this.#match.levelIndex + 1}`;
+    if (level.INTRO) LevelIntro.play(this, level.INTRO, () => this.#banner.show(title, level.NAME));
+    else this.#banner.show(title, level.NAME);
+    this.#tutorial = level.TUTORIAL ? new TutorialGuide(this, level.TUTORIAL, this.#match.isCoop) : null;
 
     this.#camera = new PartyCamera(this, this.#party, this.#levelMap);
     this.#setupCollisions();
@@ -144,6 +148,10 @@ class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     if (this.#flow.hasEnded) return;
+    if (this.#tutorial) {
+      this.#tutorial.update(this.#party.frontX);
+      if (this.#tutorial.isHolding) return; // apresentando um bicho: o jogo espera
+    }
 
     this.#timer.tick(delta);
     this.#clock.update();

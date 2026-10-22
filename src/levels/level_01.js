@@ -1,5 +1,5 @@
 /**
- * level_01.js — FASE 1: Campos de Fogo
+ * level_01.js — FASE 2 (no jogo): Campos de Fogo
  * -----------------------------------------------------------------------------
  * Chefão: Dragão Vermelho. O que cada campo significa: veja level_helpers.js.
  * -----------------------------------------------------------------------------

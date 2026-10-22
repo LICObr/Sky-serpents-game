@@ -41,6 +41,7 @@ const ASSET_MANIFEST = Object.freeze([
     bg_selva: 'fundo_selva.png',
     chao_selva: 'chao_selva.png', terra_selva: 'terra_selva.png',
     arvore_0: 'arvore_0.png', arvore_1: 'arvore_1.png',
+    arvore_campo_0: 'arvore_campo_0.png', arvore_campo_1: 'arvore_campo_1.png', // tutorial (tools/meadow_trees.py)
     bandeira: 'bandeira.png',
     chao: 'chao.png', chao_gelo: 'chao_gelo.png', chao_rosa: 'chao_rosa.png',
     terra: 'terra.png', terra_gelo: 'terra_gelo.png', terra_rosa: 'terra_rosa.png',
@@ -67,9 +68,11 @@ const ASSET_MANIFEST = Object.freeze([
     heroi_ataque_esquerda: 'heroi_ataque_esquerda.png',
     heroi_agachado_direita: 'heroi_agachado_direita.png',
     heroi_agachado_esquerda: 'heroi_agachado_esquerda.png',
-    // caminhada (tools/walk_frames.py)
-    heroi_passo_a_direita: 'heroi_passo_a_direita.png', heroi_passo_b_direita: 'heroi_passo_b_direita.png',
-    heroi_passo_a_esquerda: 'heroi_passo_a_esquerda.png', heroi_passo_b_esquerda: 'heroi_passo_b_esquerda.png'
+    // caminhada e pulo (tools/walk_frames.py)
+    heroi_passo_a_direita: 'heroi_passo_a_direita.png', heroi_passo_a_meio_direita: 'heroi_passo_a_meio_direita.png', heroi_passo_b_direita: 'heroi_passo_b_direita.png',
+    heroi_passo_b_meio_direita: 'heroi_passo_b_meio_direita.png', heroi_pulo_direita: 'heroi_pulo_direita.png', heroi_queda_direita: 'heroi_queda_direita.png',
+    heroi_passo_a_esquerda: 'heroi_passo_a_esquerda.png', heroi_passo_a_meio_esquerda: 'heroi_passo_a_meio_esquerda.png', heroi_passo_b_esquerda: 'heroi_passo_b_esquerda.png',
+    heroi_passo_b_meio_esquerda: 'heroi_passo_b_meio_esquerda.png', heroi_pulo_esquerda: 'heroi_pulo_esquerda.png', heroi_queda_esquerda: 'heroi_queda_esquerda.png'
   }),
 
   // Arqueira
@@ -80,9 +83,11 @@ const ASSET_MANIFEST = Object.freeze([
     arqueira_ataque_esquerda: 'arqueira_ataque_esquerda.png',
     arqueira_agachada_direita: 'arqueira_agachada_direita.png',
     arqueira_agachada_esquerda: 'arqueira_agachada_esquerda.png',
-    // caminhada (tools/walk_frames.py)
-    arqueira_passo_a_direita: 'arqueira_passo_a_direita.png', arqueira_passo_b_direita: 'arqueira_passo_b_direita.png',
-    arqueira_passo_a_esquerda: 'arqueira_passo_a_esquerda.png', arqueira_passo_b_esquerda: 'arqueira_passo_b_esquerda.png',
+    // caminhada e pulo (tools/walk_frames.py)
+    arqueira_passo_a_direita: 'arqueira_passo_a_direita.png', arqueira_passo_a_meio_direita: 'arqueira_passo_a_meio_direita.png', arqueira_passo_b_direita: 'arqueira_passo_b_direita.png',
+    arqueira_passo_b_meio_direita: 'arqueira_passo_b_meio_direita.png', arqueira_pulo_direita: 'arqueira_pulo_direita.png', arqueira_queda_direita: 'arqueira_queda_direita.png',
+    arqueira_passo_a_esquerda: 'arqueira_passo_a_esquerda.png', arqueira_passo_a_meio_esquerda: 'arqueira_passo_a_meio_esquerda.png', arqueira_passo_b_esquerda: 'arqueira_passo_b_esquerda.png',
+    arqueira_passo_b_meio_esquerda: 'arqueira_passo_b_meio_esquerda.png', arqueira_pulo_esquerda: 'arqueira_pulo_esquerda.png', arqueira_queda_esquerda: 'arqueira_queda_esquerda.png',
     flecha: 'flecha.png'
   }),
 

@@ -1,5 +1,5 @@
 /**
- * level_02.js — FASE 2: Pico Congelado
+ * level_02.js — FASE 3 (no jogo): Pico Congelado
  * -----------------------------------------------------------------------------
  * Chefão: Serpente Glacial. O que cada campo significa: veja level_helpers.js.
  * -----------------------------------------------------------------------------

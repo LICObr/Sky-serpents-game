@@ -57,10 +57,11 @@ const GameSettings = deepFreeze({
   BACKGROUND: {
     SCROLL_SPEED: 0.35,         // rolagem automática (pixels por frame)
     PARALLAX: 0.15,             // o fundo anda mais devagar que a câmera
-    DEFAULT_TEXTURE: 'bg',
+    DEFAULT_TEXTURE: 'bg',      // vale dos castelos (tools/castle_background.py)
     SEAMLESS_BLEND: 0.3,        // fração da imagem usada para esconder a emenda
     PHASE_FADE_MS: 1400,        // transição suave (fade) ao trocar o fundo do chefão
-    // Na luta contra o chefão o fundo muda conforme a vida dele cai
+    // Na luta contra o chefão o fundo muda conforme a vida dele cai (o mesmo vale,
+    // só o céu muda de cor: dourado e depois entardecer)
     PHASES: [
       { MAX_HP_RATIO: 0.4, TEXTURE: 'bg_phase_40' },
       { MAX_HP_RATIO: 0.8, TEXTURE: 'bg_phase_80' }
@@ -100,7 +101,8 @@ const GameSettings = deepFreeze({
     DEPTH: 2,                   // desenhado na frente de inimigos e chefões
     JUMP_VELOCITY: -580,
 
-    WALK_FRAME_MS: 110,         // tempo de cada quadro da caminhada (passo, parado, passo, parado)
+    WALK_FRAME_MS: 110,         // tempo de cada quadro da caminhada (apoia, levanta, apoia, levanta)
+    AIR_POSE_DELAY_MS: 90,      // fora do chão há mais que isso: pose de pulo/queda
 
     HIT_KNOCKBACK_Y: -300,
     DAMAGE_COOLDOWN_MS: 1500,   // após levar dano, fica invulnerável (piscando) por este tempo
@@ -652,6 +654,16 @@ const GameSettings = deepFreeze({
     CLOCK: { X: 650, Y: 52, SIZE: 8 },
     BANNER_DURATION_MS: 2200,
     DEPTH: 10
+  },
+
+  // Tutorial (fase 1): dicas com as teclas e o cartão de cada bicho novo
+  TUTORIAL: {
+    HINT_Y: 150,                // dica no alto da tela (abaixo do HUD)
+    HINT_MS: 7000,              // some sozinha depois deste tempo (ou quando vem a próxima)
+    MOB_VISIBLE_MARGIN: 40,     // o bicho já entrou na tela este tanto: hora do cartão
+    MOB_PICTURE_HEIGHT: 64,     // desenho do bicho no cartão
+    MOB_CARD_MS: 2800,          // pausinha com o cartão...
+    MOB_SKIP_AFTER_MS: 600      // ...que dá para fechar com qualquer tecla depois disto
   },
 
   // Tela de pausa / confirmação (ESC, R, P ou janela sem foco)

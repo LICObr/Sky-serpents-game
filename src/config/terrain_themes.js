@@ -37,6 +37,7 @@ const WeatherType = Object.freeze({
 const TERRAIN_THEMES = deepFreeze({
   [TerrainThemeId.MEADOW]: {
     TOP_TEXTURE: 'chao', FILL_TEXTURE: 'terra', PLATFORM_TEXTURE: 'platform',
+    TREE_TEXTURES: ['arvore_campo_0', 'arvore_campo_1'], // sem neve (tools/meadow_trees.py)
     WEATHER: [WeatherType.EMBERS]
   },
   [TerrainThemeId.ICE]: {

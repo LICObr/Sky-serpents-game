@@ -1,15 +1,26 @@
 """
 walk_frames.py
 -----------------------------------------------------------------------------
-Gera os quadros de CAMINHADA dos personagens a partir da pose parada, mexendo
-SÓ as pernas (e a mão livre do guerreiro). O resto do desenho fica idêntico.
+Gera os quadros de CAMINHADA e de PULO dos personagens a partir da pose
+parada, mexendo SÓ as pernas (e a mão livre do guerreiro). O resto do
+desenho fica idêntico.
+
+Caminhada de verdade (4 quadros, um PASSO de cada vez):
+  passo_a       pé da frente na frente, o de trás atrás (apoiando)
+  passo_a_meio  o pé de trás SOBE e passa por baixo do corpo
+  passo_b       agora o de trás está na frente (cruzando o outro)
+  passo_b_meio  o pé da frente sobe e passa
+A perna de trás fica um pouco mais escura, para dar para ver qual está na
+frente quando elas se cruzam. Pé levantado fica atrás do corpo (só aparece a
+canela e o pé, mais altos).
+
+Pulo:
+  pulo   subindo: as duas pernas encolhidas
+  queda  descendo: uma perna na frente, já se preparando para pousar
 
 Como funciona: abaixo do quadril cada perna é deslocada para frente ou para
 trás, de "pixel" em "pixel" da arte (mais perto do pé = mais deslocado), para
 os blocos da pixel art continuarem inteiros.
-  passo_a → perna da frente para frente, a de trás para trás
-  passo_b → o contrário
-A animação no jogo é: passo_a, parado, passo_b, parado.
 
 A arqueira segura o arco com os dois braços, então nela só as pernas mexem.
 
@@ -43,7 +54,19 @@ SPRITES = {
                          hand=None, facing=1)),
     ],
 }
-HAND_STEPS = 1             # quanto a mão balança (em "pixels" da arte)
+BACK_LEG_SHADE = 0.8       # a perna de trás um pouco mais escura
+
+# Cada quadro: (perna de trás, perna da frente, mão)
+#   perna = (pé anda quantos "pixels" para a frente, sobe quantos "pixels")
+#   mão   = quantos "pixels" a mão livre balança para a frente
+FRAMES = {
+    "passo_a":      ((-2, 0), (2, 0), 1),
+    "passo_a_meio": ((1, 2), (0, 0), 0),
+    "passo_b":      ((2, 0), (-2, 0), -1),
+    "passo_b_meio": ((0, 0), (1, 2), 0),
+    "pulo":         ((-1, 2), (1, 2), 1),
+    "queda":        ((-1, 0), (2, 1), -1),
+}
 
 
 def cut_leg(image, bands):
@@ -59,21 +82,32 @@ def cut_leg(image, bands):
 
 
 def step_at(steps, y):
-    """Quantos "pixels" da arte a linha y anda (quadril 0, canela 1, pé 2)."""
+    """Quanto da passada a linha y anda: quadril 0, canela 1, pé 2."""
     return max((value for start, value in steps if y >= start), default=0)
 
 
-def move_leg(leg, steps, art, direction):
-    """Desloca cada linha da perna conforme a parte (canela, pé)."""
+def move_leg(leg, cfg, foot, lift):
+    """Leva o pé `foot` "pixels" para a frente (a canela vai metade) e sobe a perna `lift` "pixels"."""
+    art, steps, facing = cfg["art"], cfg["steps"], cfg["facing"]
     out = Image.new("RGBA", leg.size, (0, 0, 0, 0))
     for y in range(steps[0][0], leg.height):
         row = leg.crop((0, y, leg.width, y + 1))
-        out.alpha_composite(row, (direction * step_at(steps, y) * art, y))
+        dx = int(step_at(steps, y) * foot / 2 + (0.5 if foot >= 0 else -0.5)) * art * facing
+        out.alpha_composite(row, (dx, y - lift * art))
     return out
+
+
+def shade(image, factor):
+    """Escurece (perna de trás)."""
+    r, g, b, a = image.split()
+    r, g, b = (channel.point(lambda v: int(v * factor)) for channel in (r, g, b))
+    return Image.merge("RGBA", (r, g, b, a))
 
 
 def swing_hand(image, box, dx):
     """Move a mão para o lado; o espaço que ela deixa vira a cor que estava ao lado dela."""
+    if dx == 0:
+        return image
     x0, y0, x1, y1 = box
     hand = image.crop(box)
     out = image.copy()
@@ -86,17 +120,24 @@ def swing_hand(image, box, dx):
     return out
 
 
-def walk_frame(stand, cfg, sign):
-    """sign = +1 (passo_a) ou -1 (passo_b)."""
-    art, facing, steps = cfg["art"], cfg["facing"], cfg["steps"]
+def leg_frame(stand, cfg, back_pose, front_pose, hand):
+    """Um quadro: perna levantada fica atrás do corpo; a de trás por baixo da da frente."""
     image = stand
     if cfg["hand"]:
-        image = swing_hand(image, cfg["hand"], facing * sign * HAND_STEPS * art)
+        image = swing_hand(image, cfg["hand"], cfg["facing"] * hand * cfg["art"])
     back, rest = cut_leg(image, cfg["back"])
     front, rest = cut_leg(rest, cfg["front"])
-    frame = rest
-    frame.alpha_composite(move_leg(back, steps, art, -facing * sign))
-    frame.alpha_composite(move_leg(front, steps, art, facing * sign))
+    back = shade(move_leg(back, cfg, *back_pose), BACK_LEG_SHADE)
+    front = move_leg(front, cfg, *front_pose)
+
+    frame = Image.new("RGBA", stand.size, (0, 0, 0, 0))
+    lifted = [leg for leg, (_, lift) in ((back, back_pose), (front, front_pose)) if lift]
+    planted = [leg for leg, (_, lift) in ((back, back_pose), (front, front_pose)) if not lift]
+    for leg in lifted:        # pé levantado: atrás do corpo (só aparece canela e pé)
+        frame.alpha_composite(leg)
+    frame.alpha_composite(rest)
+    for leg in planted:       # a de trás primeiro, a da frente por cima
+        frame.alpha_composite(leg)
     return frame
 
 
@@ -104,8 +145,8 @@ if __name__ == "__main__":
     for base, sides in SPRITES.items():
         for side, cfg in sides:
             stand = Image.open(FOLDER / f"{base}_{side}.png").convert("RGBA")
-            for name, sign in (("passo_a", 1), ("passo_b", -1)):
-                frame = walk_frame(stand, cfg, sign)
+            for name, (back_pose, front_pose, hand) in FRAMES.items():
+                frame = leg_frame(stand, cfg, back_pose, front_pose, hand)
                 frame.save(FOLDER / f"{base}_{name}_{side}.png")
                 print("gerado:", FOLDER / f"{base}_{name}_{side}.png")
                 if len(sides) == 1:  # o outro lado é só o espelho (como a pose parada)

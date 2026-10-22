@@ -84,8 +84,11 @@ class PlayerMovement {
       sprite.setVelocityX(0);
     }
 
-    // Andando no chão: quadros da caminhada; parado ou no ar: pose parada
-    if (sprite.body.velocity.x !== 0 && sprite.body.blocked.down) this.#player.walk(now);
+    // No ar: pose de pulo/queda (um instante de folga para não piscar ao descer
+    // degraus de rampa); no chão: quadros da caminhada ou a pose parada
+    const airborne = now - this.#lastGroundedAt > GameSettings.PLAYER.AIR_POSE_DELAY_MS;
+    if (airborne) this.#player.showAirPose();
+    else if (sprite.body.velocity.x !== 0) this.#player.walk(now);
     else this.#player.stopWalking();
   }
 
