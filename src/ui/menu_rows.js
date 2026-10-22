@@ -67,7 +67,8 @@ class CharacterPicker extends MenuRow {
       const frame = scene.add.rectangle(x, y, 160, 150, 0x1a1030, 0.75).setStrokeStyle(3, 0x6a5a8a);
       const image = scene.add.image(x, y - 18, character.TEXTURES.STAND.RIGHT).setScale(character.SCALE * 2.2);
       const name = scene.add.text(x, y + 44, character.NAME.toUpperCase(), UiStyle.text(11)).setOrigin(0.5);
-      const info = scene.add.text(x, y + 62, character.DESCRIPTION, UiStyle.text(6, '#c8c0e0')).setOrigin(0.5);
+      const info = scene.add.text(x, y + 62, character.DESCRIPTION, { ...UiStyle.text(6, '#c8c0e0'), wordWrap: { width: 150 } })
+        .setOrigin(0.5);
 
       frame.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
         this.#index = i;

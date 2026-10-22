@@ -8,7 +8,8 @@
 class PlayerFactory {
   static #classes = Object.freeze({
     [CharacterId.KNIGHT]: KnightPlayer,
-    [CharacterId.ARCHER]: ArcherPlayer
+    [CharacterId.ARCHER]: ArcherPlayer,
+    [CharacterId.VIKING]: VikingPlayer
   });
 
   constructor() {

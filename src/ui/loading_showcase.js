@@ -67,7 +67,9 @@ class LoadingShowcase {
     this.#shownAt = scene.time.now;
 
     // fundo sorteado, na altura da tela, rolando devagar e meio escurecido
-    this.#background = scene.add.tileSprite(0, 0, WIDTH, HEIGHT, background).setOrigin(0, 0);
+    // (se não carregou, fica o fundo escuro mesmo)
+    this.#background = scene.add.tileSprite(0, 0, WIDTH, HEIGHT, scene.textures.exists(background) ? background : '__DEFAULT')
+      .setOrigin(0, 0);
     const scale = HEIGHT / this.#background.displayFrame.realHeight;
     this.#background.setTileScale(scale, scale);
     scene.add.rectangle(0, 0, WIDTH, HEIGHT, 0x0a0614, cfg.SHADE_ALPHA).setOrigin(0, 0);

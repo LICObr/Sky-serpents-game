@@ -13,8 +13,23 @@
  */
 const CharacterId = Object.freeze({
   KNIGHT: 'KNIGHT',
-  ARCHER: 'ARCHER'
+  ARCHER: 'ARCHER',
+  VIKING: 'VIKING'
 });
+
+/** Texturas de um conjunto de poses do viking (com ou sem o martelo). */
+const vikingTextures = (base, attack) => {
+  const side = name => ({ RIGHT: `${name}_direita`, LEFT: `${name}_esquerda` });
+  const walk = ['passo_a', 'passo_a_meio', 'passo_b', 'passo_b_meio'];
+  return {
+    STAND:  side(base),
+    WALK:   { RIGHT: walk.map(step => `${base}_${step}_direita`), LEFT: walk.map(step => `${base}_${step}_esquerda`) },
+    JUMP:   side(`${base}_pulo`),
+    FALL:   side(`${base}_queda`),
+    ATTACK: side(attack),
+    DUCK:   side(`${base}_agachado`)
+  };
+};
 
 const CHARACTERS = deepFreeze({
   [CharacterId.KNIGHT]: {
@@ -58,5 +73,21 @@ const CHARACTERS = deepFreeze({
       ATTACK: { RIGHT: 'arqueira_ataque_direita',   LEFT: 'arqueira_ataque_esquerda' },
       DUCK:   { RIGHT: 'arqueira_agachada_direita', LEFT: 'arqueira_agachada_esquerda' }
     }
+  },
+
+  // Viking: arremessa o martelo (que gira, cai fazendo terremoto e precisa
+  // ser buscado); sem ele, dá soquinhos (tools/viking_from_image.py)
+  [CharacterId.VIKING]: {
+    ID: CharacterId.VIKING,
+    NAME: 'Viking',
+    DESCRIPTION: 'Martelo: ataque de médio alcance',
+    SCALE: 0.085,
+    BODY: { WIDTH: 300, HEIGHT: 440 },
+    WALK_SPEED: 115,            // um pouco mais lento (é pesado)
+    DUCK_VISUAL_OFFSET: 0,
+    // o soco é também a pose do arremesso: o braço vai para a frente e o martelo sai voando
+    TEXTURES: vikingTextures('viking', 'viking_soco'),
+    // sem o martelo na mão (depois de arremessar, até pegar de volta)
+    ALT_TEXTURES: { UNARMED: vikingTextures('viking_sem_martelo', 'viking_soco') }
   }
 });

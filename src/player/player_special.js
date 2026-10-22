@@ -8,7 +8,7 @@
  *   - informar ao HUD quanto falta para recarregar.
  *
  * Cada personagem tem o seu (definido pela subclasse de Player):
- *   ArrowStormSpecial (arqueira) | DashSpecial (guerreiro)
+ *   ArrowStormSpecial (arqueira) | DashSpecial (guerreiro) | ThunderSpecial (viking)
  * -----------------------------------------------------------------------------
  */
 class PlayerSpecial {
@@ -23,7 +23,7 @@ class PlayerSpecial {
    */
   constructor(player, input) {
     if (new.target === PlayerSpecial) {
-      throw new TypeError('PlayerSpecial é abstrata: use ArrowStormSpecial ou DashSpecial.');
+      throw new TypeError('PlayerSpecial é abstrata: use ArrowStormSpecial, DashSpecial ou ThunderSpecial.');
     }
     this.#player = player;
     this.#input = input;

@@ -5,8 +5,9 @@
  * a base cuida do que é igual para todos (ler a tecla, respeitar o
  * intervalo entre ataques, mostrar a pose de ataque) e as subclasses
  * implementam apenas o golpe em si (perform):
- *   - SwordAttack → golpe corpo a corpo
- *   - BowAttack   → dispara flechas
+ *   - SwordAttack  → golpe corpo a corpo
+ *   - BowAttack    → dispara flechas
+ *   - HammerAttack → arremessa o martelo (sem ele, soquinho)
  * -----------------------------------------------------------------------------
  */
 class PlayerAttack {
@@ -23,7 +24,7 @@ class PlayerAttack {
    */
   constructor(player, input, { cooldownMs = 0, poseDurationMs }) {
     if (new.target === PlayerAttack) {
-      throw new TypeError('PlayerAttack é abstrata: use SwordAttack ou BowAttack.');
+      throw new TypeError('PlayerAttack é abstrata: use SwordAttack, BowAttack ou HammerAttack.');
     }
     this.#player = player;
     this.#input = input;

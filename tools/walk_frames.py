@@ -22,7 +22,8 @@ Como funciona: abaixo do quadril cada perna é deslocada para frente ou para
 trás, de "pixel" em "pixel" da arte (mais perto do pé = mais deslocado), para
 os blocos da pixel art continuarem inteiros.
 
-A arqueira segura o arco com os dois braços, então nela só as pernas mexem.
+A arqueira segura o arco com os dois braços, então nela só as pernas mexem
+(no viking também: com e sem o martelo).
 
     py tools/walk_frames.py
 -----------------------------------------------------------------------------
@@ -54,6 +55,11 @@ SPRITES = {
                          hand=None, facing=1)),
     ],
 }
+# Viking (tools/viking_from_image.py): com e sem o martelo, as pernas no mesmo lugar
+VIKING_LEGS = dict(art=10, steps=[(400, 0), (420, 1), (440, 2)], back=[(400, 0, 190)], front=[(400, 190, 500)],
+                   hand=None, facing=1)
+SPRITES["viking/viking"] = [("direita", VIKING_LEGS)]
+SPRITES["viking/viking_sem_martelo"] = [("direita", VIKING_LEGS)]
 BACK_LEG_SHADE = 0.8       # a perna de trás um pouco mais escura
 
 # Cada quadro: (perna de trás, perna da frente, mão)

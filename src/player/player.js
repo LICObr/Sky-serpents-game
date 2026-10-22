@@ -8,9 +8,9 @@
  *   - PlayerStatus   → efeitos temporários (lentidão, congelado)
  *   - PlayerShield   → escudinho do agachar (segura um golpe e recarrega)
  *   - PlayerAttack   → definido pela SUBCLASSE (createAttack):
- *        KnightPlayer → SwordAttack | ArcherPlayer → BowAttack
+ *        KnightPlayer → SwordAttack | ArcherPlayer → BowAttack | VikingPlayer → HammerAttack
  *   - PlayerSpecial  → especial da tecla G, também da SUBCLASSE (createSpecial):
- *        KnightPlayer → DashSpecial | ArcherPlayer → ArrowStormSpecial
+ *        KnightPlayer → DashSpecial | ArcherPlayer → ArrowStormSpecial | VikingPlayer → ThunderSpecial
  *
  * Com 2 jogadores, cada um também é um ALVO do combate (fogo amigo): golpe,
  * flecha ou especial do parceiro tira um coração (o escudinho segura). E quem
@@ -31,6 +31,7 @@ class Player extends GameEntity {
   #bodyOffsetY;     // posição original da hitbox dentro do sprite
   #walkFrame = -1;  // quadro atual da caminhada
   #nextWalkFrameAt = 0;
+  #textures;        // poses em uso (as normais ou um conjunto alternativo — ex.: viking sem martelo)
 
   /**
    * @param {Phaser.Scene} scene
@@ -42,7 +43,7 @@ class Player extends GameEntity {
    */
   constructor(scene, character, slot, input, eventBus, match) {
     if (new.target === Player) {
-      throw new TypeError('Player é abstrata: use KnightPlayer ou ArcherPlayer (PlayerFactory).');
+      throw new TypeError('Player é abstrata: use uma subclasse (KnightPlayer, ArcherPlayer...) via PlayerFactory.');
     }
     const cfg = GameSettings.PLAYER;
     const startX = cfg.START_X - slot * GameSettings.PARTY.START_GAP;
@@ -53,6 +54,7 @@ class Player extends GameEntity {
     super(scene, sprite);
     this.#character = character;
     this.#slot = slot;
+    this.#textures = character.TEXTURES;
 
     sprite.body.setSize(character.BODY.WIDTH, character.BODY.HEIGHT);
     this.#bodyOffsetY = sprite.body.offset.y;
@@ -130,14 +132,25 @@ class Player extends GameEntity {
 
   /** Mostra a textura da pose escolhida, respeitando o lado em que está virado. */
   showPose(pose) {
-    const textures = this.#character.TEXTURES[pose];
+    const textures = this.#textures[pose];
     this.setTextureIfChanged(this.#facingRight ? textures.RIGHT : textures.LEFT);
+  }
+
+  /**
+   * Troca o conjunto de poses (ALT_TEXTURES do personagem, ex.: 'UNARMED' =
+   * viking sem o martelo) ou volta às normais (null). A pose atual é refeita.
+   * @param {string|null} setName
+   */
+  useTextures(setName) {
+    this.#textures = setName ? this.#character.ALT_TEXTURES[setName] : this.#character.TEXTURES;
+    if (this.#isShowing(PlayerPose.ATTACK)) return; // a pose de ataque termina sozinha
+    this.showPose(this.isDucking ? PlayerPose.DUCK : PlayerPose.STAND);
   }
 
   /** Andando no chão: troca os quadros da caminhada (sem cortar a pose de ataque). */
   walk(now) {
     if (this.#isShowing(PlayerPose.ATTACK)) return;
-    const frames = this.#character.TEXTURES.WALK[this.#facingRight ? 'RIGHT' : 'LEFT'];
+    const frames = this.#textures.WALK[this.#facingRight ? 'RIGHT' : 'LEFT'];
     if (now >= this.#nextWalkFrameAt) {
       this.#walkFrame = (this.#walkFrame + 1) % frames.length;
       this.#nextWalkFrameAt = now + GameSettings.PLAYER.WALK_FRAME_MS;
@@ -162,7 +175,7 @@ class Player extends GameEntity {
 
   /** A textura atual é a desta pose (virado para qualquer lado)? */
   #isShowing(pose) {
-    const { RIGHT, LEFT } = this.#character.TEXTURES[pose];
+    const { RIGHT, LEFT } = this.#textures[pose];
     const key = this.sprite.texture.key;
     return key === RIGHT || key === LEFT;
   }

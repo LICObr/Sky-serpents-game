@@ -30,6 +30,9 @@ class ParallaxBackground {
    * @param {string} [texture] fundo próprio da fase (padrão: vale dos castelos)
    */
   constructor(scene, tint, texture = GameSettings.BACKGROUND.DEFAULT_TEXTURE) {
+    // Fundo que não carregou (ex.: navegador com a lista de arquivos antiga em
+    // cache logo depois de uma atualização): usa o padrão em vez do quadrado verde
+    if (!scene.textures.exists(texture)) texture = GameSettings.BACKGROUND.DEFAULT_TEXTURE;
     this.#scene = scene;
     this.#base = this.#createLayer(texture, tint);
     this.#overlay = this.#createLayer(texture, tint).setAlpha(0).setVisible(false);
@@ -55,6 +58,7 @@ class ParallaxBackground {
    * @returns {Phaser.GameObjects.TileSprite}
    */
   addLightLayer(texture) {
+    if (!this.#scene.textures.exists(texture)) texture = this.#targetTexture; // não carregou: o próprio fundo
     const layer = this.#createLayer(texture, 0xffffff).setAlpha(0).setDepth(ParallaxBackground.DEPTH + 0.1);
     this.#lightLayers.push(layer);
     return layer;
@@ -72,7 +76,7 @@ class ParallaxBackground {
 
   /** Faz a imagem nova aparecer suavemente por cima da atual. */
   #fadeTo(texture) {
-    if (texture === this.#targetTexture) return;
+    if (texture === this.#targetTexture || !this.#scene.textures.exists(texture)) return;
     this.#targetTexture = texture;
 
     // Se ainda estava num fade anterior, conclui ele na hora

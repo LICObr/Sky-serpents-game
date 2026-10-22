@@ -82,6 +82,16 @@ const ASSET_MANIFEST = Object.freeze([
     heroi_passo_b_meio_esquerda: 'heroi_passo_b_meio_esquerda.png', heroi_pulo_esquerda: 'heroi_pulo_esquerda.png', heroi_queda_esquerda: 'heroi_queda_esquerda.png'
   }),
 
+  // Viking (tools/viking_from_image.py e tools/walk_frames.py): com e sem o martelo
+  ...imagesIn('personagens/viking', {
+    viking_direita: 'viking_direita.png', viking_passo_a_direita: 'viking_passo_a_direita.png', viking_passo_a_meio_direita: 'viking_passo_a_meio_direita.png', viking_passo_b_direita: 'viking_passo_b_direita.png', viking_passo_b_meio_direita: 'viking_passo_b_meio_direita.png', viking_pulo_direita: 'viking_pulo_direita.png', viking_queda_direita: 'viking_queda_direita.png', viking_agachado_direita: 'viking_agachado_direita.png',
+    viking_esquerda: 'viking_esquerda.png', viking_passo_a_esquerda: 'viking_passo_a_esquerda.png', viking_passo_a_meio_esquerda: 'viking_passo_a_meio_esquerda.png', viking_passo_b_esquerda: 'viking_passo_b_esquerda.png', viking_passo_b_meio_esquerda: 'viking_passo_b_meio_esquerda.png', viking_pulo_esquerda: 'viking_pulo_esquerda.png', viking_queda_esquerda: 'viking_queda_esquerda.png', viking_agachado_esquerda: 'viking_agachado_esquerda.png',
+    viking_sem_martelo_direita: 'viking_sem_martelo_direita.png', viking_sem_martelo_passo_a_direita: 'viking_sem_martelo_passo_a_direita.png', viking_sem_martelo_passo_a_meio_direita: 'viking_sem_martelo_passo_a_meio_direita.png', viking_sem_martelo_passo_b_direita: 'viking_sem_martelo_passo_b_direita.png', viking_sem_martelo_passo_b_meio_direita: 'viking_sem_martelo_passo_b_meio_direita.png', viking_sem_martelo_pulo_direita: 'viking_sem_martelo_pulo_direita.png', viking_sem_martelo_queda_direita: 'viking_sem_martelo_queda_direita.png', viking_sem_martelo_agachado_direita: 'viking_sem_martelo_agachado_direita.png',
+    viking_sem_martelo_esquerda: 'viking_sem_martelo_esquerda.png', viking_sem_martelo_passo_a_esquerda: 'viking_sem_martelo_passo_a_esquerda.png', viking_sem_martelo_passo_a_meio_esquerda: 'viking_sem_martelo_passo_a_meio_esquerda.png', viking_sem_martelo_passo_b_esquerda: 'viking_sem_martelo_passo_b_esquerda.png', viking_sem_martelo_passo_b_meio_esquerda: 'viking_sem_martelo_passo_b_meio_esquerda.png', viking_sem_martelo_pulo_esquerda: 'viking_sem_martelo_pulo_esquerda.png', viking_sem_martelo_queda_esquerda: 'viking_sem_martelo_queda_esquerda.png', viking_sem_martelo_agachado_esquerda: 'viking_sem_martelo_agachado_esquerda.png',
+    viking_soco_direita: 'viking_soco_direita.png', viking_soco_esquerda: 'viking_soco_esquerda.png',
+    martelo: 'martelo.png'
+  }),
+
   // Arqueira
   ...imagesIn('personagens/arqueira', {
     arqueira_direita: 'arqueira_direita.png',

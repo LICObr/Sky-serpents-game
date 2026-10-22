@@ -212,6 +212,44 @@ const GameSettings = deepFreeze({
     MAX_STUCK: 8                // limite de flechas cravadas (as mais antigas somem)
   },
 
+  // Martelo do VIKING: arremessa girando e, ao cair, faz um TREMOR. Ele fica no
+  // chão até o viking passar por cima; enquanto isso, o ataque vira SOQUINHO.
+  HAMMER_ATTACK: {
+    COOLDOWN_MS: 300,           // arremessar ou socar
+    POSE_DURATION_MS: 200,
+    TEXTURE: 'martelo',
+    SCALE: 0.095,
+    DEPTH: 1.8,                 // como as flechas: na frente dos bichos, atrás do jogador
+    HAND: { X: 14, Y: -4 },     // de onde ele sai (a mão do viking)
+    THROW_SPEED_X: 420,
+    THROW_SPEED_Y: -300,        // sobe um pouquinho e cai uns 210px à frente (médio alcance)
+    GRAVITY: 1300,              // gravidade própria (um pouco mais leve que a do mundo)
+    SPIN_SPEED: 20,             // giro no ar (rad/s)
+    BOUNCE_X: 0.3,              // bate na parede (ou na borda da arena) e volta um pouco
+    HIT_DAMAGE: 35,             // acerta tudo no caminho (cada um uma vez por arremesso)
+    TREE_BOUNCE: 0.35,          // bate na árvore e volta um pouco (cai do lado de cá)
+    EMBED: 2,                   // cai de cabeça e afunda um tiquinho no chão
+    QUAKE: {                    // ao cair: tremor em quem está no chão perto
+      DAMAGE: 18,
+      RADIUS_X: 90,
+      RADIUS_Y: 50,
+      SHAKE_MS: 200,
+      SHAKE_INTENSITY: 0.01,
+      DUST: 16,
+      COLOR: 0xd8c8a8
+    },
+    PICKUP: { RANGE_X: 18, RANGE_Y: 28 }, // passou por cima: pega de volta
+    RETURN: {                   // volta voando sozinho para a mão (nunca fica perdido)
+      SPEED: 650,
+      AFTER_MS: 10000,          // largado no chão há muito tempo
+      DISTANCE: 900,            // ficou longe demais (ex.: renasceu no checkpoint)
+      WATER_MS: 500,            // caiu numa lagoa
+      CATCH_RANGE: 16
+    },
+    // Sem o martelo: soquinho, bem mais fraco e só de perto (mas dá dano!)
+    PUNCH: { DAMAGE: 5, REACH_RATIO: 0.7, POW_X: 16, POW_Y: -2 }
+  },
+
   ENEMY: {
     DEPTH: 1,
     ACTIVATION_MARGIN: 200,     // só atualiza inimigos perto da câmera
@@ -568,6 +606,15 @@ const GameSettings = deepFreeze({
       TICK_DAMAGE: 8,
       REACH: 60,
       GHOST_EVERY_MS: 50        // rastro de "fantasmas"
+    },
+    THUNDER: {                  // viking: raios nos bichos da tela e o martelo volta para a mão
+      BOLTS: 5,
+      MAX_PER_TARGET: 3,        // sozinho na tela (ex.: o chefão), leva até 3 raios
+      DAMAGE: 20,
+      EVERY_MS: 130,            // um raio atrás do outro
+      POSE_MS: 450,
+      FLASH_ALPHA: 0.35,
+      SHAKE: { MS: 140, INTENSITY: 0.008 }
     }
   },
 
