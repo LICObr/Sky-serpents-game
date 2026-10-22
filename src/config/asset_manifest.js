@@ -31,17 +31,17 @@ function imagesIn(folder, images) {
 const ASSET_MANIFEST = Object.freeze([
   // Cenário (fundos, chão e ilhas)
   ...imagesIn('cenario', {
-    bg: 'fundo.png',
-    bg_phase_80: 'fundo_chefao_80.png',
-    bg_phase_40: 'fundo_chefao_40.png',
+    bg: 'fundo.jpg',
+    bg_phase_80: 'fundo_chefao_80.jpg',
+    bg_phase_40: 'fundo_chefao_40.jpg',
     platform: 'plataforma.png',
     platform_gelo: 'plataforma_gelo.png',  // ilhas na cor de cada fase (tools/terrain_variants.py)
     platform_rosa: 'plataforma_rosa.png',
     platform_selva: 'plataforma_selva.png',
     // fundos dos castelos (tools/castle_background.py): pôr do sol (Serpente) e neve (Urso)
-    bg_por_do_sol: 'fundo_por_do_sol.png', bg_neve: 'fundo_neve.png',
+    bg_por_do_sol: 'fundo_por_do_sol.jpg', bg_neve: 'fundo_neve.jpg',
     // tempestade (tools/castle_background.py e tools/storm_terrain.py)
-    bg_tempestade: 'fundo_tempestade.png', bg_tempestade_raio: 'fundo_tempestade_raio.png',
+    bg_tempestade: 'fundo_tempestade.jpg', bg_tempestade_raio: 'fundo_tempestade_raio.jpg',
     chao_tempestade: 'chao_tempestade.png', terra_tempestade: 'terra_tempestade.png',
     platform_tempestade: 'plataforma_tempestade.png',
     // terreno todo de neve da fase do Urso (tools/snow_terrain.py)
@@ -52,17 +52,17 @@ const ASSET_MANIFEST = Object.freeze([
     bandeira: 'bandeira.png',
     chao: 'chao.png', chao_gelo: 'chao_gelo.png', chao_rosa: 'chao_rosa.png',
     terra: 'terra.png', terra_gelo: 'terra_gelo.png', terra_rosa: 'terra_rosa.png',
-    // Floresta do mel (tools/honey_background.py e tools/honey_terrain.py)
-    bg_mel: 'fundo_mel.png', chao_mel: 'chao_mel.png', terra_mel: 'terra_mel.png', platform_mel: 'plataforma_mel.png',
+    // Floresta do mel (tools/castle_background.py e tools/honey_terrain.py)
+    bg_floresta_mel: 'fundo_floresta_mel.jpg', chao_mel: 'chao_mel.png', terra_mel: 'terra_mel.png', platform_mel: 'plataforma_mel.png',
     arvore_mel_0: 'arvore_mel_0.png', arvore_mel_1: 'arvore_mel_1.png',
-    // Montanha da selva (tools/tall_jungle_background.py e tools/moss_terrain.py)
-    bg_selva_alta: 'fundo_selva_alta.png', chao_musgo: 'chao_musgo.png', chao_neve: 'chao_neve.png',
+    // Montanha da selva (tools/castle_background.py e tools/moss_terrain.py)
+    bg_floresta: 'fundo_floresta.jpg', chao_musgo: 'chao_musgo.png', chao_neve: 'chao_neve.png',
     platform_musgo: 'plataforma_musgo.png',
     // Caverna (tools/cave_background.py, tools/cave_terrain.py, tools/cave_creatures.py)
-    bg_caverna: 'fundo_caverna.png', chao_caverna: 'chao_caverna.png', terra_caverna: 'terra_caverna.png',
+    bg_caverna: 'fundo_caverna.jpg', chao_caverna: 'chao_caverna.png', terra_caverna: 'terra_caverna.png',
     platform_caverna: 'plataforma_caverna.png', pedra_caverna: 'pedra_caverna.png',
     // Pântano (tools/swamp_background.py, tools/swamp_terrain.py, tools/swamp_creatures.py)
-    bg_pantano: 'fundo_pantano.png', chao_pantano: 'chao_pantano.png', terra_pantano: 'terra_pantano.png',
+    bg_pantano: 'fundo_pantano.jpg', chao_pantano: 'chao_pantano.png', terra_pantano: 'terra_pantano.png',
     platform_pantano: 'plataforma_pantano.png', vitoria_regia: 'vitoria_regia.png',
     vitoria_regia_flor: 'vitoria_regia_flor.png', lama: 'lama.png'
   }),

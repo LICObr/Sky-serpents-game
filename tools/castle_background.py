@@ -1,19 +1,22 @@
 """
 castle_background.py
 -----------------------------------------------------------------------------
-Gera os FUNDOS DOS CASTELOS a partir das artes originais (source_art/cenario/):
+Gera os FUNDOS DOS CASTELOS (e o da selva) a partir das artes originais
+(source_art/cenario/):
   - corta a faixa de chão de baixo da arte (ali fica o chão do jogo);
   - escala para a altura da tela e põe a mesma imagem ESPELHADA ao lado:
     a ponta direita encosta na esquerda sem corte e o fundo fica infinito.
 
-  fundo.png              vale dos castelos, céu azul (fases sem fundo próprio,
+  fundo.jpg              vale dos castelos, céu azul (fases sem fundo próprio,
                          menu, escolha de fase)
-  fundo_chefao_80.png    o mesmo vale com o céu levemente dourado (chefão com 80% de vida)
-  fundo_chefao_40.png    céu de fim de tarde avermelhado (chefão com 40% de vida)
-  fundo_por_do_sol.png   reino de castelos com neve ao pôr do sol (fase da Serpente)
-  fundo_neve.png         castelos congelados no meio da neve (fase do Urso)
-  fundo_tempestade.png   costa dos castelos de noite, na tempestade, com o tornado
-  fundo_tempestade_raio.png  a mesma costa ILUMINADA pelo relâmpago: tudo clareia
+  fundo_chefao_80.jpg    o mesmo vale com o céu levemente dourado (chefão com 80% de vida)
+  fundo_chefao_40.jpg    céu de fim de tarde avermelhado (chefão com 40% de vida)
+  fundo_por_do_sol.jpg   reino de castelos com neve ao pôr do sol (fase da Serpente)
+  fundo_neve.jpg         castelos congelados no meio da neve (fase do Urso)
+  fundo_floresta.jpg     selva de árvores altas, com araras e tucanos (Montanha da Selva)
+  fundo_floresta_mel.jpg a mesma selva dourada, cheia de colmeias e mel (Floresta do Mel)
+  fundo_tempestade.jpg   costa dos castelos de noite, na tempestade, com o tornado
+  fundo_tempestade_raio.jpg  a mesma costa ILUMINADA pelo relâmpago: tudo clareia
                          e o tornado fica brilhando (o jogo pisca para ela)
 
 Nos fundos do chefão só o CÉU muda de cor (e um pouquinho as montanhas lá no
@@ -24,18 +27,20 @@ fundo): o resto da imagem fica igual, então a troca no meio da luta é suave.
 """
 import numpy as np
 from PIL import Image, ImageOps
-from cave_background import HEIGHT, ROOT
+from cave_background import HEIGHT, ROOT, save_background
 
 ART = ROOT / "source_art" / "cenario"
 FOLDER = ROOT / "assets" / "cenario"
 # arte original → (fundo gerado, linha onde começa o chão da própria arte — cortado)
-VALLEY = ("castelos_original.png", "fundo.png", 640)
+VALLEY = ("castelos_original.png", "fundo.jpg", 640)
 OTHER_BACKGROUNDS = [
-    ("por_do_sol_original.png", "fundo_por_do_sol.png", 630),
-    ("neve_original.png", "fundo_neve.png", 616),
-    ("tempestade_original.png", "fundo_tempestade.png", 630),
+    ("por_do_sol_original.png", "fundo_por_do_sol.jpg", 630),
+    ("neve_original.png", "fundo_neve.jpg", 616),
+    ("tempestade_original.png", "fundo_tempestade.jpg", 630),
+    ("selva_original.jpg", "fundo_floresta.jpg", 560),
+    ("floresta_mel_original.jpg", "fundo_floresta_mel.jpg", 560),
 ]
-STORM = ("tempestade_original.png", "fundo_tempestade_raio.png", 630)
+STORM = ("tempestade_original.png", "fundo_tempestade_raio.jpg", 630)
 TORNADO = (1266, 285)      # meio do tornado na arte original (x, y)
 LIGHTNING_LIGHT = (214, 228, 255)  # luz fria do relâmpago
 HORIZON = 0.62             # o céu vai até esta fração da altura (mais forte lá em cima)
@@ -44,8 +49,8 @@ HORIZON = 0.62             # o céu vai até esta fração da altura (mais forte
 #   "alto"      mais forte lá em cima, sumindo até o horizonte
 #   "horizonte" brilho perto do horizonte (o alto do céu continua azul)
 SKIES = {
-    "fundo_chefao_80.png": ((255, 186, 120), 0.55, "horizonte"),  # fim de tarde dourado
-    "fundo_chefao_40.png": ((214, 96, 86), 0.55, "alto"),          # entardecer avermelhado
+    "fundo_chefao_80.jpg": ((255, 186, 120), 0.55, "horizonte"),  # fim de tarde dourado
+    "fundo_chefao_40.jpg": ((214, 96, 86), 0.55, "alto"),          # entardecer avermelhado
 }
 
 
@@ -108,16 +113,16 @@ def tint_sky(image, color, strength, where):
 if __name__ == "__main__":
     source, out, ground_y = VALLEY
     valley = seamless_valley(source, ground_y)
-    valley.save(FOLDER / out, optimize=True)
+    save_background(valley, FOLDER / out)
     print("gerado:", FOLDER / out, valley.size)
     for name, (color, strength, where) in SKIES.items():
-        tint_sky(valley, color, strength, where).save(FOLDER / name, optimize=True)
+        save_background(tint_sky(valley, color, strength, where), FOLDER / name)
         print("gerado:", FOLDER / name)
     for source, out, ground_y in OTHER_BACKGROUNDS:
         background = seamless_valley(source, ground_y)
-        background.save(FOLDER / out, optimize=True)
+        save_background(background, FOLDER / out)
         print("gerado:", FOLDER / out, background.size)
     source, out, ground_y = STORM
     lit = mirrored(lightning_lit(scaled_art(source, ground_y), TORNADO, ground_y))
-    lit.save(FOLDER / out, optimize=True)
+    save_background(lit, FOLDER / out)
     print("gerado:", FOLDER / out, lit.size)

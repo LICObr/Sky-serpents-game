@@ -15,7 +15,7 @@ const LEVEL_06 = {
   NUMBER: 6,
   NAME: 'Montanha da Selva',
   INTRO: { TEXTURE: 'eaglet_call', TITLE: 'THE EAGLET CALLS MOMMY...' }, // abertura da fase
-  BACKGROUND_TEXTURE: 'bg_selva_alta', // árvores altíssimas (tools/tall_jungle_background.py)
+  BACKGROUND_TEXTURE: 'bg_floresta',   // selva de árvores altas (tools/castle_background.py)
   BACKGROUND_SEAMLESS: true,           // já emenda sozinho (fundo infinito)
   BACKGROUND_TINT: 0xffffff,
   TERRAIN: TerrainThemeId.MOSS,

@@ -594,7 +594,7 @@ const GameSettings = deepFreeze({
 
   // Menu principal: fundo de uma fase e os dois personagens grandes, um de cada lado
   TITLE: {
-    BACKGROUND: 'bg_mel',       // fundo da Floresta do Mel (emenda sozinho)
+    BACKGROUND: 'bg_floresta_mel', // a selva dourada da Floresta do Mel (emenda sozinho)
     HERO_SCALE: 0.36,           // ~180px de altura
     HERO_X_MARGIN: 130,         // distância do personagem até a borda
     HERO_Y: 420,
@@ -664,7 +664,7 @@ const GameSettings = deepFreeze({
     SHADE_ALPHA: 0.4,           // escurece o fundo para a barra aparecer
     MIN_MS: 1200,               // fica pelo menos este tempo na tela (dá para ver o bicho)
     CREATURE_SPEED: 260,        // px/s correndo atrás da ponta da barra
-    BACKGROUNDS: ['bg', 'bg_mel', 'bg_selva_alta', 'bg_caverna', 'bg_pantano', 'bg_neve', 'bg_por_do_sol', 'bg_tempestade'],
+    BACKGROUNDS: ['bg', 'bg_floresta_mel', 'bg_floresta', 'bg_caverna', 'bg_pantano', 'bg_neve', 'bg_por_do_sol', 'bg_tempestade'],
     // FRAMES = quadros (a arte olha para a esquerda) | SHEET + CLIP = folha de animação
     // FLY = voa acima da barra | HOP = vai pulando | HEIGHT = altura na tela (px)
     CREATURES: [

@@ -117,12 +117,14 @@ python tools/boss_intros.py
 | `boss_intros.py` | imagens de abertura dos dragões e da serpente |
 | `bee_boss_sprites.py` | colmeia (cenário + recorte), animação da Abelha Rainha, mel |
 | `coin_sprite.py` | a moeda |
-| `honey_background.py` / `honey_terrain.py` | fundo infinito, terreno e árvores amarelas da Floresta do Mel |
-| `tall_jungle_background.py` / `moss_terrain.py` | árvores altíssimas do fundo e chão de musgo com neve da Montanha da Selva |
+| `honey_terrain.py` | terreno e árvores amarelas da Floresta do Mel |
+| `honey_background.py` | antigo fundo da Floresta do Mel (não é mais usado: agora ela usa a selva dourada de `castle_background.py`) |
+| `moss_terrain.py` | chão de musgo com neve da Montanha da Selva |
+| `tall_jungle_background.py` | antigo fundo da Montanha da Selva (não é mais usado: agora ela usa a selva de `castle_background.py`) |
 | `eaglet_boss_sprites.py` | filhote de águia (3 poses), ninho vazio da arena, minhoca e graveto |
 | `eagle_variants.py` | as 5 águias diferentes (bico de lança, dourada, rabo de leque, asa larga, negra) |
 | `cave_background.py` / `cave_terrain.py` / `cave_creatures.py` | fundo infinito da caverna (arte espelhada), chão de pedra e os bichos da caverna |
-| `castle_background.py` | fundos dos castelos (espelhados): o vale padrão e as versões com o céu dourado e de entardecer da luta com os dragões, o pôr do sol com neve (Serpente), os castelos congelados (Urso) e a costa na tempestade, com a versão iluminada pelo relâmpago |
+| `castle_background.py` | fundos dos castelos (espelhados): o vale padrão e as versões com o céu dourado e de entardecer da luta com os dragões, o pôr do sol com neve (Serpente), os castelos congelados (Urso) a costa na tempestade, com a versão iluminada pelo relâmpago, a selva de árvores altas (Montanha da Selva) e a mesma selva dourada com colmeias (Floresta do Mel, também no menu) |
 | `walk_frames.py` | caminhada (um passo de cada vez) e as poses de pulo e queda dos personagens |
 | `meadow_trees.py` | árvores do campo (sem neve) do tutorial |
 | `swamp_background.py` / `swamp_terrain.py` / `swamp_creatures.py` | fundo infinito do pântano, chão de musgo e lama, os bichos do pântano (sapos, jacarés, tartaruga, piranha, poraquê, garça, sanguessuga...), vitórias-régias e lama |

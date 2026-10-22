@@ -11,7 +11,7 @@ const LEVEL_05 = {
   NUMBER: 5,
   NAME: 'Floresta do Mel',
   INTRO: { TEXTURE: 'hive', TITLE: 'THE HIVE ATTACKS...' }, // abertura da fase
-  BACKGROUND_TEXTURE: 'bg_mel',       // floresta com mel (tools/honey_background.py)
+  BACKGROUND_TEXTURE: 'bg_floresta_mel', // selva dourada com colmeias e mel (tools/castle_background.py)
   BACKGROUND_SEAMLESS: true,          // já emenda sozinho (fundo infinito)
   BACKGROUND_TINT: 0xffffff,
   TERRAIN: TerrainThemeId.HONEY,
