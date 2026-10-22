@@ -57,18 +57,21 @@ class CharacterPicker extends MenuRow {
     this.#index = Math.max(0, this.#ids.indexOf(selectedId));
     this.#onFocusRequest = onFocusRequest;
 
-    const centerX = GameSettings.SCREEN.WIDTH / 2;
-    const spacing = 190;
+    const { WIDTH } = GameSettings.SCREEN;
+    const centerX = WIDTH / 2;
+    // os cartões encolhem para todos caberem na tela (5 personagens: ~148px cada)
+    const spacing = Math.min(190, (WIDTH - 60) / this.#ids.length);
+    const cardWidth = Math.min(160, spacing - 8);
 
     this.#ids.forEach((id, i) => {
       const character = CHARACTERS[id];
       const x = centerX + (i - (this.#ids.length - 1) / 2) * spacing;
 
-      const frame = scene.add.rectangle(x, y, 160, 150, 0x1a1030, 0.75).setStrokeStyle(3, 0x6a5a8a);
-      const image = scene.add.image(x, y - 18, character.TEXTURES.STAND.RIGHT).setScale(character.SCALE * 2.2);
-      const name = scene.add.text(x, y + 44, character.NAME.toUpperCase(), UiStyle.text(11)).setOrigin(0.5);
-      const info = scene.add.text(x, y + 62, character.DESCRIPTION, { ...UiStyle.text(6, '#c8c0e0'), wordWrap: { width: 150 } })
-        .setOrigin(0.5);
+      const frame = scene.add.rectangle(x, y, cardWidth, 150, 0x1a1030, 0.75).setStrokeStyle(3, 0x6a5a8a);
+      const image = scene.add.image(x, y - 24, character.TEXTURES.STAND.RIGHT).setScale(character.SCALE * 2.2);
+      const name = scene.add.text(x, y + 36, character.NAME.toUpperCase(), UiStyle.text(11)).setOrigin(0.5);
+      const info = scene.add.text(x, y + 58, character.DESCRIPTION,
+        { ...UiStyle.text(6, '#c8c0e0'), wordWrap: { width: cardWidth - 14 }, lineSpacing: 2 }).setOrigin(0.5);
 
       frame.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
         this.#index = i;

@@ -9,8 +9,9 @@
  *   - fx_ice_block: bloco de gelo transparente (jogador congelado)
  *   - fx_icicle:    pino de gelo pontudo (cai do céu na luta do urso)
  *   - fx_shield:    escudinho azul-claro (defesa do agachar)
+ *   - fx_note:      nota musical (a nota encantada do bardo e os aliados)
  *
- * fx_glow e fx_spark são brancas: a cor é aplicada com "tint" na hora de usar.
+ * fx_glow, fx_spark e fx_note são brancas: a cor é aplicada com "tint" na hora de usar.
  * -----------------------------------------------------------------------------
  */
 const FxTextureKeys = Object.freeze({
@@ -22,7 +23,8 @@ const FxTextureKeys = Object.freeze({
   ICICLE: 'fx_icicle',
   SHIELD: 'fx_shield',
   RAIN: 'fx_rain',     // gota de chuva comprida (tempestade)
-  LEAF: 'fx_leaf'      // folhinha voando no vento (tempestade)
+  LEAF: 'fx_leaf',     // folhinha voando no vento (tempestade)
+  NOTE: 'fx_note'      // nota musical (bardo)
 });
 
 class FxTextures {
@@ -41,6 +43,38 @@ class FxTextures {
     FxTextures.#shield(scene, FxTextureKeys.SHIELD);
     FxTextures.#rain(scene, FxTextureKeys.RAIN);
     FxTextures.#leaf(scene, FxTextureKeys.LEAF);
+    FxTextures.#note(scene, FxTextureKeys.NOTE);
+  }
+
+  /** Colcheia (♪): cabeça inclinada, haste e bandeirinha; branca com contorno escuro. */
+  static #note(scene, key) {
+    if (scene.textures.exists(key)) return;
+    const texture = scene.textures.createCanvas(key, 24, 30);
+    const ctx = texture.getContext();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#2a1a30';
+    ctx.fillStyle = '#ffffff';
+    ctx.lineJoin = 'round';
+    // haste e bandeirinha
+    ctx.beginPath();
+    ctx.moveTo(13, 22);
+    ctx.lineTo(13, 3);
+    ctx.quadraticCurveTo(22, 7, 21, 16);
+    ctx.quadraticCurveTo(20, 11, 16, 10);
+    ctx.lineTo(16, 22);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    // cabeça
+    ctx.save();
+    ctx.translate(9.5, 23);
+    ctx.rotate(-0.4);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 7, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+    texture.refresh();
   }
 
   /** Gota de chuva: risquinho vertical, transparente em cima e claro embaixo. */

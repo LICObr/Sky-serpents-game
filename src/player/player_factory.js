@@ -9,7 +9,9 @@ class PlayerFactory {
   static #classes = Object.freeze({
     [CharacterId.KNIGHT]: KnightPlayer,
     [CharacterId.ARCHER]: ArcherPlayer,
-    [CharacterId.VIKING]: VikingPlayer
+    [CharacterId.VIKING]: VikingPlayer,
+    [CharacterId.NINJA]: NinjaPlayer,
+    [CharacterId.BARD]: BardPlayer
   });
 
   constructor() {

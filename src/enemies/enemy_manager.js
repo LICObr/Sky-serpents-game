@@ -25,6 +25,7 @@
  * casco de tartaruga deslizando derruba os bichos que encontrar.
  * E cuida do que alguns bichos deixam ao morrer: o morcego-gigante vira dois
  * morceguinhos (SPLIT) e a traça e o sapo venenoso soltam uma nuvem (DEATH_DUST).
+ * Bicho encantado pelo Bardo (aliado) é atualizado sempre, pelo CharmedAlly.
  * -----------------------------------------------------------------------------
  */
 class EnemyManager {
@@ -120,8 +121,13 @@ class EnemyManager {
    */
   update(time, party) {
     const margin = GameSettings.ENEMY.ACTIVATION_MARGIN;
+    this.#enemies = this.#enemies.filter(enemy => enemy.isAlive); // (aliado dispensado pelo bardo some sem morrer)
     this.#enemies.forEach(enemy => {
-      if (!enemy.isAlive) return;
+      // Aliado do bardo: segue ele (não cai no buraco, não afunda e não dorme)
+      if (enemy.isCharmed) {
+        enemy.update(time, null);
+        return;
+      }
       // Caiu num buraco (ex.: sapo pulando): some
       if (enemy.y > GameSettings.LEVEL.PIT_Y) {
         enemy.vanish();

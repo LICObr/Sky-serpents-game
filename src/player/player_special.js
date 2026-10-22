@@ -9,6 +9,7 @@
  *
  * Cada personagem tem o seu (definido pela subclasse de Player):
  *   ArrowStormSpecial (arqueira) | DashSpecial (guerreiro) | ThunderSpecial (viking)
+ *   SmokeBombSpecial (ninja) | CharmNoteSpecial (bardo)
  * -----------------------------------------------------------------------------
  */
 class PlayerSpecial {
@@ -45,6 +46,11 @@ class PlayerSpecial {
   /** O especial controla o movimento enquanto acontece? (ex.: investida) */
   get controlsMovement() {
     return false;
+  }
+
+  /** Enquanto acontece, o ataque normal fica parado? (a fumaça do ninja e a nota do bardo deixam atacar) */
+  get blocksAttack() {
+    return true;
   }
 
   /** Milissegundos que faltam para recarregar (0 = pronto). */

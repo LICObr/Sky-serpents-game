@@ -5,6 +5,9 @@
  * vida, animação de 2 quadros, piscar (e tremer a tela) ao apanhar, morrer,
  * e a regra de "pisar em cima mata".
  *
+ * Encantado pelo Bardo (charm), o bicho vira ALIADO: quem manda nele passa a
+ * ser o CharmedAlly (segue o bardo e ataca os outros) e ninguém acerta ele.
+ *
  * Cada subclasse implementa apenas behave() — o jeito de se mover:
  *   WalkerEnemy (anda) → SnakeEnemy (cobrinha), SpikyEnemy (ouriço)
  *   FlyerEnemy (voa)   → GhostEnemy (some), DiverEnemy (vespa, rasante)
@@ -23,6 +26,7 @@ class Enemy extends GameEntity {
   #frameIndex = 0;
   #nextFrameTime = 0;
   #dying = false;
+  #ally = null;     // encantado pelo bardo (CharmedAlly): vira aliado
 
   /**
    * @param {Phaser.Scene} scene
@@ -58,8 +62,11 @@ class Enemy extends GameEntity {
   /** Vivo e não está morrendo (ainda se mexe). */
   get isActive() { return this.isAlive && !this.#dying; }
 
-  /** @override Morrendo não apanha mais. */
-  get canBeHit() { return this.isActive; }
+  /** @override Morrendo (ou aliado do bardo) não apanha mais. */
+  get canBeHit() { return this.isActive && !this.#ally; }
+
+  /** Encantado pelo bardo (virou aliado)? */
+  get isCharmed() { return this.#ally !== null; }
 
   /** Machuca o jogador ao encostar? (o fantasma sumido não machuca) */
   get canHurt() { return this.canBeHit; }
@@ -94,7 +101,16 @@ class Enemy extends GameEntity {
   update(time, player) {
     if (!this.isActive) return;
     if (this.cyclesFrames) this.#animate(time);
-    this.behave(time, player);
+    if (this.#ally) this.#ally.update(time); // aliado do bardo: o jeito de se mover é outro
+    else this.behave(time, player);
+  }
+
+  /**
+   * Encantado pela nota do bardo: a partir de agora quem manda nele é o aliado.
+   * @param {CharmedAlly} ally
+   */
+  charm(ally) {
+    this.#ally = ally;
   }
 
   /** Movimento próprio de cada tipo. Subclasses DEVEM sobrescrever. */

@@ -8,6 +8,8 @@
  *   - SwordAttack  → golpe corpo a corpo
  *   - BowAttack    → dispara flechas
  *   - HammerAttack → arremessa o martelo (sem ele, soquinho)
+ *   - KatanaAttack → corte rápido e furtivo
+ *   - RapierAttack → estocada de florete
  * -----------------------------------------------------------------------------
  */
 class PlayerAttack {

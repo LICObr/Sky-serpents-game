@@ -14,11 +14,16 @@
 const CharacterId = Object.freeze({
   KNIGHT: 'KNIGHT',
   ARCHER: 'ARCHER',
-  VIKING: 'VIKING'
+  VIKING: 'VIKING',
+  NINJA: 'NINJA',
+  BARD: 'BARD'
 });
 
-/** Texturas de um conjunto de poses do viking (com ou sem o martelo). */
-const vikingTextures = (base, attack) => {
+/**
+ * Texturas de um conjunto de poses geradas pelas ferramentas (parado, os 4
+ * passos, pulo, queda, ataque e agachado — veja poseImages no asset_manifest).
+ */
+const poseTextures = (base, attack) => {
   const side = name => ({ RIGHT: `${name}_direita`, LEFT: `${name}_esquerda` });
   const walk = ['passo_a', 'passo_a_meio', 'passo_b', 'passo_b_meio'];
   return {
@@ -86,8 +91,35 @@ const CHARACTERS = deepFreeze({
     WALK_SPEED: 115,            // um pouco mais lento (é pesado)
     DUCK_VISUAL_OFFSET: 0,
     // o soco é também a pose do arremesso: o braço vai para a frente e o martelo sai voando
-    TEXTURES: vikingTextures('viking', 'viking_soco'),
+    TEXTURES: poseTextures('viking', 'viking_soco'),
     // sem o martelo na mão (depois de arremessar, até pegar de volta)
-    ALT_TEXTURES: { UNARMED: vikingTextures('viking_sem_martelo', 'viking_soco') }
+    ALT_TEXTURES: { UNARMED: poseTextures('viking_sem_martelo', 'viking_soco') }
+  },
+
+  // Ninja: katana rápida (o primeiro golpe em cada bicho é furtivo: dobrado),
+  // pulo duplo e bomba de fumaça (tools/ninja_from_image.py)
+  [CharacterId.NINJA]: {
+    ID: CharacterId.NINJA,
+    NAME: 'Ninja',
+    DESCRIPTION: 'Katana: ataque rápido e furtivo',
+    SCALE: 0.085,
+    BODY: { WIDTH: 300, HEIGHT: 440 },
+    WALK_SPEED: 140,            // o mais rápido
+    AIR_JUMPS: 1,               // pulo duplo (um pulo a mais no ar)
+    DUCK_VISUAL_OFFSET: 0,
+    TEXTURES: poseTextures('ninja', 'ninja_corte')
+  },
+
+  // Bardo: estocada de florete e, no especial, uma nota encantada que
+  // transforma até 2 bichos em aliados (tools/bard_from_image.py)
+  [CharacterId.BARD]: {
+    ID: CharacterId.BARD,
+    NAME: 'Bardo',
+    DESCRIPTION: 'Alaúde: encanta até 2 inimigos, que viram aliados',
+    SCALE: 0.085,
+    BODY: { WIDTH: 300, HEIGHT: 440 },
+    WALK_SPEED: 125,
+    DUCK_VISUAL_OFFSET: 0,
+    TEXTURES: poseTextures('bardo', 'bardo_estocada')
   }
 });

@@ -9,8 +9,10 @@
  *   - PlayerShield   → escudinho do agachar (segura um golpe e recarrega)
  *   - PlayerAttack   → definido pela SUBCLASSE (createAttack):
  *        KnightPlayer → SwordAttack | ArcherPlayer → BowAttack | VikingPlayer → HammerAttack
+ *        NinjaPlayer → KatanaAttack | BardPlayer → RapierAttack
  *   - PlayerSpecial  → especial da tecla G, também da SUBCLASSE (createSpecial):
  *        KnightPlayer → DashSpecial | ArcherPlayer → ArrowStormSpecial | VikingPlayer → ThunderSpecial
+ *        NinjaPlayer → SmokeBombSpecial | BardPlayer → CharmNoteSpecial
  *
  * Com 2 jogadores, cada um também é um ALVO do combate (fogo amigo): golpe,
  * flecha ou especial do parceiro tira um coração (o escudinho segura). E quem
@@ -201,7 +203,7 @@ class Player extends GameEntity {
   handleAttack(combat) {
     if (this.#status.isFrozen) return; // congelado não ataca
     this.#special.update(combat);
-    if (this.isDucking || this.#special.isActive) return;
+    if (this.isDucking || (this.#special.isActive && this.#special.blocksAttack)) return;
     this.#attack.update(combat);
   }
 
@@ -303,6 +305,18 @@ class Player extends GameEntity {
     if (this.#knockedOut) return;
     this.sprite.setVelocity(0, speed);
     this.#status.grab(ms);
+  }
+
+  /** Pulo duplo (ninja): um mortal no ar e uma nuvenzinha embaixo dos pés. */
+  playAirJump() {
+    const cfg = GameSettings.PLAYER.AIR_JUMP;
+    const sprite = this.sprite;
+    const scene = this.scene;
+    sprite.setAngle(0);
+    scene.tweens.add({ targets: sprite, angle: this.#facingRight ? 360 : -360, duration: cfg.FLIP_MS,
+      onComplete: () => sprite.setAngle(0) });
+    const puff = scene.add.ellipse(sprite.x, sprite.body.bottom, 22, 8, 0xe8e8f0, 0.7).setDepth(sprite.depth - 0.1);
+    scene.tweens.add({ targets: puff, scaleX: 1.8, scaleY: 0.4, alpha: 0, duration: 260, onComplete: () => puff.destroy() });
   }
 
   /** Pulinho depois de pisar em um inimigo. */

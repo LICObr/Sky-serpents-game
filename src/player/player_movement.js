@@ -4,6 +4,7 @@
  * Responsável por TODA a locomoção do jogador: andar (com os quadros da
  * caminhada), pular, agachar e NADAR (lagoas do pântano). A velocidade vem
  * do personagem escolhido e pode ser reduzida por efeitos (gelo, água, lama).
+ * Quem tem AIR_JUMPS (o ninja) ainda pula de novo no ar: pulo duplo.
  * -----------------------------------------------------------------------------
  */
 class PlayerMovement {
@@ -12,6 +13,8 @@ class PlayerMovement {
   #isDucking = false;
   #lastGroundedAt = 0;
   #swimmingSince = null; // quando caiu na água (null = fora da água)
+  #airJumpsLeft = 0;     // pulos que ainda dá para dar no ar (pulo duplo)
+  #jumpWasHeld = false;  // para o pulo no ar precisar de uma nova apertada
 
   /**
    * @param {Player} player dono deste componente
@@ -30,13 +33,19 @@ class PlayerMovement {
   update() {
     const sprite = this.#player.sprite;
     const now = this.#player.scene.time.now;
-    if (sprite.body.blocked.down) this.#lastGroundedAt = now;
+    if (sprite.body.blocked.down) {
+      this.#lastGroundedAt = now;
+      this.#airJumpsLeft = this.#player.character.AIR_JUMPS || 0;
+    }
+    const jumpHeld = this.#input.isJumpHeld();
+    const jumpPressed = jumpHeld && !this.#jumpWasHeld;
+    this.#jumpWasHeld = jumpHeld;
 
     // Enquanto agachado o jogador não anda nem pula
     if (this.#handleDuck(sprite)) return;
 
     this.#handleHorizontal(sprite, now);
-    this.#handleJump(sprite, now);
+    this.#handleJump(sprite, now, jumpPressed);
   }
 
   /** Cancela o agachamento (ex.: ao renascer no checkpoint). */
@@ -95,8 +104,9 @@ class PlayerMovement {
   /**
    * Pulo: permitido com os pés no chão ou logo depois de sair dele
    * ("coyote time" — evita falhar o pulo ao descer degraus de rampa).
+   * Pulo duplo: no ar, uma NOVA apertada pula de novo (se ainda tiver pulo).
    */
-  #handleJump(sprite, now) {
+  #handleJump(sprite, now, jumpPressed) {
     if (this.#player.status.isSwimming) {
       this.#swim(sprite, now);
       return;
@@ -107,6 +117,11 @@ class PlayerMovement {
     if (this.#input.isJumpHeld() && grounded && !goingUp) {
       sprite.setVelocityY(GameSettings.PLAYER.JUMP_VELOCITY * this.#player.status.jumpMultiplier);
       this.#lastGroundedAt = 0; // não deixa pular duas vezes no mesmo instante
+    } else if (jumpPressed && !grounded && this.#airJumpsLeft > 0) {
+      this.#airJumpsLeft--;
+      const { VELOCITY_MULTIPLIER } = GameSettings.PLAYER.AIR_JUMP;
+      sprite.setVelocityY(GameSettings.PLAYER.JUMP_VELOCITY * VELOCITY_MULTIPLIER * this.#player.status.jumpMultiplier);
+      this.#player.playAirJump();
     }
   }
 

@@ -5,7 +5,7 @@
  * responsável por carregá-los no Phaser.
  *
  * Os arquivos ficam organizados por "dono" dentro de assets/:
- *   personagens/guerreiro | personagens/arqueira
+ *   personagens/guerreiro | personagens/arqueira | personagens/viking | personagens/ninja | personagens/bardo
  *   inimigos/slime | inimigos/morcego | inimigos/fantasma
  *   chefoes/dragao_vermelho | chefoes/dragao_rosa | chefoes/serpente_glacial | chefoes/urso_polar
  *   chefoes/colmeia | chefoes/abelha_rainha | chefoes/filhote_aguia
@@ -26,6 +26,21 @@
  */
 function imagesIn(folder, images) {
   return Object.entries(images).map(([key, file]) => ({ type: 'image', key, path: `assets/${folder}/${file}` }));
+}
+
+/**
+ * As imagens de um conjunto de poses (parado, os 4 passos, pulo, queda e
+ * agachado), dos dois lados — o que as ferramentas dos personagens geram.
+ * @param {string} folder pasta dentro de assets/
+ * @param {string} base nome da pose parada (ex.: 'ninja' → ninja_direita.png...)
+ */
+function poseImages(folder, base) {
+  const poses = ['', '_passo_a', '_passo_a_meio', '_passo_b', '_passo_b_meio', '_pulo', '_queda', '_agachado'];
+  const images = {};
+  poses.forEach(pose => ['direita', 'esquerda'].forEach(side => {
+    images[`${base}${pose}_${side}`] = `${base}${pose}_${side}.png`;
+  }));
+  return imagesIn(folder, images);
 }
 
 const ASSET_MANIFEST = Object.freeze([
@@ -82,15 +97,18 @@ const ASSET_MANIFEST = Object.freeze([
     heroi_passo_b_meio_esquerda: 'heroi_passo_b_meio_esquerda.png', heroi_pulo_esquerda: 'heroi_pulo_esquerda.png', heroi_queda_esquerda: 'heroi_queda_esquerda.png'
   }),
 
-  // Viking (tools/viking_from_image.py e tools/walk_frames.py): com e sem o martelo
+  // Viking, Ninja e Bardo (tools/viking_from_image.py, ninja_from_image.py,
+  // bard_from_image.py e walk_frames.py)
+  ...poseImages('personagens/viking', 'viking'),
+  ...poseImages('personagens/viking', 'viking_sem_martelo'),
   ...imagesIn('personagens/viking', {
-    viking_direita: 'viking_direita.png', viking_passo_a_direita: 'viking_passo_a_direita.png', viking_passo_a_meio_direita: 'viking_passo_a_meio_direita.png', viking_passo_b_direita: 'viking_passo_b_direita.png', viking_passo_b_meio_direita: 'viking_passo_b_meio_direita.png', viking_pulo_direita: 'viking_pulo_direita.png', viking_queda_direita: 'viking_queda_direita.png', viking_agachado_direita: 'viking_agachado_direita.png',
-    viking_esquerda: 'viking_esquerda.png', viking_passo_a_esquerda: 'viking_passo_a_esquerda.png', viking_passo_a_meio_esquerda: 'viking_passo_a_meio_esquerda.png', viking_passo_b_esquerda: 'viking_passo_b_esquerda.png', viking_passo_b_meio_esquerda: 'viking_passo_b_meio_esquerda.png', viking_pulo_esquerda: 'viking_pulo_esquerda.png', viking_queda_esquerda: 'viking_queda_esquerda.png', viking_agachado_esquerda: 'viking_agachado_esquerda.png',
-    viking_sem_martelo_direita: 'viking_sem_martelo_direita.png', viking_sem_martelo_passo_a_direita: 'viking_sem_martelo_passo_a_direita.png', viking_sem_martelo_passo_a_meio_direita: 'viking_sem_martelo_passo_a_meio_direita.png', viking_sem_martelo_passo_b_direita: 'viking_sem_martelo_passo_b_direita.png', viking_sem_martelo_passo_b_meio_direita: 'viking_sem_martelo_passo_b_meio_direita.png', viking_sem_martelo_pulo_direita: 'viking_sem_martelo_pulo_direita.png', viking_sem_martelo_queda_direita: 'viking_sem_martelo_queda_direita.png', viking_sem_martelo_agachado_direita: 'viking_sem_martelo_agachado_direita.png',
-    viking_sem_martelo_esquerda: 'viking_sem_martelo_esquerda.png', viking_sem_martelo_passo_a_esquerda: 'viking_sem_martelo_passo_a_esquerda.png', viking_sem_martelo_passo_a_meio_esquerda: 'viking_sem_martelo_passo_a_meio_esquerda.png', viking_sem_martelo_passo_b_esquerda: 'viking_sem_martelo_passo_b_esquerda.png', viking_sem_martelo_passo_b_meio_esquerda: 'viking_sem_martelo_passo_b_meio_esquerda.png', viking_sem_martelo_pulo_esquerda: 'viking_sem_martelo_pulo_esquerda.png', viking_sem_martelo_queda_esquerda: 'viking_sem_martelo_queda_esquerda.png', viking_sem_martelo_agachado_esquerda: 'viking_sem_martelo_agachado_esquerda.png',
     viking_soco_direita: 'viking_soco_direita.png', viking_soco_esquerda: 'viking_soco_esquerda.png',
     martelo: 'martelo.png'
   }),
+  ...poseImages('personagens/ninja', 'ninja'),
+  ...imagesIn('personagens/ninja', { ninja_corte_direita: 'ninja_corte_direita.png', ninja_corte_esquerda: 'ninja_corte_esquerda.png' }),
+  ...poseImages('personagens/bardo', 'bardo'),
+  ...imagesIn('personagens/bardo', { bardo_estocada_direita: 'bardo_estocada_direita.png', bardo_estocada_esquerda: 'bardo_estocada_esquerda.png' }),
 
   // Arqueira
   ...imagesIn('personagens/arqueira', {

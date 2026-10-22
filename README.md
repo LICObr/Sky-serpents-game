@@ -1,7 +1,12 @@
 # Sky Serpents Supremo
 
 Jogo de plataforma 2D em pixel art, feito com [Phaser 3](https://phaser.io) (JavaScript puro, sem build).
-Escolha o **Guerreiro** (espada), a **Arqueira** (arco) ou o **Viking** (arremessa o martelo, que cai fazendo um tremor — passe por cima dele para pegar de volta; sem ele, soquinho; especial: Trovão), atravesse cada fase e derrote o chefão no final.
+Escolha o personagem, atravesse cada fase e derrote o chefão no final:
+- **Guerreiro**: espada; especial Investida.
+- **Arqueira**: arco e flechas; especial Tempestade de Flechas.
+- **Viking**: arremessa o martelo, que cai fazendo um tremor — passe por cima dele para pegar de volta (sem ele, soquinho); especial Trovão.
+- **Ninja**: katana rápida e furtiva (o primeiro golpe em cada bicho vale o dobro) e pulo duplo; especial Bomba de Fumaça (some, fica invencível e todo golpe vale o dobro).
+- **Bardo**: estocada de florete; especial Nota Encantada (até 2 bichos viram aliados e lutam do seu lado, com dano menor).
 
 No menu principal:
 - **1 jogador**: escolha o personagem e a fase.

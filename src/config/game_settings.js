@@ -111,6 +111,7 @@ const GameSettings = deepFreeze({
     STOMP_BOUNCE_Y: -420,       // pulinho ao pisar em um inimigo
     COYOTE_TIME_MS: 110,        // ainda dá para pular logo após sair do chão
     PUSH: { LIFT_Y: -260, MS: 420 }, // empurrão (vento): pulinho e tempo sem controle
+    AIR_JUMP: { VELOCITY_MULTIPLIER: 0.9, FLIP_MS: 320 }, // pulo duplo (ninja): um pouco mais baixo, com mortal
     // Sem corações: tomba para a esquerda e fica deitado, meio transparente
     DEATH: { FALL_MS: 450, ALPHA: 0.45, LYING_HEIGHT: 18, PULSE_MS: 900 }
   },
@@ -221,12 +222,12 @@ const GameSettings = deepFreeze({
     SCALE: 0.095,
     DEPTH: 1.8,                 // como as flechas: na frente dos bichos, atrás do jogador
     HAND: { X: 14, Y: -4 },     // de onde ele sai (a mão do viking)
-    THROW_SPEED_X: 420,
-    THROW_SPEED_Y: -300,        // sobe um pouquinho e cai uns 210px à frente (médio alcance)
+    THROW_SPEED_X: 320,
+    THROW_SPEED_Y: -300,        // sobe um pouquinho e cai uns 160px à frente (médio alcance)
     GRAVITY: 1300,              // gravidade própria (um pouco mais leve que a do mundo)
     SPIN_SPEED: 20,             // giro no ar (rad/s)
     BOUNCE_X: 0.3,              // bate na parede (ou na borda da arena) e volta um pouco
-    HIT_DAMAGE: 35,             // acerta tudo no caminho (cada um uma vez por arremesso)
+    HIT_DAMAGE: 25,             // acerta tudo no caminho (cada um uma vez por arremesso)
     TREE_BOUNCE: 0.35,          // bate na árvore e volta um pouco (cai do lado de cá)
     EMBED: 2,                   // cai de cabeça e afunda um tiquinho no chão
     QUAKE: {                    // ao cair: tremor em quem está no chão perto
@@ -248,6 +249,36 @@ const GameSettings = deepFreeze({
     },
     // Sem o martelo: soquinho, bem mais fraco e só de perto (mas dá dano!)
     PUNCH: { DAMAGE: 5, REACH_RATIO: 0.7, POW_X: 16, POW_Y: -2 }
+  },
+
+  // Katana do NINJA: golpe rápido, só na frente. FURTIVO: o primeiro golpe em
+  // cada bicho (pego de surpresa) e os golpes escondido na fumaça valem o dobro
+  KATANA_ATTACK: {
+    DAMAGE: 10,
+    SNEAK_MULTIPLIER: 2,
+    COOLDOWN_MS: 220,           // bem mais rápida que a espada
+    POSE_DURATION_MS: 140
+  },
+
+  // Florete do BARDO: estocada só na frente, um pouco mais longe que a espada
+  RAPIER_ATTACK: {
+    DAMAGE: 12,
+    REACH_RATIO: 1.25,          // fração do alcance da espada contra o alvo
+    COOLDOWN_MS: 330,
+    POSE_DURATION_MS: 180
+  },
+
+  // Bicho ENCANTADO pelo bardo (CharmedAlly): segue o bardo e ataca os outros
+  ALLY: {
+    DAMAGE: 4,                  // bem menos que os jogadores
+    HIT_MS: 700,
+    SPEED: 170,
+    SIGHT: 300,                 // ataca bichos (e o chefão) até esta distância do bardo
+    LEASH: 420,                 // mais longe que isso do bardo: reaparece do lado dele
+    FOLLOW: { X: 34, GAP: 28, Y: -30, BOB: 5 }, // atrás do bardo, um do lado do outro, dançando
+    RECOIL: 180,                // depois de bater, recua um pouquinho
+    TINT: 0xffd6f4,             // rosinha: encantado
+    MARKER: { SCALE: 0.5, Y: 6, TINT: 0xffb8ec } // notinha em cima da cabeça
   },
 
   ENEMY: {
@@ -606,6 +637,23 @@ const GameSettings = deepFreeze({
       TICK_DAMAGE: 8,
       REACH: 60,
       GHOST_EVERY_MS: 50        // rastro de "fantasmas"
+    },
+    SMOKE_BOMB: {               // ninja: some na fumaça (invencível) e todo golpe vira furtivo
+      DURATION_MS: 3000,
+      ALPHA: 0.3,               // quase invisível
+      TINT: 0x8a80a8,
+      PUFF: 26,                 // fumaça ao sumir e ao aparecer
+      WISP_EVERY_MS: 110        // fiapos de fumaça enquanto está escondido
+    },
+    CHARM_NOTE: {               // bardo: nota encantada que transforma bichos em aliados
+      SPEED: 260,
+      LIFETIME_MS: 1500,
+      WAVE: { AMPLITUDE: 12, SPEED: 0.009 }, // sobe e desce dançando
+      MAX_CHARMS: 2,            // encanta até 2 por nota...
+      MAX_ALLIES: 2,            // ...e no máximo 2 aliados (o mais antigo vai embora)
+      DAMAGE: 20,               // bicho que não dá para encantar (ex.: peixe, planta) leva dano
+      BOSS_DAMAGE: 30,          // o chefão não se encanta: leva dano e a nota estoura
+      TINT: 0xffd84a
     },
     THUNDER: {                  // viking: raios nos bichos da tela e o martelo volta para a mão
       BOLTS: 5,
