@@ -52,7 +52,7 @@ class PlayerHealth {
 
     this.#hearts--;
     this.#emitHeartsChanged();
-    SoundFx.play(this.#player.scene, this.isDead ? SoundKeys.PLAYER_DOWN : SoundKeys.PLAYER_HURT);
+    this.#feelPain();
 
     if (this.isDead) {
       this.#eventBus.emit(GameEvents.PLAYER_DIED, this.#player);
@@ -110,6 +110,16 @@ class PlayerHealth {
       repeat: Math.max(0, Math.floor(DAMAGE_COOLDOWN_MS / (BLINK_INTERVAL_MS * 2)) - 1),
       onComplete: () => { if (player.isAlive) player.sprite.setAlpha(1); }
     });
+  }
+
+  /** Perdeu um coração: pancada, gemido de dor (voz do personagem) e as bordas da tela piscam em vermelho. */
+  #feelPain() {
+    const scene = this.#player.scene;
+    const character = this.#player.character;
+    SoundFx.play(scene, this.isDead ? SoundKeys.PLAYER_DOWN : SoundKeys.PLAYER_HURT);
+    SoundFx.play(scene, Phaser.Utils.Array.GetRandom(VoiceGrunts[character.VOICE]),
+      { volume: 0.8, detune: character.VOICE_DETUNE });
+    HurtFlash.play(scene);
   }
 
   #emitHeartsChanged() {

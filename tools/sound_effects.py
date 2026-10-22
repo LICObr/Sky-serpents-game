@@ -7,6 +7,8 @@ de bipe de videogame antigo nem som fininho):
     roupa, socos, metal, madeira, pedra, moedas, os menus e as vinhetas
     de vitória e game over em cordas (pizzicato), muitas vezes em camadas
     (ex.: o pulo é o pé empurrando o chão + a roupa balançando);
+  - VOZES (source_art/sons/vozes/): gemidos de dor de homem e de mulher,
+    para quando o personagem perde um coração (créditos no LICENCA.txt);
   - o que não existe gravado é SINTETIZADO em camadas, como no cinema: o arco
     (estalo firme da corda, o arco vibrando e a flecha indo embora), lâminas e
     martelo cortando o ar, fumaça, trovão, magia, poção e explosão — sempre
@@ -28,6 +30,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES = ROOT / "source_art" / "sons" / "kenney"
+VOICES = ROOT / "source_art" / "sons" / "vozes"
 OUT = ROOT / "assets" / "sons"
 SR = 44100
 LOUDNESS_DB = -16               # volume da parte que soa (todos os sons iguais)
@@ -191,15 +194,22 @@ def reverb(x, seconds=0.8, amount=0.2, brightness=5000):
     return mix(x, wet * amount)
 
 
-def recording(name, gain=1.0, start=0.0):
+def recording(name, gain=1.0, start=0.0, folder=SOURCES):
     """Um som gravado (mono, 44,1 kHz), sem o silêncio do começo e com o pico em 1."""
-    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(SOURCES / f"{name}.ogg"),
+    path = next(folder.glob(f"{name}.*"))
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(path),
                           "-f", "s16le", "-ac", "1", "-ar", str(SR), "-"], capture_output=True, check=True).stdout
     x = np.frombuffer(raw, dtype=np.int16).astype(float) / 32768
     peak = np.max(np.abs(x)) or 1
     onset = int(np.argmax(np.abs(x) > 0.02 * peak))
     x = x[max(0, onset - samples(0.002)):] / peak * gain
     return delay(x, start) if start else x
+
+
+def pitch_shift(x, semitones):
+    """Muda o tom como numa fita: mais grave = toca mais devagar."""
+    factor = 2 ** (semitones / 12)
+    return np.interp(np.arange(0, len(x) - 1, factor), np.arange(len(x)), x)
 
 
 def finish(x):
@@ -247,6 +257,16 @@ def knocked_out():
 def shield():
     """O escudinho segurou: pancada de metal pesado ressoando."""
     return reverb(recording("impactPlate_heavy_001"), 0.7, 0.2)
+
+
+def male_grunt(number):
+    """Perdeu um coração: gemido de dor de homem, baixo e grave."""
+    return reverb(pitch_shift(recording(f"homem_gemido_{number}", folder=VOICES), -2), 0.4, 0.08)
+
+
+def female_grunt(number):
+    """Perdeu um coração: gemido de dor de mulher (a arqueira)."""
+    return reverb(recording(f"mulher_gemido_{number}", folder=VOICES), 0.4, 0.08)
 
 
 def stomp():
@@ -478,6 +498,8 @@ def menu_ok():
 SOUNDS = {
     "pulo": jump, "pulo_duplo": air_jump, "dano_jogador": player_hurt, "jogador_caiu": knocked_out,
     "escudo": shield, "pisar": stomp, "reviver": revive,
+    "gemido_homem_1": lambda: male_grunt(1), "gemido_homem_2": lambda: male_grunt(3), "gemido_homem_3": lambda: male_grunt(5),
+    "gemido_mulher_1": lambda: female_grunt(1), "gemido_mulher_2": lambda: female_grunt(2), "gemido_mulher_3": lambda: female_grunt(3),
     "espada": sword, "flecha": bow, "martelo": hammer_throw, "tremor": quake, "soco": punch,
     "katana": katana, "fumaca": smoke, "florete": rapier, "alaude": lute, "encanto": charm,
     "trovao": thunder, "investida": dash, "chuva_de_flechas": arrow_storm,

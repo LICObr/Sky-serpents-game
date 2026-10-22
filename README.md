@@ -8,7 +8,9 @@ Escolha o personagem, atravesse cada fase e derrote o chefão no final:
 - **Ninja**: katana rápida e furtiva (o primeiro golpe em cada bicho vale o dobro) e pulo duplo; especial Bomba de Fumaça (some, fica invencível e todo golpe vale o dobro).
 - **Bardo**: estocada de florete; especial Nota Encantada (até 2 bichos viram aliados e lutam do seu lado: com dano menor, mas o dobro da vida — e podem morrer; quem é de chão anda, quem voa voa).
 
-Efeitos sonoros realistas para golpes, dano, pulos, moedas, poções, chefões, vitória e game over: sons gravados de verdade (passos, roupa, socos, metal, madeira, pedra, moedas — de [Kenney](https://kenney.nl), licença CC0) misturados com sons sintetizados em camadas, no estilo de cinema (o arco, as lâminas cortando o ar, trovão, magia, explosões).
+Efeitos sonoros realistas para golpes, dano, pulos, moedas, poções, chefões, vitória e game over: sons gravados de verdade (passos, roupa, socos, metal, madeira, pedra, moedas — de [Kenney](https://kenney.nl), licença CC0) misturados com sons sintetizados em camadas, no estilo de cinema (o arco, as lâminas cortando o ar, trovão, magia, explosões). Ao perder um coração, as bordas da tela piscam em vermelho e o personagem solta um gemido de dor (voz de homem; na Arqueira, de mulher).
+
+Créditos dos sons gravados: [Kenney](https://kenney.nl) (CC0); gemidos masculinos de [HaelDB](https://opengameart.org/content/male-gruntyelling-sounds) (CC0); "Female Voice-pack by PlumpDev" ([Female Gruntwork - 1](https://opengameart.org/content/female-gruntwork-1), CC BY 4.0).
 
 No menu principal:
 - **1 jogador**: escolha o personagem e a fase.

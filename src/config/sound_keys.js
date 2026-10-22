@@ -15,6 +15,12 @@ const SoundKeys = Object.freeze({
   SHIELD: 'escudo',
   STOMP: 'pisar',
   REVIVE: 'reviver',
+  GRUNT_MALE_1: 'gemido_homem_1',     // perdeu um coração: gemido de dor (voz de homem)...
+  GRUNT_MALE_2: 'gemido_homem_2',
+  GRUNT_MALE_3: 'gemido_homem_3',
+  GRUNT_FEMALE_1: 'gemido_mulher_1',  // ...ou de mulher (a arqueira)
+  GRUNT_FEMALE_2: 'gemido_mulher_2',
+  GRUNT_FEMALE_3: 'gemido_mulher_3',
   // ataques e especiais
   SWORD: 'espada',
   BOW: 'flecha',
@@ -44,4 +50,10 @@ const SoundKeys = Object.freeze({
   GAME_OVER: 'game_over',
   MENU_MOVE: 'menu_mover',
   MENU_OK: 'menu_ok'
+});
+
+/** Gemidos de dor de cada voz (um sorteado a cada coração perdido). */
+const VoiceGrunts = Object.freeze({
+  MALE: [SoundKeys.GRUNT_MALE_1, SoundKeys.GRUNT_MALE_2, SoundKeys.GRUNT_MALE_3],
+  FEMALE: [SoundKeys.GRUNT_FEMALE_1, SoundKeys.GRUNT_FEMALE_2, SoundKeys.GRUNT_FEMALE_3]
 });

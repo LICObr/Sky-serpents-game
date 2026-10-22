@@ -778,6 +778,8 @@ const GameSettings = deepFreeze({
     // Relógio da fase embaixo da bandeirinha (as moedas crescem para a esquerda e não chegam nele)
     CLOCK: { X: 650, Y: 52, SIZE: 8 },
     BANNER_DURATION_MS: 2200,
+    // Perdeu um coração: as bordas da tela piscam em vermelho (HurtFlash)
+    HURT_FLASH: { PEAK_ALPHA: 0.55, IN_MS: 70, OUT_MS: 420 },
     // Botõezinhos de música e de todos os sons, no canto de baixo à direita (SoundToggles)
     SOUND_TOGGLES: { X: 778, Y: 580, GAP: 30, SIZE: 24 },
     DEPTH: 10

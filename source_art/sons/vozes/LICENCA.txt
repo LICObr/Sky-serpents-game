@@ -1,0 +1,10 @@
+Vozes (gemidos de dor) usadas por tools/sound_effects.py:
+
+  homem_gemido_*.flac  — "Male grunt/yelling sounds" de HaelDB (OpenGameArt)
+                         https://opengameart.org/content/male-gruntyelling-sounds
+                         Licença: CC0 (domínio público; a página também oferece OGA-BY 3.0)
+
+  mulher_gemido_*.flac — trechos de "Female Gruntwork - 1" de PlumpDev (OpenGameArt)
+                         https://opengameart.org/content/female-gruntwork-1
+                         Licença: CC BY 4.0 (a página também cita CC-BY-SA 4.0) — crédito obrigatório:
+                         "Female Voice-pack by PlumpDev". Os trechos recortados seguem a mesma licença.

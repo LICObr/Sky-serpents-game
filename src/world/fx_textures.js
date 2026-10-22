@@ -11,6 +11,7 @@
  *   - fx_shield:    escudinho azul-claro (defesa do agachar)
  *   - fx_note:      nota musical (a nota encantada do bardo e os aliados)
  *   - fx_speaker:   alto-falante (botão de ligar/desligar os sons)
+ *   - fx_vignette:  bordas vermelhas da tela (piscam quando o jogador perde um coração)
  *
  * fx_glow, fx_spark e fx_note são brancas: a cor é aplicada com "tint" na hora de usar.
  * -----------------------------------------------------------------------------
@@ -26,7 +27,8 @@ const FxTextureKeys = Object.freeze({
   RAIN: 'fx_rain',     // gota de chuva comprida (tempestade)
   LEAF: 'fx_leaf',     // folhinha voando no vento (tempestade)
   NOTE: 'fx_note',     // nota musical (bardo)
-  SPEAKER: 'fx_speaker' // alto-falante (botão dos sons)
+  SPEAKER: 'fx_speaker', // alto-falante (botão dos sons)
+  VIGNETTE: 'fx_vignette' // bordas vermelhas (perdeu um coração)
 });
 
 class FxTextures {
@@ -47,6 +49,28 @@ class FxTextures {
     FxTextures.#leaf(scene, FxTextureKeys.LEAF);
     FxTextures.#note(scene, FxTextureKeys.NOTE);
     FxTextures.#speaker(scene, FxTextureKeys.SPEAKER);
+    FxTextures.#vignette(scene, FxTextureKeys.VIGNETTE);
+  }
+
+  /** Bordas vermelhas: o meio transparente e o vermelho só perto das bordas da tela. */
+  static #vignette(scene, key) {
+    if (scene.textures.exists(key)) return;
+    const width = GameSettings.SCREEN.WIDTH / 2;
+    const height = GameSettings.SCREEN.HEIGHT / 2;
+    const texture = scene.textures.createCanvas(key, width, height);
+    const ctx = texture.getContext();
+    ctx.save();
+    ctx.translate(width / 2, height / 2);
+    ctx.scale(1, height / width); // oval do tamanho da tela
+    const radius = width / 2;
+    const gradient = ctx.createRadialGradient(0, 0, radius * 0.55, 0, 0, radius * 1.15);
+    gradient.addColorStop(0, 'rgba(255, 20, 20, 0)');
+    gradient.addColorStop(0.6, 'rgba(230, 10, 10, 0.35)');
+    gradient.addColorStop(1, 'rgba(200, 0, 0, 0.85)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(-width, -width, width * 2, width * 2);
+    ctx.restore();
+    texture.refresh();
   }
 
   /** Alto-falante com duas ondas de som; branco com contorno escuro. */

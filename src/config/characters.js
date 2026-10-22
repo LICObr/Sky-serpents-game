@@ -4,6 +4,9 @@
  * Personagens jogáveis. Cada um define aparência, hitbox, velocidade e o
  * tipo de ataque. A classe de cada personagem é escolhida em PlayerFactory.
  *
+ * VOICE (MALE/FEMALE) e VOICE_DETUNE (tom, em cents) escolhem o gemido de
+ * dor quando o personagem perde um coração.
+ *
  * Para criar um personagem novo:
  *   1. adicione as imagens no asset_manifest.js
  *   2. adicione uma entrada aqui
@@ -40,6 +43,7 @@ const CHARACTERS = deepFreeze({
   [CharacterId.KNIGHT]: {
     ID: CharacterId.KNIGHT,
     NAME: 'Guerreiro',
+    VOICE: 'MALE', VOICE_DETUNE: 0,
     DESCRIPTION: 'Espada: golpe forte de perto',
     SCALE: 0.085,
     BODY: { WIDTH: 300, HEIGHT: 440 },
@@ -63,6 +67,7 @@ const CHARACTERS = deepFreeze({
   [CharacterId.ARCHER]: {
     ID: CharacterId.ARCHER,
     NAME: 'Arqueira',
+    VOICE: 'FEMALE', VOICE_DETUNE: 0,
     DESCRIPTION: 'Arco: flechas de longe',
     SCALE: 0.085,
     BODY: { WIDTH: 300, HEIGHT: 440 },
@@ -85,6 +90,7 @@ const CHARACTERS = deepFreeze({
   [CharacterId.VIKING]: {
     ID: CharacterId.VIKING,
     NAME: 'Viking',
+    VOICE: 'MALE', VOICE_DETUNE: -250,   // mais grave
     DESCRIPTION: 'Martelo: ataque de médio alcance',
     SCALE: 0.085,
     BODY: { WIDTH: 300, HEIGHT: 440 },
@@ -101,6 +107,7 @@ const CHARACTERS = deepFreeze({
   [CharacterId.NINJA]: {
     ID: CharacterId.NINJA,
     NAME: 'Ninja',
+    VOICE: 'MALE', VOICE_DETUNE: 120,   // um pouco mais agudo
     DESCRIPTION: 'Katana: ataque rápido e furtivo',
     SCALE: 0.085,
     BODY: { WIDTH: 300, HEIGHT: 440 },
@@ -115,6 +122,7 @@ const CHARACTERS = deepFreeze({
   [CharacterId.BARD]: {
     ID: CharacterId.BARD,
     NAME: 'Bardo',
+    VOICE: 'MALE', VOICE_DETUNE: -100,   // um pouquinho mais grave
     DESCRIPTION: 'Alaúde: encanta até 2 inimigos, que viram aliados',
     SCALE: 0.085,
     BODY: { WIDTH: 300, HEIGHT: 440 },
