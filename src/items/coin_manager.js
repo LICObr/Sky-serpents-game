@@ -50,7 +50,7 @@ class CoinManager {
     coin.setData('collected', true);
     coin.body.enable = false;
     this.#eventBus.emit(GameEvents.COINS_CHANGED, CoinWallet.add(1));
-    SoundFx.play(coin.scene, SoundKeys.COIN, { volume: 0.7 });
+    SoundFx.play(coin.scene, SoundKeys.COIN, { volume: 0.6 });
 
     // sobe brilhando e some
     this.#scene.tweens.killTweensOf(coin);

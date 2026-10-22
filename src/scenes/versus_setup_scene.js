@@ -71,7 +71,7 @@ class VersusSetupScene extends Phaser.Scene {
   #bindKeys() {
     const keyboard = this.input.keyboard;
     const change = delta => () => {
-      SoundFx.play(this, SoundKeys.MENU_MOVE);
+      SoundFx.play(this, SoundKeys.MENU_MOVE, { volume: 0.5 });
       this.#rows[this.#focusIndex].change(delta);
     };
     ['UP', 'W'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#focus(this.#focusIndex - 1)));
@@ -84,7 +84,7 @@ class VersusSetupScene extends Phaser.Scene {
 
   #focus(index) {
     const next = Phaser.Math.Wrap(index, 0, this.#rows.length);
-    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE);
+    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE, { volume: 0.5 });
     this.#focusIndex = next;
     this.#rows.forEach((row, i) => row.setFocused(i === this.#focusIndex));
   }

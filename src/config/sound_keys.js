@@ -1,7 +1,7 @@
 /**
  * sound_keys.js
  * -----------------------------------------------------------------------------
- * Os EFEITOS SONOROS do jogo (estilo 16-bit, gerados por
+ * Os EFEITOS SONOROS do jogo (gravados + sintetizados em camadas, gerados por
  * tools/sound_effects.py em assets/sons/). O asset_manifest carrega todos e o
  * código toca com SoundFx.play(scene, SoundKeys.JUMP).
  * -----------------------------------------------------------------------------

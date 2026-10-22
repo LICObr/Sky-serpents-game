@@ -8,7 +8,7 @@ Escolha o personagem, atravesse cada fase e derrote o chefão no final:
 - **Ninja**: katana rápida e furtiva (o primeiro golpe em cada bicho vale o dobro) e pulo duplo; especial Bomba de Fumaça (some, fica invencível e todo golpe vale o dobro).
 - **Bardo**: estocada de florete; especial Nota Encantada (até 2 bichos viram aliados e lutam do seu lado: com dano menor, mas o dobro da vida — e podem morrer; quem é de chão anda, quem voa voa).
 
-Efeitos sonoros no estilo 16-bit (SNES/Mega Drive) para golpes, dano, pulos, moedas, poções, chefões, vitória e game over.
+Efeitos sonoros realistas para golpes, dano, pulos, moedas, poções, chefões, vitória e game over: sons gravados de verdade (passos, roupa, socos, metal, madeira, pedra, moedas — de [Kenney](https://kenney.nl), licença CC0) misturados com sons sintetizados em camadas, no estilo de cinema (o arco, as lâminas cortando o ar, trovão, magia, explosões).
 
 No menu principal:
 - **1 jogador**: escolha o personagem e a fase.
@@ -143,7 +143,7 @@ python tools/boss_intros.py
 | `bear_polish.py` | acerto final do Urso Polar: todos os quadros do mesmo tamanho, com os pés na mesma linha e o corpo centralizado |
 | `creature_sprites.py`, `dragon_variants.py`, `terrain_variants.py`, `archer_from_image.py` | bichos, cores e personagens |
 | `viking_from_image.py`, `ninja_from_image.py`, `bard_from_image.py` (+ `pixel_character.py`) | Viking, Ninja e Bardo a partir do print de cada um: refaz a pixel art na grade original, tira o fundo e monta as poses |
-| `sound_effects.py` | os efeitos sonoros 16-bit (síntese FM, ruído filtrado, cordas dedilhadas e o eco do SNES) em `assets/sons/` — precisa de numpy e do `lame` |
+| `sound_effects.py` | os efeitos sonoros em `assets/sons/`: sons gravados (`source_art/sons/kenney/`, CC0) em camadas com sons sintetizados no estilo de cinema, todos no mesmo volume — precisa de numpy, do `ffmpeg` e do `lame` |
 
 ## Licença
 

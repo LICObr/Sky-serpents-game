@@ -153,7 +153,7 @@ class Enemy extends GameEntity {
     this.#flash();
     if (source !== this) { // (cair no buraco não treme nem faz barulho)
       this.#shakeScreen();
-      SoundFx.play(this.scene, this.#hp <= 0 ? SoundKeys.ENEMY_DEFEATED : SoundKeys.HIT);
+      SoundFx.play(this.scene, this.#hp <= 0 ? SoundKeys.ENEMY_DEFEATED : SoundKeys.HIT, { volume: 0.85 });
     }
 
     const direction = Math.sign(this.x - source.x) || 1;

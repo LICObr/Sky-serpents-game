@@ -60,7 +60,7 @@ class MenuScene extends Phaser.Scene {
     ['UP', 'W'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#focus(this.#focusIndex - 1)));
     ['DOWN', 'S'].forEach(key => keyboard.on(`keydown-${key}`, () => this.#focus(this.#focusIndex + 1)));
     const change = delta => () => {
-      SoundFx.play(this, SoundKeys.MENU_MOVE);
+      SoundFx.play(this, SoundKeys.MENU_MOVE, { volume: 0.5 });
       this.#rows[this.#focusIndex].change(delta);
     };
     ['LEFT', 'A'].forEach(key => keyboard.on(`keydown-${key}`, change(-1)));
@@ -71,7 +71,7 @@ class MenuScene extends Phaser.Scene {
 
   #focus(index) {
     const next = Phaser.Math.Wrap(index, 0, this.#rows.length);
-    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE);
+    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE, { volume: 0.5 });
     this.#focusIndex = next;
     this.#rows.forEach((row, i) => row.setFocused(i === this.#focusIndex));
   }

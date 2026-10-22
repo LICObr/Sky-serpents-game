@@ -67,7 +67,7 @@ class TitleScene extends Phaser.Scene {
 
   #focus(index) {
     const next = Phaser.Math.Wrap(index, 0, this.#rows.length);
-    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE);
+    if (next !== this.#focusIndex) SoundFx.play(this, SoundKeys.MENU_MOVE, { volume: 0.5 });
     this.#focusIndex = next;
     this.#rows.forEach((row, i) => row.setFocused(i === this.#focusIndex));
   }

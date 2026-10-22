@@ -1,0 +1,4 @@
+Sons gravados usados por tools/sound_effects.py — de Kenney (www.kenney.nl):
+  RPG Audio, Impact Sounds e Music Jingles
+Licença: Creative Commons Zero (CC0) — uso livre, inclusive comercial; crédito opcional.
+http://creativecommons.org/publicdomain/zero/1.0/

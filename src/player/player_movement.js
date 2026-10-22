@@ -117,13 +117,13 @@ class PlayerMovement {
     if (this.#input.isJumpHeld() && grounded && !goingUp) {
       sprite.setVelocityY(GameSettings.PLAYER.JUMP_VELOCITY * this.#player.status.jumpMultiplier);
       this.#lastGroundedAt = 0; // não deixa pular duas vezes no mesmo instante
-      SoundFx.play(this.#player.scene, SoundKeys.JUMP, { volume: 0.6 });
+      SoundFx.play(this.#player.scene, SoundKeys.JUMP, { volume: 0.5 });
     } else if (jumpPressed && !grounded && this.#airJumpsLeft > 0) {
       this.#airJumpsLeft--;
       const { VELOCITY_MULTIPLIER } = GameSettings.PLAYER.AIR_JUMP;
       sprite.setVelocityY(GameSettings.PLAYER.JUMP_VELOCITY * VELOCITY_MULTIPLIER * this.#player.status.jumpMultiplier);
       this.#player.playAirJump();
-      SoundFx.play(this.#player.scene, SoundKeys.AIR_JUMP, { volume: 0.7 });
+      SoundFx.play(this.#player.scene, SoundKeys.AIR_JUMP, { volume: 0.6 });
     }
   }
 

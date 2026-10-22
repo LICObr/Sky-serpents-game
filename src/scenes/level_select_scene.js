@@ -83,7 +83,7 @@ class LevelSelectScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     const columns = GameSettings.LEVEL_SELECT.COLUMNS;
     const move = delta => () => {
-      SoundFx.play(this, SoundKeys.MENU_MOVE);
+      SoundFx.play(this, SoundKeys.MENU_MOVE, { volume: 0.5 });
       this.#select(this.#selected + delta);
     };
     ['LEFT', 'A'].forEach(key => keyboard.on(`keydown-${key}`, move(-1)));
