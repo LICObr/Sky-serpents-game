@@ -17,6 +17,7 @@ class PlayerSpecial {
   #input;
   #readyAt = 0;      // momento em que fica pronto de novo
   #activeUntil = 0;  // enquanto o especial acontece
+  #enabled = true;   // 1v1 com especial proibido: desligado
 
   /**
    * @param {Player} player dono do especial
@@ -62,6 +63,16 @@ class PlayerSpecial {
     return this.remainingMs === 0;
   }
 
+  /** Ligado? (no 1v1 dá para proibir o especial) */
+  get isEnabled() {
+    return this.#enabled;
+  }
+
+  /** Desliga o especial: a tecla não faz nada (e o HUD não mostra a caixinha). */
+  disable() {
+    this.#enabled = false;
+  }
+
   /** Adianta a recarga (ex.: ao derrotar um bicho). */
   reduceCooldown(ms) {
     this.#readyAt = Math.max(0, this.#readyAt - ms);
@@ -72,6 +83,7 @@ class PlayerSpecial {
    * @param {CombatRegistry} combat alvos disponíveis
    */
   update(combat) {
+    if (!this.#enabled) return;
     const now = this.#player.scene.time.now;
     if (this.#input.isSpecialJustPressed() && this.isReady && !this.#player.isDucking) {
       this.#readyAt = now + GameSettings.SPECIAL.COOLDOWN_MS;

@@ -7,11 +7,13 @@
  */
 const SceneKeys = Object.freeze({
   BOOT: 'BootScene',
-  TITLE: 'TitleScene',     // menu principal: 1 jogador, 2 jogadores, opções
+  TITLE: 'TitleScene',     // menu principal: 1 jogador, 2 jogadores, 1v1, opções
   OPTIONS: 'OptionsScene', // teclas dos jogadores
   MENU: 'MenuScene',       // 1 jogador: escolher o personagem
   LEVEL_SELECT: 'LevelSelectScene',
   GAME: 'GameScene',
+  VERSUS_SETUP: 'VersusSetupScene', // 1v1: personagens e opções
+  VERSUS: 'VersusScene',            // 1v1: a luta
   PAUSE: 'PauseScene'
 });
 

@@ -705,8 +705,24 @@ const GameSettings = deepFreeze({
     BOB_MS: 1400,               // balançando devagar
     ATTACK_POSE_MS: 260,
     ATTACK_EVERY_MS: { MIN: 2500, MAX: 4500 },
-    BUTTONS_Y: 290,
-    BUTTON_GAP: 60
+    BUTTONS_Y: 272,
+    BUTTON_GAP: 54
+  },
+
+  // 1v1 (VersusScene): a arena inteira na tela, com a câmera afastada
+  VERSUS: {
+    ZOOM: 0.7,                  // mostra 1/0,7 da tela: os dois jogadores aparecem sempre
+    RESULT_DELAY_MS: 1100,      // alguém caiu: um tempinho para ver antes do resultado
+    POTION_DELAY_MS: { MIN: 8000, MAX: 14000 }, // poções aparecendo nas ilhas (se ligadas)
+    MOB_RESPAWN_MS: { MIN: 2500, MAX: 5000 },   // bicho que morre: outro aparece depois disso
+    MOB_SAFE_DISTANCE: 220,     // bicho novo não nasce perto de um jogador
+    // Opções da tela do 1v1
+    MOB_OPTIONS: [
+      { LABEL: 'NENHUM', COUNT: 0 },
+      { LABEL: 'POUCOS', COUNT: 2 },
+      { LABEL: 'VÁRIOS', COUNT: 4 },
+      { LABEL: 'MUITOS', COUNT: 6 }
+    ]
   },
 
   // Tela de opções: uma caixinha de teclas para cada jogador

@@ -24,14 +24,17 @@ class PlayerHUD {
     const boxEdge = HEARTS_X - direction * 15; // caixinhas alinhadas com o primeiro coração
 
     new HeartsHUD(scene, player, eventBus, { x: HEARTS_X, y: Y, direction });
-    this.#special = new CooldownHUD(scene, boxEdge, Y + ROW_GAP, {
-      side: SIDE,
-      text: KeyBindings.label(KeyBindings.forPlayer(player.slot).SPECIAL),
-      remainingMs: () => player.special.remainingMs,
-      totalMs: GameSettings.SPECIAL.COOLDOWN_MS,
-      pulse: true
-    });
-    this.#shield = new CooldownHUD(scene, boxEdge, Y + ROW_GAP * 2, {
+    // especial proibido (1v1): sem a caixinha dele, o escudinho sobe
+    this.#special = player.special.isEnabled
+      ? new CooldownHUD(scene, boxEdge, Y + ROW_GAP, {
+        side: SIDE,
+        text: KeyBindings.label(KeyBindings.forPlayer(player.slot).SPECIAL),
+        remainingMs: () => player.special.remainingMs,
+        totalMs: GameSettings.SPECIAL.COOLDOWN_MS,
+        pulse: true
+      })
+      : null;
+    this.#shield = new CooldownHUD(scene, boxEdge, Y + ROW_GAP * (this.#special ? 2 : 1), {
       side: SIDE,
       icon: FxTextureKeys.SHIELD,
       remainingMs: () => player.shield.remainingMs,
@@ -41,7 +44,7 @@ class PlayerHUD {
 
   /** Atualiza as recargas (chamar a cada frame). */
   update() {
-    this.#special.update();
+    if (this.#special) this.#special.update();
     this.#shield.update();
   }
 }

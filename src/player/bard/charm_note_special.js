@@ -6,7 +6,8 @@
  * ENCANTADOS e viram aliados (CharmedAlly) — até 2 por nota e no máximo 2 ao
  * mesmo tempo (encantar mais um manda o mais antigo embora).
  *   - bicho que não dá para encantar (ex.: peixe, planta, casco): leva dano;
- *   - o chefão não se encanta: leva dano e a nota estoura.
+ *   - o chefão não se encanta: leva dano e a nota estoura (o rival, no 1
+ *     contra 1, também: perde um coração).
  * Enquanto a nota voa, o bardo continua atacando com o florete.
  * -----------------------------------------------------------------------------
  */
@@ -100,12 +101,12 @@ class CharmNoteSpecial extends PlayerSpecial {
     const cfg = GameSettings.SPECIAL.CHARM_NOTE;
     const bounds = this.#note.getBounds();
     for (const target of combat.targets) {
-      if (target instanceof Player || target instanceof BreakableTree || this.#touched.has(target)) continue;
+      if (!this.player.isFoe(target) || target instanceof BreakableTree || this.#touched.has(target)) continue;
       const touching = target.hitboxSprites.some(sprite =>
         Phaser.Geom.Intersects.RectangleToRectangle(bounds, sprite.getBounds()));
       if (!touching) continue;
       this.#touched.add(target);
-      if (target instanceof Boss) { // o chefão não se encanta
+      if (target instanceof Boss || target instanceof Player) { // o chefão (e o rival) não se encanta
         target.takeHit(this.#note, cfg.BOSS_DAMAGE);
         this.#burstNote();
         return;

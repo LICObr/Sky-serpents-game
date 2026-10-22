@@ -10,19 +10,25 @@
  *
  * As classes do jogo recebem um MatchConfig e não precisam saber como os
  * multiplicadores funcionam.
+ *
+ * 1v1 (versus): os dois jogadores lutam entre si na arena da
+ * tempestade; `versus` guarda as opções escolhidas (poções, bichos, especial).
  * -----------------------------------------------------------------------------
  */
 class MatchConfig {
   #characterIds;
   #levelIndex;
   #difficultyId;
+  #versus;
   #boss; // estatísticas do chefão já ajustadas (calculadas uma vez)
 
   /**
-   * @param {{characterIds?: string[], levelIndex?: number, difficultyId?: string}} options
+   * @param {{characterIds?: string[], levelIndex?: number, difficultyId?: string,
+   *          versus?: {potions: boolean, mobs: number, specials: boolean}|null}} options
    *   characterIds: um personagem por jogador (1 ou 2)
+   *   versus: opções do 1v1 (null = jogo normal)
    */
-  constructor({ characterIds = [CharacterId.KNIGHT], levelIndex = 0, difficultyId = DEFAULT_DIFFICULTY } = {}) {
+  constructor({ characterIds = [CharacterId.KNIGHT], levelIndex = 0, difficultyId = DEFAULT_DIFFICULTY, versus = null } = {}) {
     const validPlayers = Array.isArray(characterIds) && characterIds.length >= 1 && characterIds.length <= 2;
     if (!validPlayers || characterIds.some(id => !CHARACTERS[id])) {
       throw new RangeError(`Personagens inválidos: ${characterIds}`);
@@ -33,6 +39,7 @@ class MatchConfig {
     this.#characterIds = [...characterIds];
     this.#levelIndex = levelIndex;
     this.#difficultyId = difficultyId;
+    this.#versus = versus ? Object.freeze({ ...versus }) : null;
     this.#boss = this.level.ARENA
       ? MatchConfig.#scaleBoss(BOSS_TYPES[this.level.ARENA.BOSS], this.level.CHALLENGE)
       : null; // fase ainda sem chefão (termina na bandeira de chegada)
@@ -47,6 +54,8 @@ class MatchConfig {
   get hasBoss()          { return this.#boss !== null; }
   get playerHearts()     { return this.difficulty.PLAYER_HEARTS; }
   get potionDelayMs()    { return this.difficulty.POTION_DELAY_MS; }
+  get isVersus()         { return this.#versus !== null; } // 1v1?
+  get versus()           { return this.#versus; }          // opções do 1v1
 
   get hasNextLevel() {
     return this.#levelIndex + 1 < LEVELS.length;
@@ -75,7 +84,8 @@ class MatchConfig {
     return {
       characterIds: [...this.#characterIds],
       levelIndex: this.#levelIndex,
-      difficultyId: this.#difficultyId
+      difficultyId: this.#difficultyId,
+      versus: this.#versus
     };
   }
 

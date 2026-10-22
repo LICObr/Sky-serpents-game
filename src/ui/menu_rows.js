@@ -9,7 +9,9 @@
  *
  * Subclasses:
  *   CharacterPicker → cartões dos personagens com a arte de cada um
+ *                     (compacto no 1v1: só a arte e o nome)
  *   OptionSelector  → "< opção >" (fase, dificuldade)
+ *   InlineOption    → "TÍTULO  < opção >" numa linha só (opções do 1v1)
  *   MenuButton      → botão (JOGAR)
  * -----------------------------------------------------------------------------
  */
@@ -50,8 +52,9 @@ class CharacterPicker extends MenuRow {
    * @param {number} y
    * @param {string} selectedId personagem inicialmente escolhido
    * @param {Function} onFocusRequest chamado ao clicar (para focar a linha)
+   * @param {{compact?: boolean}} [options] compact = cartão baixinho, só a arte e o nome (cabem dois seletores na tela)
    */
-  constructor(scene, y, selectedId, onFocusRequest) {
+  constructor(scene, y, selectedId, onFocusRequest, { compact = false } = {}) {
     super();
     this.#ids = Object.keys(CHARACTERS);
     this.#index = Math.max(0, this.#ids.indexOf(selectedId));
@@ -67,10 +70,12 @@ class CharacterPicker extends MenuRow {
       const character = CHARACTERS[id];
       const x = centerX + (i - (this.#ids.length - 1) / 2) * spacing;
 
-      const frame = scene.add.rectangle(x, y, cardWidth, 150, 0x1a1030, 0.75).setStrokeStyle(3, 0x6a5a8a);
-      const image = scene.add.image(x, y - 24, character.TEXTURES.STAND.RIGHT).setScale(character.SCALE * 2.2);
-      const name = scene.add.text(x, y + 36, character.NAME.toUpperCase(), UiStyle.text(11)).setOrigin(0.5);
-      const info = scene.add.text(x, y + 58, character.DESCRIPTION,
+      const frame = scene.add.rectangle(x, y, cardWidth, compact ? 112 : 150, 0x1a1030, 0.75).setStrokeStyle(3, 0x6a5a8a);
+      const image = scene.add.image(x, y - (compact ? 12 : 24), character.TEXTURES.STAND.RIGHT)
+        .setScale(character.SCALE * (compact ? 1.7 : 2.2));
+      const name = scene.add.text(x, y + (compact ? 42 : 36), character.NAME.toUpperCase(), UiStyle.text(compact ? 9 : 11))
+        .setOrigin(0.5);
+      const info = compact ? null : scene.add.text(x, y + 58, character.DESCRIPTION,
         { ...UiStyle.text(6, '#c8c0e0'), wordWrap: { width: cardWidth - 14 }, lineSpacing: 2 }).setOrigin(0.5);
 
       frame.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
@@ -152,6 +157,55 @@ class OptionSelector extends MenuRow {
     const option = this.#options[this.#index];
     this.#valueText.setText(option.label).setColor(this.isFocused ? '#ffe066' : '#ffffff');
     this.#detailText.setText(option.detail || '');
+    this.#label.setColor(this.isFocused ? '#ffe066' : '#c8c0e0');
+  }
+}
+
+/** Opção numa linha só: "TÍTULO  < opção >" (as opções do 1v1). */
+class InlineOption extends MenuRow {
+  #label;
+  #valueText;
+  #options;
+  #index;
+
+  /**
+   * @param {Phaser.Scene} scene
+   * @param {number} y
+   * @param {string} label título (ex.: "POÇÕES")
+   * @param {{label: string, value: any}[]} options
+   * @param {number} initialIndex
+   * @param {Function} onFocusRequest
+   */
+  constructor(scene, y, label, options, initialIndex, onFocusRequest) {
+    super();
+    const centerX = GameSettings.SCREEN.WIDTH / 2;
+    this.#options = options;
+    this.#index = Phaser.Math.Clamp(initialIndex, 0, options.length - 1);
+    this.#label = scene.add.text(centerX - 16, y, label, UiStyle.text(10, '#c8c0e0')).setOrigin(1, 0.5);
+    this.#valueText = scene.add.text(centerX + 104, y, '', UiStyle.text(10)).setOrigin(0.5);
+    [[-1, centerX + 16, '<'], [1, centerX + 192, '>']].forEach(([delta, x, symbol]) => {
+      scene.add.text(x, y, symbol, UiStyle.text(12, '#ffe066')).setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on('pointerdown', () => { onFocusRequest(this); this.change(delta); });
+    });
+    this.render();
+  }
+
+  /** Valor da opção escolhida. */
+  get value() { return this.#options[this.#index].value; }
+
+  /** Posição da opção escolhida (para lembrar na próxima vez). */
+  get index() { return this.#index; }
+
+  /** @override */
+  change(delta) {
+    this.#index = Phaser.Math.Wrap(this.#index + delta, 0, this.#options.length);
+    this.render();
+  }
+
+  /** @override */
+  render() {
+    this.#valueText.setText(this.#options[this.#index].label).setColor(this.isFocused ? '#ffe066' : '#ffffff');
     this.#label.setColor(this.isFocused ? '#ffe066' : '#c8c0e0');
   }
 }

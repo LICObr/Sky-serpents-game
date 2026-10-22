@@ -34,6 +34,7 @@ class Player extends GameEntity {
   #walkFrame = -1;  // quadro atual da caminhada
   #nextWalkFrameAt = 0;
   #textures;        // poses em uso (as normais ou um conjunto alternativo — ex.: viking sem martelo)
+  #versus;          // 1v1: o outro jogador é rival
 
   /**
    * @param {Phaser.Scene} scene
@@ -57,6 +58,7 @@ class Player extends GameEntity {
     this.#character = character;
     this.#slot = slot;
     this.#textures = character.TEXTURES;
+    this.#versus = match.isVersus;
 
     sprite.body.setSize(character.BODY.WIDTH, character.BODY.HEIGHT);
     this.#bodyOffsetY = sprite.body.offset.y;
@@ -102,6 +104,15 @@ class Player extends GameEntity {
   get shield()      { return this.#shield; }
   get facingRight() { return this.#facingRight; }
   get isDucking()   { return this.#movement.isDucking; }
+
+  /**
+   * Alvo dos especiais que miram (raio, tremor, nota encantada): bichos e
+   * chefões — e o outro jogador só no 1v1 (no modo 2 jogadores o
+   * parceiro é do time).
+   */
+  isFoe(target) {
+    return target instanceof Player ? this.#versus && target !== this : true;
+  }
 
   /** Altura dos pés (base da hitbox). */
   get feetY() {

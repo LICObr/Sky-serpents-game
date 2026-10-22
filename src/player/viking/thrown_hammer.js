@@ -188,9 +188,9 @@ class ThrownHammer {
         onComplete: () => wave.destroy()
       });
     });
-    // o tremor é só nos bichos (o parceiro, com 2 jogadores, não leva)
+    // o tremor é nos bichos (e no rival, no 1v1); o parceiro, com 2 jogadores, não leva
     this.#combat.targets
-      .filter(target => !(target instanceof Player) && ThrownHammer.#onGroundNear(target, x, groundY))
+      .filter(target => this.#player.isFoe(target) && ThrownHammer.#onGroundNear(target, x, groundY))
       .forEach(target => target.takeHit({ x, y: groundY }, cfg.DAMAGE));
   }
 

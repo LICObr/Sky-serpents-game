@@ -62,8 +62,9 @@ class ThunderSpecial extends PlayerSpecial {
   }
 
   /**
-   * Alvos dos raios: os bichos da tela, do mais perto ao mais longe (árvores
-   * por último); sobrando raios, a lista se repete (até MAX_PER_TARGET cada).
+   * Alvos dos raios: os bichos da tela (e o rival, no 1v1), do mais
+   * perto ao mais longe (árvores por último); sobrando raios, a lista se
+   * repete (até MAX_PER_TARGET cada).
    */
   #pickTargets(combat) {
     const cfg = GameSettings.SPECIAL.THUNDER;
@@ -71,7 +72,7 @@ class ThunderSpecial extends PlayerSpecial {
     const view = player.scene.cameras.main.worldView;
     const isTree = target => (target instanceof BreakableTree ? 1 : 0);
     const onScreen = combat.targets
-      .filter(target => !(target instanceof Player) && view.contains(target.x, target.y))
+      .filter(target => player.isFoe(target) && view.contains(target.x, target.y))
       .sort((a, b) => isTree(a) - isTree(b) || a.distanceFrom(player) - b.distanceFrom(player));
     const picks = [];
     for (let round = 0; round < cfg.MAX_PER_TARGET; round++) {

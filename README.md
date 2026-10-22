@@ -13,6 +13,7 @@ Efeitos sonoros no estilo 16-bit (SNES/Mega Drive) para golpes, dano, pulos, moe
 No menu principal:
 - **1 jogador**: escolha o personagem e a fase.
 - **2 jogadores**: Guerreiro e Arqueira na mesma tela, cada um com as suas teclas. Um não avança sem o outro: ninguém sai da tela. Cuidado com o parceiro: espada, flechas e especiais acertam ele também (o escudinho segura). Quem fica sem corações cai deitado e fica fora — mas o parceiro pode **agachar em cima dele** (com pelo menos 2 corações) para doar um coração e ele volta. O game over só vem com os dois fora.
+- **1v1**: os dois lutam entre si numa arena de uma tela só, na tempestade (chuva, relâmpagos, vento e raios no chão), cheia de ilhas flutuantes, com a câmera afastada para ver os dois. Cada um escolhe o personagem e vocês combinam as regras: poções aparecendo nas ilhas (sim/não), quantos bichos ficam na arena atacando os dois (nenhum, poucos, vários ou muitos) e se o especial é liberado. Cada golpe do rival tira um coração; quem ficar sem corações perde.
 - **Opções**: troque as teclas do jogador 1 e do jogador 2.
 
 Ao abrir o jogo, a tela de carregamento sorteia um fundo (de qualquer fase) e um bicho (do morcego ao dragão), que anda ou voa em cima da barrinha enquanto o jogo carrega.

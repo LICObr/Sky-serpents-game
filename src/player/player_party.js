@@ -24,12 +24,13 @@ class PlayerParty {
    * @param {Player[]} players
    * @param {Phaser.Events.EventEmitter} eventBus
    * @param {LevelMap} levelMap para achar chão firme ao renascer
+   * @param {{donation?: boolean}} [options] donation = dá para doar coração ao parceiro caído
    */
-  constructor(players, eventBus, levelMap) {
+  constructor(players, eventBus, levelMap, { donation = true } = {}) {
     this.#players = players;
     this.#eventBus = eventBus;
     this.#levelMap = levelMap;
-    if (this.isCoop) this.#donation = new HeartDonation(players[0].scene, this);
+    if (this.isCoop && donation) this.#donation = new HeartDonation(players[0].scene, this);
     eventBus.on(GameEvents.PLAYER_DIED, player => this.#onPlayerDied(player));
   }
 

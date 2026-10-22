@@ -85,6 +85,13 @@ class KeyBindings {
       `${both(ControlAction.ATTACK)} atacar   ${both(ControlAction.SPECIAL)} especial`;
   }
 
+  /** Resumo das teclas de UM jogador (ex.: rodapé da tela do 1v1). */
+  static playerHint(index) {
+    const keys = KeyBindings.forPlayer(index);
+    return `${KeyBindings.#movementLabel(keys)} mover   ${KeyBindings.label(keys[ControlAction.ATTACK])} atacar   ` +
+      `${KeyBindings.label(keys[ControlAction.SPECIAL])} especial`;
+  }
+
   /** "WASD", "SETAS" ou as quatro teclas (pular, esquerda, agachar, direita). */
   static #movementLabel(keys) {
     const order = [keys.JUMP, keys.LEFT, keys.DUCK, keys.RIGHT];
