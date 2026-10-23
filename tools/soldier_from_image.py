@@ -14,7 +14,7 @@ azul-arroxeado com drones desenhados ao longe):
        soldado           parado, segurando o drone
        soldado_lanca     acabou de lançar: a mão vazia (o drone saiu voando)
        soldado_agachado
-     e o DRONE sozinho (drone.png), recortado da mão dele, para o projétil;
+     e o DRONE sozinho (drone.png) com a granada deitada embaixo, para o projétil;
   5. cada pose vai para um quadro 500x500 (cada pixel do print = 4 px), com
      o meio do corpo no meio do quadro e os pés na linha dos outros.
 
@@ -70,12 +70,27 @@ def without_drone(img):
     return keep_largest(out)
 
 
+DRONE_ROWS = 13               # no recorte do drone: linhas 0..12 são o drone (hélices e corpo)
+BOMB_ROWS = (28, 52)          # a granada pendurada (no meio sobra um pedaço da mão, que sai)
+BOMB_SCALE = 0.7
+
+
 def drone_only(img):
-    """Só o drone (o projétil), sem o braço."""
+    """
+    O projétil: o drone com a granada DEITADA logo embaixo dele (no cartão ela
+    fica pendurada longe, por uma alça segurada pela mão).
+    """
     x0, y0, x1, y1 = DRONE_BOX
     part = img.crop((max(x0, HAND_X), y0, x1, y1))
-    part = keep_largest(part)
-    return part.crop(part.getbbox())
+    drone = part.crop((0, 0, part.width, DRONE_ROWS))
+    bomb = part.crop((0, BOMB_ROWS[0], part.width, BOMB_ROWS[1]))
+    bomb = bomb.crop(bomb.getbbox()).rotate(-90, expand=True)          # deitada, ponta para a frente
+    bomb = bomb.resize((max(1, round(bomb.width * BOMB_SCALE)), max(1, round(bomb.height * BOMB_SCALE))), Image.NEAREST)
+    drone = drone.crop(drone.getbbox())
+    out = Image.new("RGBA", (max(drone.width, bomb.width), drone.height + bomb.height - 1), (0, 0, 0, 0))
+    out.paste(drone, ((out.width - drone.width) // 2, 0), drone)
+    out.paste(bomb, ((out.width - bomb.width) // 2, drone.height - 1), bomb)  # encostada no drone
+    return out
 
 
 if __name__ == "__main__":
