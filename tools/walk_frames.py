@@ -23,7 +23,7 @@ trás, de "pixel" em "pixel" da arte (mais perto do pé = mais deslocado), para
 os blocos da pixel art continuarem inteiros.
 
 A arqueira segura o arco com os dois braços, então nela só as pernas mexem
-(no viking também — com e sem o martelo —, no ninja e no bardo).
+(no viking também — com e sem o martelo —, no ninja, no bardo e no operador de drones).
 
     py tools/walk_frames.py
 -----------------------------------------------------------------------------
@@ -66,6 +66,9 @@ SPRITES["ninja/ninja"] = [("direita", dict(art=10, steps=[(340, 0), (380, 1), (4
 # Bardo (tools/bard_from_image.py): arte mais miúda (6 px); o florete pendurado atrás não anda junto
 SPRITES["bardo/bardo"] = [("direita", dict(art=6, steps=[(398, 0), (422, 1), (440, 2)],
                                            back=[(398, 139, 250)], front=[(398, 250, 500)], hand=None, facing=1))]
+# Operador de drones (tools/soldier_from_image.py): print pequeno (4 px por pixel); o drone na mão não anda
+SPRITES["soldado/soldado"] = [("direita", dict(art=4, steps=[(375, 0), (405, 1), (440, 2)],
+                                               back=[(375, 0, 256)], front=[(375, 256, 380)], hand=None, facing=1))]
 BACK_LEG_SHADE = 0.8       # a perna de trás um pouco mais escura
 
 # Cada quadro: (perna de trás, perna da frente, mão)

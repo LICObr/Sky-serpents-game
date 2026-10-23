@@ -9,7 +9,7 @@
  *
  * Cada personagem tem o seu (definido pela subclasse de Player):
  *   ArrowStormSpecial (arqueira) | DashSpecial (guerreiro) | ThunderSpecial (viking)
- *   SmokeBombSpecial (ninja) | CharmNoteSpecial (bardo)
+ *   SmokeBombSpecial (ninja) | CharmNoteSpecial (bardo) | DroneControlSpecial (operador)
  * -----------------------------------------------------------------------------
  */
 class PlayerSpecial {
@@ -71,6 +71,11 @@ class PlayerSpecial {
   /** Desliga o especial: a tecla não faz nada (e o HUD não mostra a caixinha). */
   disable() {
     this.#enabled = false;
+  }
+
+  /** Termina o especial em andamento agora (ex.: o drone pilotado mergulhou antes da hora). */
+  endNow() {
+    this.#activeUntil = this.#player.scene.time.now;
   }
 
   /** Adianta a recarga (ex.: ao derrotar um bicho). */

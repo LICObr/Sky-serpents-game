@@ -5,7 +5,7 @@
  * responsável por carregá-los no Phaser.
  *
  * Os arquivos ficam organizados por "dono" dentro de assets/:
- *   personagens/guerreiro | personagens/arqueira | personagens/viking | personagens/ninja | personagens/bardo
+ *   personagens/guerreiro | personagens/arqueira | personagens/viking | personagens/ninja | personagens/bardo | personagens/soldado
  *   inimigos/slime | inimigos/morcego | inimigos/fantasma
  *   chefoes/dragao_vermelho | chefoes/dragao_rosa | chefoes/serpente_glacial | chefoes/urso_polar
  *   chefoes/colmeia | chefoes/abelha_rainha | chefoes/filhote_aguia
@@ -107,6 +107,12 @@ const ASSET_MANIFEST = Object.freeze([
   }),
   ...poseImages('personagens/ninja', 'ninja'),
   ...imagesIn('personagens/ninja', { ninja_corte_direita: 'ninja_corte_direita.png', ninja_corte_esquerda: 'ninja_corte_esquerda.png' }),
+  // Operador de drones (tools/soldier_from_image.py e walk_frames.py)
+  ...poseImages('personagens/soldado', 'soldado'),
+  ...imagesIn('personagens/soldado', {
+    soldado_lanca_direita: 'soldado_lanca_direita.png', soldado_lanca_esquerda: 'soldado_lanca_esquerda.png',
+    drone: 'drone.png'
+  }),
   ...poseImages('personagens/bardo', 'bardo'),
   ...imagesIn('personagens/bardo', { bardo_estocada_direita: 'bardo_estocada_direita.png', bardo_estocada_esquerda: 'bardo_estocada_esquerda.png' }),
 

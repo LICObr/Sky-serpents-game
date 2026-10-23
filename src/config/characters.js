@@ -19,7 +19,8 @@ const CharacterId = Object.freeze({
   ARCHER: 'ARCHER',
   VIKING: 'VIKING',
   NINJA: 'NINJA',
-  BARD: 'BARD'
+  BARD: 'BARD',
+  SOLDIER: 'SOLDIER'
 });
 
 /**
@@ -123,11 +124,24 @@ const CHARACTERS = deepFreeze({
     ID: CharacterId.BARD,
     NAME: 'Bardo',
     VOICE: 'MALE', VOICE_DETUNE: -100,   // um pouquinho mais grave
-    DESCRIPTION: 'Alaúde: encanta até 2 inimigos, que viram aliados',
+    DESCRIPTION: 'Alaúde: 2 inimigos viram aliados',
     SCALE: 0.085,
     BODY: { WIDTH: 300, HEIGHT: 440 },
     WALK_SPEED: 125,
     DUCK_VISUAL_OFFSET: 0,
     TEXTURES: poseTextures('bardo', 'bardo_estocada')
+  },
+
+  // Operador de drones (tools/soldier_from_image.py): drone em arco + drone pilotado
+  [CharacterId.SOLDIER]: {
+    ID: CharacterId.SOLDIER,
+    NAME: 'Operador',
+    VOICE: 'MALE', VOICE_DETUNE: -200,   // mais grave
+    DESCRIPTION: 'Drones explosivos e drone kamikaze',
+    SCALE: 0.085,
+    BODY: { WIDTH: 300, HEIGHT: 440 },
+    WALK_SPEED: 115,            // equipamento pesado: um pouco mais lento
+    DUCK_VISUAL_OFFSET: 0,
+    TEXTURES: poseTextures('soldado', 'soldado_lanca')
   }
 });

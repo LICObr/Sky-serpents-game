@@ -217,6 +217,20 @@ const GameSettings = deepFreeze({
     MAX_STUCK: 8                // limite de flechas cravadas (as mais antigas somem)
   },
 
+  // Drones do OPERADOR: sobem em arco, fazem a parábola e caem um pouco mais
+  // longe que a flecha (~280px no plano); explodem ao encostar (área pequena)
+  DRONE_ATTACK: {
+    TEXTURE: 'drone',
+    SCALE: 0.16,                // o desenho tem 128x208 px (com a granada pendurada)
+    COOLDOWN_MS: 650,
+    POSE_DURATION_MS: 220,
+    HAND: { X: 16, Y: -10 },    // sai da mão, na frente
+    LAUNCH_SPEED_X: 280,
+    LAUNCH_SPEED_Y: -380,       // sobe antes de cair
+    GRAVITY: 800,               // gravidade própria (mais leve que a do mundo: arco longo)
+    EXPLOSION: { RADIUS: 46, DAMAGE: 18, SHAKE_MS: 120, SHAKE_INTENSITY: 0.004, SPARKS: 14, SMOKE: 5, SOUND_VOLUME: 0.55, SOUND_DETUNE: 500 }
+  },
+
   // Martelo do VIKING: arremessa girando e, ao cair, faz um TREMOR. Ele fica no
   // chão até o viking passar por cima; enquanto isso, o ataque vira SOQUINHO.
   HAMMER_ATTACK: {
@@ -648,6 +662,15 @@ const GameSettings = deepFreeze({
       TICK_DAMAGE: 8,
       REACH: 60,
       GHOST_EVERY_MS: 50        // rastro de "fantasmas"
+    },
+    DRONE_CONTROL: {            // operador: pilota um drone por 4s e ele cai com explosão grande
+      CONTROL_MS: 4000,
+      SPEED: 240,
+      START_Y: -60,             // nasce acima da cabeça dele
+      SCALE_MULTIPLIER: 1.35,   // o mesmo drone, um pouco maior
+      DIVE_SPEED: 260,
+      DIVE_GRAVITY: 1400,
+      EXPLOSION: { RADIUS: 110, DAMAGE: 60, SHAKE_MS: 380, SHAKE_INTENSITY: 0.014, SPARKS: 40, SMOKE: 14, SOUND_VOLUME: 1, SOUND_DETUNE: 0 }
     },
     SMOKE_BOMB: {               // ninja: some na fumaça (invencível) e todo golpe vira furtivo
       DURATION_MS: 3000,

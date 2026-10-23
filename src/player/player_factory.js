@@ -11,7 +11,8 @@ class PlayerFactory {
     [CharacterId.ARCHER]: ArcherPlayer,
     [CharacterId.VIKING]: VikingPlayer,
     [CharacterId.NINJA]: NinjaPlayer,
-    [CharacterId.BARD]: BardPlayer
+    [CharacterId.BARD]: BardPlayer,
+    [CharacterId.SOLDIER]: SoldierPlayer
   });
 
   constructor() {

@@ -75,8 +75,9 @@ class CharacterPicker extends MenuRow {
         .setScale(character.SCALE * (compact ? 1.7 : 2.2));
       const name = scene.add.text(x, y + (compact ? 42 : 36), character.NAME.toUpperCase(), UiStyle.text(compact ? 9 : 11))
         .setOrigin(0.5);
-      const info = compact ? null : scene.add.text(x, y + 58, character.DESCRIPTION,
-        { ...UiStyle.text(6, '#c8c0e0'), wordWrap: { width: cardWidth - 14 }, lineSpacing: 2 }).setOrigin(0.5);
+      // a descrição cresce para BAIXO a partir de logo abaixo do nome (com 6 cartões ela pode ter 3 linhas)
+      const info = compact ? null : scene.add.text(x, y + 46, character.DESCRIPTION,
+        { ...UiStyle.text(6, '#c8c0e0'), wordWrap: { width: cardWidth - 14 }, lineSpacing: 2 }).setOrigin(0.5, 0);
 
       frame.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
         this.#index = i;
