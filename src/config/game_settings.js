@@ -227,10 +227,12 @@ const GameSettings = deepFreeze({
     HAND: { X: 16, Y: -10 },    // sai da mão, na frente
     LAUNCH_SPEED_X: 280,
     LAUNCH_SPEED_Y: -380,       // sobe antes de cair
-    // Gravidade DINÂMICA: começa forte e vai enfraquecendo até END em FADE_MS.
-    // Cada lançamento sorteia um FADE_MS: enfraquecer mais cedo = cai mais longe
-    // (4 distâncias diferentes)
-    GRAVITY: { START: 1100, END: 450, FADE_MS: [250, 450, 650, 850] },
+    // Voo em duas fases: SOBE com gravidade forte e, passado o topo, PLANA —
+    // gravidade fraquinha e descida limitada. Cada lançamento sorteia a
+    // velocidade de descida do planeio: mais devagar = cai mais longe
+    // (~550, ~370, ~280 e ~220px no plano)
+    GRAVITY: { RISE: 1100, GLIDE: 120 },
+    GLIDE_FALL_SPEEDS: [60, 100, 150, 220],
     EXPLOSION: { RADIUS: 46, DAMAGE: 18, SHAKE_MS: 120, SHAKE_INTENSITY: 0.004, SPARKS: 14, SMOKE: 5, SOUND_VOLUME: 0.55, SOUND_DETUNE: 500 }
   },
 

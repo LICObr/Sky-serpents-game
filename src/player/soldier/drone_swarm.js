@@ -3,8 +3,8 @@
  * -----------------------------------------------------------------------------
  * Os DRONES do Operador de Drones:
  *   - drone lançado (ataque): sobe em ARCO e cai um pouco mais longe que uma
- *     flecha; a gravidade começa forte e enfraquece num ritmo sorteado, então
- *     cada lançamento cai numa de 4 distâncias; explode ao encostar em bicho, chefão, árvore ou
+ *     flecha: sobe com gravidade forte e, depois do topo, PLANA (gravidade
+ *     fraquinha, descida lenta sorteada entre 4 — 4 distâncias diferentes); explode ao encostar em bicho, chefão, árvore ou
  *     no chão — explosão de área PEQUENA;
  *   - drone CONTROLADO (especial): paira no ar e o jogador pilota com as
  *     setas por alguns segundos; quando o tempo acaba (ou ao apertar o
@@ -96,9 +96,8 @@ class DroneSwarm {
     const drone = this.#spawn(player.x + direction * cfg.HAND.X, player.y + cfg.HAND.Y, DroneMode.THROWN);
     drone.setFlipX(direction < 0);
     drone.body.setAllowGravity(true);
-    drone.setData('launchedAt', player.scene.time.now);
-    drone.setData('fadeMs', Phaser.Utils.Array.GetRandom(cfg.GRAVITY.FADE_MS)); // sorteia a distância
-    this.#applyGravity(drone, player.scene.time.now);
+    drone.setData('glideFall', Phaser.Utils.Array.GetRandom(cfg.GLIDE_FALL_SPEEDS)); // sorteia a distância
+    this.#applyGravity(drone);
     drone.setVelocity(direction * cfg.LAUNCH_SPEED_X, cfg.LAUNCH_SPEED_Y);
     SoundFx.play(player.scene, SoundKeys.HAMMER, { volume: 0.7, detune: 700 });
   }
@@ -155,7 +154,7 @@ class DroneSwarm {
       drone.setScale(base * (1 + Math.sin(now * 0.09 + drone.getData('seed')) * 0.04), base);
       drone.setRotation(Phaser.Math.Clamp(drone.body.velocity.x / 900, -0.35, 0.35));
 
-      if (drone.getData('mode') === DroneMode.THROWN) this.#applyGravity(drone, now);
+      if (drone.getData('mode') === DroneMode.THROWN) this.#applyGravity(drone);
       if (drone.getData('mode') === DroneMode.STEERED) {
         this.#keepInView(drone, view);
         this.#updateMarker(drone, now);
@@ -177,17 +176,19 @@ class DroneSwarm {
     const radius = width * 0.36;
     drone.body.setCircle(radius, width / 2 - radius, height / 2 - radius);    // drone + granada deitada
     drone.setCollideWorldBounds(false);
+    drone.body.maxVelocity.y = 10000;
     drone.setData('mode', mode);
     drone.setData('baseScale', drone.scaleY);
     drone.setData('seed', Math.random() * 100);
     return drone;
   }
 
-  /** Gravidade do drone lançado: forte no começo, enfraquecendo até o fim do FADE_MS sorteado. */
-  #applyGravity(drone, now) {
-    const { START, END } = GameSettings.DRONE_ATTACK.GRAVITY;
-    const t = Math.min(1, (now - drone.getData('launchedAt')) / drone.getData('fadeMs'));
-    drone.body.setGravityY(START + (END - START) * t - GameSettings.PHYSICS.GRAVITY_Y);
+  /** Subindo: gravidade forte. Passou do topo: plana (gravidade fraquinha e descida limitada à sorteada). */
+  #applyGravity(drone) {
+    const { RISE, GLIDE } = GameSettings.DRONE_ATTACK.GRAVITY;
+    const gliding = drone.body.velocity.y >= 0;
+    drone.body.setGravityY((gliding ? GLIDE : RISE) - GameSettings.PHYSICS.GRAVITY_Y);
+    drone.body.maxVelocity.y = gliding ? drone.getData('glideFall') : 10000;
   }
 
   /** Bateu em alguém ou no chão: explode (pequena ou grande, conforme o drone). */
