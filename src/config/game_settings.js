@@ -222,7 +222,7 @@ const GameSettings = deepFreeze({
   DRONE_ATTACK: {
     TEXTURE: 'drone',
     SCALE: 0.16,                // o desenho tem 128x88 px (drone com a granada deitada embaixo)
-    COOLDOWN_MS: 2000,          // 1 drone a cada 2 segundos (explode em área: não pode ser metralhadora)
+    COOLDOWN_MS: 3000,          // 1 drone a cada 3 segundos (explode em área: não pode ser metralhadora)
     POSE_DURATION_MS: 220,
     HAND: { X: 16, Y: -10 },    // sai da mão, na frente
     LAUNCH_SPEED_X: 280,
